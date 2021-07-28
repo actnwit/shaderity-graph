@@ -1,0 +1,17 @@
+{
+  "extends": "./../tsconfig.json",
+  "include": [
+    "./simple"
+  ],
+  "exclude": [],
+  "compilerOptions": {
+    "module": "umd",
+    "declaration": false,
+    "declarationDir": null,
+
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": false
+  }
+}
