@@ -6,10 +6,10 @@ const baseConfig = require('./webpack.config.base.js');
 const config = merge(baseConfig, {
   mode: 'production',
   output: {
-    filename: 'rhodonite.min.js',
-    chunkFilename: 'rhodonite-[name].min.js',
+    filename: 'shaderityGraph.min.js',
+    chunkFilename: 'shaderityGraph-[name].min.js',
     path: path.resolve(__dirname, './../../dist/umd'),
-    library: 'Rn',
+    library: 'ShaderityGraph',
     libraryExport: 'default',
     libraryTarget: 'umd',
   },
