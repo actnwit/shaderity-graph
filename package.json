@@ -7,7 +7,8 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "shaderity-loader": "^0.0.15"
+    "shaderity-loader": "^0.0.15",
+    "typescript": "^4.3.5"
   },
   "dependencies": {
     "shaderity": "^0.1.28"
