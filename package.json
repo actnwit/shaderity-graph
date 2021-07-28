@@ -5,5 +5,11 @@
   "repository": "https://github.com/actnwit/shaderity-graph.git",
   "author": "Yuki Shimada <emadurandal@gmail.com>",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "shaderity-loader": "^0.0.15"
+  },
+  "dependencies": {
+    "shaderity": "^0.1.28"
+  }
 }
