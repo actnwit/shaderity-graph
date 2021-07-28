@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "gts": "^3.1.0",
     "husky": "^7.0.1",
+    "requirejs": "^2.3.6",
     "shaderity-loader": "^0.0.15",
     "ts-loader": "^9.2.4",
     "tsc-watch": "^4.4.0",
@@ -31,8 +32,8 @@
     "build-umd-prod": "npx webpack --config ./config/webpack/webpack.config.production.js",
     "build-esm": "npx webpack --config ./config/webpack/webpack.config.common_module.js",
     "watch-samples": "tsc-watch -p ./samples/ --onSuccess \"node server.js\"",
-    "gts-lint": "gts lint ./src",
-    "gts-clean": "gts clean ./src",
-    "gts-fix": "gts fix ./src"
+    "gts-lint": "gts lint ./src ./samples/**/*.ts",
+    "gts-clean": "gts clean ./src ./samples/**/*.ts",
+    "gts-fix": "gts fix ./src ./samples/**/*.ts"
   }
 }
