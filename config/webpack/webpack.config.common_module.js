@@ -8,7 +8,7 @@ const config = merge(baseConfig, {
   mode: 'development',
   output: {
     filename: 'index.js',
-    chunkFilename: 'rhodonite-[name].js',
+    chunkFilename: 'shaderityGraph-[name].js',
     path: path.resolve(__dirname, './../../dist/esm'),
     libraryTarget: 'commonjs-module',
   },
