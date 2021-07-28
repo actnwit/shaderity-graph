@@ -35,5 +35,8 @@
     "gts-lint": "gts lint ./src ./samples/**/*.ts",
     "gts-clean": "gts clean ./src ./samples/**/*.ts",
     "gts-fix": "gts fix ./src ./samples/**/*.ts"
-  }
+  },
+  "files": [
+    "./dist"
+  ]
 }
