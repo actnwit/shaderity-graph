@@ -38,6 +38,29 @@ export default abstract class AbstractNode {
     AbstractNode.nodes[this.__nodeId] = this;
   }
 
+  static connectSockets(
+    inputNode: AbstractNode,
+    keyOfSocketForInputNode: string,
+    outputNode: AbstractNode,
+    keyOfSocketForOutputNode: string
+  ) {
+    const socketsInInputNode = inputNode.__outputSockets;
+    const targetSocketInInputNode = socketsInInputNode[keyOfSocketForInputNode];
+
+    const socketsInOutputNode = outputNode.__inputSockets;
+    const targetSocketInOutputNode =
+      socketsInOutputNode[keyOfSocketForOutputNode];
+
+    if (targetSocketInInputNode != null && targetSocketInOutputNode != null) {
+      AbstractSocket.connectSockets(
+        targetSocketInInputNode,
+        targetSocketInOutputNode
+      );
+    } else {
+      console.error('AbstractNode.connectWith: Wrong key of socket');
+    }
+  }
+
   get shaderFunctionName() {
     return this.__shaderFunctionName;
   }
@@ -72,5 +95,28 @@ export default abstract class AbstractNode {
       }
     }
     return pixelNodes;
+  }
+
+  getConnectedNodesWithSocket(
+    keyOfSocket: string,
+    isInputSocket: boolean
+  ): AbstractNode[] {
+    const sockets = isInputSocket ? this.__inputSockets : this.__outputSockets;
+
+    const targetSocket = sockets[keyOfSocket];
+    if (targetSocket == null) {
+      console.error(
+        'AbstractNode.getConnectedNodesWithSocket: Wrong key of socket'
+      );
+      return [];
+    }
+
+    const connectedNodeIDs = targetSocket.connectedNodeIDs;
+    const connectedNodes: AbstractNode[] = [];
+    for (const nodeId of connectedNodeIDs) {
+      connectedNodes.push(AbstractNode.nodes[nodeId]);
+    }
+
+    return connectedNodes;
   }
 }

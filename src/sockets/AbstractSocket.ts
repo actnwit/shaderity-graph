@@ -40,4 +40,25 @@ export default abstract class AbstractSocket {
     this.__socketDirection = socketDirection;
     this.__nodeId = nodeId;
   }
+
+  static connectSockets(socketA: AbstractSocket, socketB: AbstractSocket) {
+    if (
+      socketA.__socketType === socketB.__socketType &&
+      socketA.__socketDirection !== socketB.__socketDirection
+    ) {
+      socketA.__connectedSockets.push();
+    } else {
+      console.error(
+        'AbstractSocket.connectSockets: Invalid socket connection.'
+      );
+    }
+  }
+
+  get connectedNodeIDs() {
+    const nodeIDs: NodeId[] = [];
+    for (const socket of this.__connectedSockets) {
+      nodeIDs.push(socket.__nodeId);
+    }
+    return nodeIDs;
+  }
 }
