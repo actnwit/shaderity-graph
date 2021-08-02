@@ -7,7 +7,7 @@ import {
   ShaderStageEnum,
 } from '../types/CommonType';
 
-type AbstractSocket = unknown;
+import AbstractSocket from '../sockets/AbstractSocket';
 
 export default abstract class AbstractNode {
   static nodes: AbstractNode[] = [];
