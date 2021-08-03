@@ -12,6 +12,7 @@ import AbstractSocket from '../sockets/AbstractSocket';
 export default abstract class AbstractNode {
   static nodes: AbstractNode[] = [];
 
+  //TODO:: create checker of shader stage
   abstract readonly availableShaderStage: AvailableShaderStageEnum;
 
   protected abstract __shaderCode: string;
