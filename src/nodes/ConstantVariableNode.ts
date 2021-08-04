@@ -6,7 +6,7 @@ import {
   ShaderPrecision,
   ShaderPrecisionEnum,
   ShaderStageEnum,
-} from '../types/CommonType';
+} from '../types/CommonEnum';
 import {ComponentTypeEnum} from '../types/ComponentType';
 import {CompositionType, CompositionTypeEnum} from '../types/CompositionType';
 import AbstractNode from './AbstractNode';

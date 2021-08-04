@@ -1,4 +1,5 @@
-import System, {ShaderCodes} from './system/System';
+import System from './system/System';
+import {ShaderCodes} from './types/CommonType';
 
 export default {
   System,

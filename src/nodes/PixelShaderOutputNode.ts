@@ -3,7 +3,7 @@ import {
   AvailableShaderStage,
   ShaderPrecisionEnum,
   ShaderStage,
-} from '../types/CommonType';
+} from '../types/CommonEnum';
 import AbstractNode from './AbstractNode';
 import PixelShaderOutputShaderityObject from '../nodeShaders/shaderityShaders/PixelShaderOutput.glsl';
 import InputSocket from '../sockets/InputSocket';

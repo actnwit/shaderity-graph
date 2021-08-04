@@ -1,7 +1,4 @@
-export type ShaderCodes = {
-  vertexShaderCode: string;
-  pixelShaderCode: string;
-};
+import {ShaderCodes} from '../types/CommonType';
 
 export default class System {
   public static createShaderCodes(json: Object): ShaderCodes {

@@ -1,12 +1,11 @@
 import {
   AvailableShaderStageEnum,
-  NodeId,
   ShaderPrecision,
   ShaderPrecisionEnum,
   ShaderStage,
   ShaderStageEnum,
-} from '../types/CommonType';
-
+} from '../types/CommonEnum';
+import {NodeId} from '../types/CommonType';
 import AbstractSocket from '../sockets/AbstractSocket';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
