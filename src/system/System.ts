@@ -1,3 +1,4 @@
+import Node from '../nodes/Node';
 import {ShaderCodes} from '../types/CommonType';
 
 export default class System {
@@ -24,17 +25,17 @@ export default class System {
   static createShaderityNodes(json: Object) {
     console.log(json);
     return {
-      vertexShaderNodes: [] as unknown[],
-      pixelShaderNodes: [] as unknown[],
+      vertexShaderNodes: [] as Node[],
+      pixelShaderNodes: [] as Node[],
     };
   }
 
-  static createVertexShaderCode(vertexShaderityNodes: unknown[]) {
+  static createVertexShaderCode(vertexShaderityNodes: Node[]) {
     console.log(vertexShaderityNodes);
     return '';
   }
 
-  static createPixelShaderCode(pixelShaderityNodes: unknown[]) {
+  static createPixelShaderCode(pixelShaderityNodes: Node[]) {
     console.log(pixelShaderityNodes);
     return '';
   }
