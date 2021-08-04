@@ -10,15 +10,30 @@ export default class System {
     JsonImporter.importJsonToNodes(json.nodes);
 
     // TODO: implement this method
-    const vertexShaderCode = this.createVertexShaderCode(Node.vertexNodes);
+    const sortedShaderityGraphNodes = {
+      vertexNodes: this.sortTopologically(Node.vertexNodes),
+      pixelNodes: this.sortTopologically(Node.pixelNodes),
+    };
 
     // TODO: implement this method
-    const pixelShaderCode = this.createPixelShaderCode(Node.pixelNodes);
+    const vertexShaderCode = this.createVertexShaderCode(
+      sortedShaderityGraphNodes.vertexNodes
+    );
+
+    // TODO: implement this method
+    const pixelShaderCode = this.createPixelShaderCode(
+      sortedShaderityGraphNodes.pixelNodes
+    );
 
     return {
       vertexShaderCode: vertexShaderCode,
       pixelShaderCode: pixelShaderCode,
     };
+  }
+
+  static sortTopologically(shaderityNodes: Node[]): Node[] {
+    console.log(shaderityNodes);
+    return [];
   }
 
   static createVertexShaderCode(vertexShaderityNodes: Node[]) {
