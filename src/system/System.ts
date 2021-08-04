@@ -1,10 +1,14 @@
 import Node from '../nodes/Node';
-import {ShaderCodes} from '../types/CommonType';
+import {
+  ShaderCodes,
+  ShaderityGraphJson,
+  ShaderityGraphNodeJson,
+} from '../types/CommonType';
 
 export default class System {
-  public static createShaderCodes(json: Object): ShaderCodes {
+  public static createShaderCodes(json: ShaderityGraphJson): ShaderCodes {
     // TODO: implement this method
-    const shaderityNodes = this.createShaderityNodes(json);
+    const shaderityNodes = this.createShaderityNodes(json.nodes);
 
     // TODO: implement this method
     const vertexShaderCode = this.createVertexShaderCode(
@@ -22,8 +26,8 @@ export default class System {
     };
   }
 
-  static createShaderityNodes(json: Object) {
-    console.log(json);
+  static createShaderityNodes(nodesJson: ShaderityGraphNodeJson[]) {
+    console.log(nodesJson);
     return {
       vertexShaderNodes: [] as Node[],
       pixelShaderNodes: [] as Node[],
