@@ -1,12 +1,12 @@
 import ConstantVariableShader from '../nodeShaders/ConstantVariableShader';
-import {SocketDirection} from '../sockets/AbstractSocket';
-import Vector4Socket from '../sockets/Vector4Socket';
+import OutputSocket from '../sockets/OutputSocket';
 import {
   AvailableShaderStage,
   ShaderPrecision,
   ShaderPrecisionEnum,
   ShaderStageEnum,
-} from '../types/CommonType';
+  SocketType,
+} from '../types/CommonEnum';
 import {ComponentTypeEnum} from '../types/ComponentType';
 import {CompositionType, CompositionTypeEnum} from '../types/CompositionType';
 import AbstractNode from './AbstractNode';
@@ -31,13 +31,11 @@ export default class ConstantVariableNode extends AbstractNode {
     super('ConstantVariableNode', shaderStage, shaderPrecision);
     this.__shaderFunctionName += ' ' + this.nodeId;
 
-    const outputSocketName = compositionType.getGlslStr(componentType);
-
     // TODO: support the other composition types
     switch (compositionType) {
       case CompositionType.Vec4:
-        this.__outputSockets[outputSocketName] = new Vector4Socket(
-          SocketDirection.Input,
+        this.__outputSockets['Out'] = new OutputSocket(
+          SocketType.Vector4,
           this.nodeId
         );
         break;
