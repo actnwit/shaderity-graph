@@ -22,8 +22,8 @@ export type SocketDirectionEnum =
   typeof SocketDirection[keyof typeof SocketDirection];
 
 export default abstract class AbstractSocket {
+  protected __connectedSockets: AbstractSocket[] = [];
 
-  private __connectedSockets: AbstractSocket[] = [];
   private __socketType: SocketTypeEnum;
   private __socketDirection: SocketDirectionEnum;
   private __nodeId: NodeId;
@@ -43,8 +43,8 @@ export default abstract class AbstractSocket {
       socketA.__socketType === socketB.__socketType &&
       socketA.__socketDirection !== socketB.__socketDirection
     ) {
-      socketA.__connectedSockets.push(socketB);
-      socketB.__connectedSockets.push(socketA);
+      socketA.__connectSocket(socketB);
+      socketB.__connectSocket(socketA);
     } else {
       console.error(
         'AbstractSocket.connectSockets: Invalid socket connection.'
@@ -59,4 +59,6 @@ export default abstract class AbstractSocket {
     }
     return nodeIDs;
   }
+
+  protected abstract __connectSocket(socket: AbstractSocket): void;
 }
