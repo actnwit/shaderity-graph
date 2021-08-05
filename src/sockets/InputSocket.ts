@@ -1,8 +1,6 @@
+import AbstractSocket from './AbstractSocket';
 import {NodeId} from '../types/CommonType';
-import AbstractSocket, {
-  SocketDirection,
-  SocketTypeEnum,
-} from './AbstractSocket';
+import {SocketDirection, SocketTypeEnum} from '../types/CommonEnum';
 
 // An InputSocket can connect only one OutputSocket
 export default class InputSocket extends AbstractSocket {

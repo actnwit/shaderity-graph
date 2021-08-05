@@ -1,8 +1,8 @@
-import {SocketType} from '../sockets/AbstractSocket';
 import {
   AvailableShaderStage,
   ShaderPrecisionEnum,
   ShaderStage,
+  SocketType,
 } from '../types/CommonEnum';
 import AbstractNode from './AbstractNode';
 import PixelShaderOutputShaderityObject from '../nodeShaders/shaderityShaders/PixelShaderOutput.glsl';

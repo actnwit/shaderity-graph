@@ -1,8 +1,6 @@
+import AbstractSocket from './AbstractSocket';
 import {NodeId} from '../types/CommonType';
-import AbstractSocket, {
-  SocketDirection,
-  SocketTypeEnum,
-} from './AbstractSocket';
+import {SocketDirection, SocketTypeEnum} from '../types/CommonEnum';
 
 export default class OutputSocket extends AbstractSocket {
   constructor(SocketType: SocketTypeEnum, nodeID: NodeId) {

@@ -1,11 +1,11 @@
 import ConstantVariableShader from '../nodeShaders/ConstantVariableShader';
-import {SocketType} from '../sockets/AbstractSocket';
 import OutputSocket from '../sockets/OutputSocket';
 import {
   AvailableShaderStage,
   ShaderPrecision,
   ShaderPrecisionEnum,
   ShaderStageEnum,
+  SocketType,
 } from '../types/CommonEnum';
 import {ComponentTypeEnum} from '../types/ComponentType';
 import {CompositionType, CompositionTypeEnum} from '../types/CompositionType';
