@@ -8,6 +8,8 @@ import {
 } from '../types/CommonType';
 
 import AbstractSocket from '../sockets/AbstractSocket';
+import InputSocket from '../sockets/InputSocket';
+import OutputSocket from '../sockets/OutputSocket';
 
 export default abstract class AbstractNode {
   static nodes: AbstractNode[] = [];
@@ -18,8 +20,8 @@ export default abstract class AbstractNode {
   protected abstract __shaderCode: string;
 
   protected __shaderFunctionName: string;
-  protected __inputSockets: {[key: string]: AbstractSocket} = {};
-  protected __outputSockets: {[key: string]: AbstractSocket} = {};
+  protected __inputSockets: {[key: string]: InputSocket} = {};
+  protected __outputSockets: {[key: string]: OutputSocket} = {};
 
   private __nodeId: NodeId = 0;
   private __shaderStage: ShaderStageEnum;

@@ -1,5 +1,4 @@
-import {SocketDirection} from '../sockets/AbstractSocket';
-import Vector4Socket from '../sockets/Vector4Socket';
+import {SocketType} from '../sockets/AbstractSocket';
 import {
   AvailableShaderStage,
   ShaderPrecisionEnum,
@@ -7,6 +6,7 @@ import {
 } from '../types/CommonType';
 import AbstractNode from './AbstractNode';
 import PixelShaderOutputShaderityObject from '../nodeShaders/shaderityShaders/PixelShaderOutput.glsl';
+import InputSocket from '../sockets/InputSocket';
 
 export default class PixelShaderOutputNode extends AbstractNode {
   // TODO: support change precision in shader
@@ -19,8 +19,8 @@ export default class PixelShaderOutputNode extends AbstractNode {
   constructor(shaderPrecision: ShaderPrecisionEnum) {
     super('pixelShaderOutput', ShaderStage.Pixel, shaderPrecision);
 
-    this.__inputSockets['pixelColor'] = new Vector4Socket(
-      SocketDirection.Input,
+    this.__inputSockets['pixelColor'] = new InputSocket(
+      SocketType.Vector4,
       this.nodeId
     );
 
