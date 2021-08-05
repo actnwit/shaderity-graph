@@ -100,13 +100,37 @@ export default abstract class AbstractNode {
     return pixelNodes;
   }
 
-  getConnectedNodesWithSocket(
-    keyOfSocket: string,
-    isInputSocket: boolean
-  ): AbstractNode[] {
-    const sockets = isInputSocket ? this.__inputSockets : this.__outputSockets;
+  public getInputNodeAll(): {[key: string]: AbstractNode | undefined} {
+    const inputNodes: {[key: string]: AbstractNode | undefined} = {};
+    for (const key in this.__inputSockets) {
+      inputNodes[key] = this.getInputNode(key);
+    }
+    return inputNodes;
+  }
 
-    const targetSocket = sockets[keyOfSocket];
+  public getInputNode(keyOfSocket: string): AbstractNode | undefined {
+    const targetSocket = this.__inputSockets[keyOfSocket];
+    if (targetSocket == null) {
+      console.error(
+        'AbstractNode.getConnectedNodesWithSocket: Wrong key of socket'
+      );
+      return undefined;
+    }
+
+    const connectedNodeID = targetSocket.connectedNodeIDs[0];
+    return AbstractNode.nodes[connectedNodeID];
+  }
+
+  public getOutputNodesAll(): {[key: string]: AbstractNode[] | undefined} {
+    const outputNodes: {[key: string]: AbstractNode[] | undefined} = {};
+    for (const key in this.__outputSockets) {
+      outputNodes[key] = this.getOutputNodes(key);
+    }
+    return outputNodes;
+  }
+
+  public getOutputNodes(keyOfSocket: string): AbstractNode[] {
+    const targetSocket = this.__outputSockets[keyOfSocket];
     if (targetSocket == null) {
       console.error(
         'AbstractNode.getConnectedNodesWithSocket: Wrong key of socket'
