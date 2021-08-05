@@ -46,7 +46,8 @@ export default abstract class AbstractSocket {
       socketA.__socketType === socketB.__socketType &&
       socketA.__socketDirection !== socketB.__socketDirection
     ) {
-      socketA.__connectedSockets.push();
+      socketA.__connectedSockets.push(socketB);
+      socketB.__connectedSockets.push(socketA);
     } else {
       console.error(
         'AbstractSocket.connectSockets: Invalid socket connection.'
