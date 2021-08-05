@@ -22,7 +22,6 @@ export type SocketDirectionEnum =
   typeof SocketDirection[keyof typeof SocketDirection];
 
 export default abstract class AbstractSocket {
-  public socketName: string;
 
   private __connectedSockets: AbstractSocket[] = [];
   private __socketType: SocketTypeEnum;
@@ -30,12 +29,10 @@ export default abstract class AbstractSocket {
   private __nodeId: NodeId;
 
   constructor(
-    socketName: string,
     socketType: SocketTypeEnum,
     socketDirection: SocketDirectionEnum,
     nodeId: NodeId
   ) {
-    this.socketName = socketName;
     this.__socketType = socketType;
     this.__socketDirection = socketDirection;
     this.__nodeId = nodeId;

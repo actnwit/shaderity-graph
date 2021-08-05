@@ -6,6 +6,6 @@ import AbstractSocket, {
 
 export default class Vector4Socket extends AbstractSocket {
   constructor(socketDirection: SocketDirectionEnum, nodeID: NodeId) {
-    super('vector4_' + nodeID, SocketType.Vector4, socketDirection, nodeID);
+    super(SocketType.Vector4, socketDirection, nodeID);
   }
 }
