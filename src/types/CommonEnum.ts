@@ -6,7 +6,7 @@ export const ShaderStage = {
 } as const;
 export type ShaderStageEnum = typeof ShaderStage[keyof typeof ShaderStage];
 
-export const SocketType = {
+const _SocketType = {
   Int: 'int',
   Float: 'float',
   Vector2: 'vector2',
@@ -16,7 +16,20 @@ export const SocketType = {
   Mat33: 'mat33',
   Mat44: 'mat44',
 } as const;
-export type SocketTypeEnum = typeof SocketType[keyof typeof SocketType];
+
+export const SocketType = {
+  ..._SocketType,
+  fromString: (str: string) => {
+    for (const type of Object.values(_SocketType)) {
+      if (type.toLowerCase() === str.toLowerCase()) {
+        return type as SocketTypeEnum;
+      }
+    }
+    return void 0;
+  },
+};
+
+export type SocketTypeEnum = typeof SocketType[keyof typeof _SocketType];
 
 export const SocketDirection = {
   Input: 'input',
