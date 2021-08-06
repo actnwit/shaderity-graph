@@ -33,6 +33,26 @@ export default class Node {
     this.__nodeName = nodeName ?? this.nodeId.toString();
   }
 
+  static get vertexNodes(): Node[] {
+    const vertexNodes: Node[] = [];
+    for (const node of this.__nodes) {
+      if (node.shaderStage === ShaderStage.Vertex) {
+        vertexNodes.push(node);
+      }
+    }
+    return vertexNodes;
+  }
+
+  static get pixelNodes(): Node[] {
+    const pixelNodes: Node[] = [];
+    for (const node of this.__nodes) {
+      if (node.shaderStage === ShaderStage.Pixel) {
+        pixelNodes.push(node);
+      }
+    }
+    return pixelNodes;
+  }
+
   static connectSockets(
     inputNode: Node,
     keyOfSocketForInputNode: string,
@@ -70,26 +90,6 @@ export default class Node {
 
   get nodeId() {
     return this.__nodeId;
-  }
-
-  get vertexNodes(): Node[] {
-    const vertexNodes: Node[] = [];
-    for (const node of Node.__nodes) {
-      if (node.shaderStage === ShaderStage.Vertex) {
-        vertexNodes.push(node);
-      }
-    }
-    return vertexNodes;
-  }
-
-  get pixelNodes(): Node[] {
-    const pixelNodes: Node[] = [];
-    for (const node of Node.__nodes) {
-      if (node.shaderStage === ShaderStage.Pixel) {
-        pixelNodes.push(node);
-      }
-    }
-    return pixelNodes;
   }
 
   public addInputSocket(key: string, SocketType: SocketTypeEnum) {
