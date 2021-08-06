@@ -2,6 +2,7 @@ export const ShaderStage = {
   Vertex: 'vertex',
   Fragment: 'pixel',
   Pixel: 'pixel',
+  NoUse: 'noUse',
 } as const;
 export type ShaderStageEnum = typeof ShaderStage[keyof typeof ShaderStage];
 
