@@ -9,7 +9,7 @@ import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
 
 export default class Node {
-  static nodes: Node[] = [];
+  private static __nodes: Node[] = [];
 
   private __nodeName: string;
   private __shaderStage: ShaderStageEnum;
@@ -28,7 +28,7 @@ export default class Node {
     this.__shaderCode = shaderCode;
 
     this.__nodeId = this.__nodeId++;
-    Node.nodes[this.__nodeId] = this;
+    Node.__nodes[this.__nodeId] = this;
 
     this.__nodeName = nodeName ?? this.nodeId.toString();
   }
@@ -74,7 +74,7 @@ export default class Node {
 
   get vertexNodes(): Node[] {
     const vertexNodes: Node[] = [];
-    for (const node of Node.nodes) {
+    for (const node of Node.__nodes) {
       if (node.shaderStage === ShaderStage.Vertex) {
         vertexNodes.push(node);
       }
@@ -84,7 +84,7 @@ export default class Node {
 
   get pixelNodes(): Node[] {
     const pixelNodes: Node[] = [];
-    for (const node of Node.nodes) {
+    for (const node of Node.__nodes) {
       if (node.shaderStage === ShaderStage.Pixel) {
         pixelNodes.push(node);
       }
@@ -124,7 +124,7 @@ export default class Node {
     }
 
     const connectedNodeID = targetSocket.connectedNodeIDs[0];
-    return Node.nodes[connectedNodeID];
+    return Node.__nodes[connectedNodeID];
   }
 
   public getOutputNodesAll(): {[key: string]: Node[] | undefined} {
@@ -145,7 +145,7 @@ export default class Node {
     const connectedNodeIDs = targetSocket.connectedNodeIDs;
     const connectedNodes: Node[] = [];
     for (const nodeId of connectedNodeIDs) {
-      connectedNodes.push(Node.nodes[nodeId]);
+      connectedNodes.push(Node.__nodes[nodeId]);
     }
 
     return connectedNodes;
