@@ -32,6 +32,10 @@ export default class Node {
     this.__nodeName = nodeName ?? this.nodeId.toString();
   }
 
+  static get allNodes(): Node[] {
+    return this.__nodes;
+  }
+
   static get vertexNodes(): Node[] {
     const vertexNodes: Node[] = [];
     for (const node of this.__nodes) {
