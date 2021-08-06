@@ -15,7 +15,7 @@ export default class Node {
   private __shaderStage: ShaderStageEnum;
   private __shaderCode: string;
 
-  private __nodeId: NodeId = 0;
+  private __nodeId: NodeId;
   private __inputSockets: {[key: string]: InputSocket} = {};
   private __outputSockets: {[key: string]: OutputSocket} = {};
 
@@ -27,7 +27,7 @@ export default class Node {
     this.__shaderStage = shaderStage;
     this.__shaderCode = shaderCode;
 
-    this.__nodeId = this.__nodeId++;
+    this.__nodeId = Node.__nodes.length;
     Node.__nodes[this.__nodeId] = this;
 
     this.__nodeName = nodeName ?? this.nodeId.toString();
@@ -51,6 +51,10 @@ export default class Node {
       }
     }
     return pixelNodes;
+  }
+
+  static resetNodes() {
+    this.__nodes.length = 0;
   }
 
   static connectSockets(

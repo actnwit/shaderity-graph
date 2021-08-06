@@ -7,6 +7,8 @@ import {
 
 export default class System {
   public static createShaderCodes(json: ShaderityGraphJson): ShaderCodes {
+    Node.resetNodes();
+
     // TODO: implement this method
     const shaderityNodes = this.createShaderityNodes(json.nodes);
 
