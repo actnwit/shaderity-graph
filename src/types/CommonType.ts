@@ -1,3 +1,5 @@
+import {SocketTypeEnum} from './CommonEnum';
+
 export type NodeId = number;
 
 export type ShaderCodes = {
@@ -12,8 +14,8 @@ export type ShaderityGraphJson = {
 };
 
 export type ShaderityGraphNodeJson = {
-  inputNodes: {[key: string]: number};
-  outputNodes: {[key: string]: number};
+  inputNodes: {[key: string]: ConnectedNode};
+  outputNodes: {[key: string]: ConnectedNode};
   shaderityData: {
     nodeName?: string;
     shaderStage: 'vertex' | 'pixel' | 'noUse';
@@ -21,4 +23,9 @@ export type ShaderityGraphNodeJson = {
     extras: {[key: string]: unknown};
   };
   extras: {[key: string]: unknown};
+};
+
+export type ConnectedNode = {
+  nodeId: number;
+  socketType: SocketTypeEnum;
 };
