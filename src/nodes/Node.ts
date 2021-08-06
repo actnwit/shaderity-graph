@@ -97,14 +97,23 @@ export default class Node {
   }
 
   public getInputNode(keyOfSocket: string): Node | undefined {
+    const targetSocket = this.getInputSocket(keyOfSocket);
+    if (targetSocket != null) {
+      const connectedNodeID = targetSocket?.connectedNodeIDs[0];
+      return Node.__nodes[connectedNodeID];
+    } else {
+      return undefined;
+    }
+  }
+
+  public getInputSocket(keyOfSocket: string): InputSocket | undefined {
     const targetSocket = this.__inputSockets[keyOfSocket];
     if (targetSocket == null) {
-      console.error('Node.getConnectedNodesWithSocket: Wrong key of socket');
+      console.error('Node.getInputSocket: Wrong key of socket');
       return undefined;
     }
 
-    const connectedNodeID = targetSocket.connectedNodeIDs[0];
-    return Node.__nodes[connectedNodeID];
+    return targetSocket;
   }
 
   public getOutputNodesAll(): {[key: string]: Node[] | undefined} {
@@ -116,18 +125,27 @@ export default class Node {
   }
 
   public getOutputNodes(keyOfSocket: string): Node[] {
-    const targetSocket = this.__outputSockets[keyOfSocket];
-    if (targetSocket == null) {
-      console.error('Node.getConnectedNodesWithSocket: Wrong key of socket');
+    const targetSocket = this.getOutputSocket(keyOfSocket);
+
+    if (targetSocket != null) {
+      const connectedNodeIDs = targetSocket.connectedNodeIDs;
+      const connectedNodes: Node[] = [];
+      for (const nodeId of connectedNodeIDs) {
+        connectedNodes.push(Node.__nodes[nodeId]);
+      }
+      return connectedNodes;
+    } else {
       return [];
     }
+  }
 
-    const connectedNodeIDs = targetSocket.connectedNodeIDs;
-    const connectedNodes: Node[] = [];
-    for (const nodeId of connectedNodeIDs) {
-      connectedNodes.push(Node.__nodes[nodeId]);
+  public getOutputSocket(keyOfSocket: string): OutputSocket | undefined {
+    const targetSocket = this.__outputSockets[keyOfSocket];
+    if (targetSocket == null) {
+      console.error('Node.getOutputSocket: Wrong key of socket');
+      return undefined;
     }
 
-    return connectedNodes;
+    return targetSocket;
   }
 }
