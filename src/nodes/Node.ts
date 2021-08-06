@@ -12,24 +12,25 @@ import OutputSocket from '../sockets/OutputSocket';
 export default class Node {
   static nodes: Node[] = [];
 
-  private __shaderCode = '';
-
   private __shaderFunctionName: string;
-  private __inputSockets: {[key: string]: InputSocket} = {};
-  private __outputSockets: {[key: string]: OutputSocket} = {};
-
-  private __nodeId: NodeId = 0;
   private __shaderStage: ShaderStageEnum;
+  private __shaderCode: string;
   // TODO: support change precision in shader
   private __shaderPrecision: ShaderPrecisionEnum = ShaderPrecision.High;
+
+  private __nodeId: NodeId = 0;
+  private __inputSockets: {[key: string]: InputSocket} = {};
+  private __outputSockets: {[key: string]: OutputSocket} = {};
 
   constructor(
     shaderFunctionName: string,
     shaderStage: ShaderStageEnum,
+    shaderCode: string,
     shaderPrecision: ShaderPrecisionEnum
   ) {
     this.__shaderFunctionName = shaderFunctionName;
     this.__shaderStage = shaderStage;
+    this.__shaderCode = shaderCode;
     this.__shaderPrecision = shaderPrecision;
 
     this.__nodeId = this.__nodeId++;
