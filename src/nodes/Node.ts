@@ -1,4 +1,8 @@
-import {ShaderStage, ShaderStageEnum} from '../types/CommonEnum';
+import {
+  ShaderStage,
+  ShaderStageEnum,
+  SocketTypeEnum,
+} from '../types/CommonEnum';
 import {NodeId} from '../types/CommonType';
 import AbstractSocket from '../sockets/AbstractSocket';
 import InputSocket from '../sockets/InputSocket';
@@ -86,6 +90,22 @@ export default class Node {
       }
     }
     return pixelNodes;
+  }
+
+  public addInputSocket(key: string, SocketType: SocketTypeEnum) {
+    if (this.__inputSockets[key] != null) {
+      console.warn('Node.addInputSocket: duplicate the key');
+    }
+
+    this.__inputSockets[key] = new InputSocket(SocketType, this.__nodeId);
+  }
+
+  public addOutputSocket(key: string, SocketType: SocketTypeEnum) {
+    if (this.__outputSockets[key] != null) {
+      console.warn('Node.addOutputSocket: duplicate the key');
+    }
+
+    this.__outputSockets[key] = new OutputSocket(SocketType, this.__nodeId);
   }
 
   public getInputNodeAll(): {[key: string]: Node | undefined} {
