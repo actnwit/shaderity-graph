@@ -4,7 +4,6 @@ import {
   SocketTypeEnum,
 } from '../types/CommonEnum';
 import {NodeId} from '../types/CommonType';
-import AbstractSocket from '../sockets/AbstractSocket';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
 
@@ -55,29 +54,6 @@ export default class Node {
 
   static resetNodes() {
     this.__nodes.length = 0;
-  }
-
-  static connectSockets(
-    inputNode: Node,
-    keyOfSocketForInputNode: string,
-    outputNode: Node,
-    keyOfSocketForOutputNode: string
-  ) {
-    const socketsInInputNode = inputNode.__outputSockets;
-    const targetSocketInInputNode = socketsInInputNode[keyOfSocketForInputNode];
-
-    const socketsInOutputNode = outputNode.__inputSockets;
-    const targetSocketInOutputNode =
-      socketsInOutputNode[keyOfSocketForOutputNode];
-
-    if (targetSocketInInputNode != null && targetSocketInOutputNode != null) {
-      AbstractSocket.connectSockets(
-        targetSocketInInputNode,
-        targetSocketInOutputNode
-      );
-    } else {
-      console.error('Node.connectWith: Wrong key of socket');
-    }
   }
 
   get nodeName() {
