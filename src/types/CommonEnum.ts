@@ -15,14 +15,6 @@ export const AvailableShaderStage = {
 export type AvailableShaderStageEnum =
   typeof AvailableShaderStage[keyof typeof AvailableShaderStage];
 
-export const ShaderPrecision = {
-  High: 'high',
-  Medium: 'medium',
-  Low: 'low',
-} as const;
-export type ShaderPrecisionEnum =
-  typeof ShaderPrecision[keyof typeof ShaderPrecision];
-
 export const SocketType = {
   Int: 'int',
   Float: 'float',

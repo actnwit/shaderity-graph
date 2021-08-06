@@ -1,9 +1,4 @@
-import {
-  ShaderPrecision,
-  ShaderPrecisionEnum,
-  ShaderStage,
-  ShaderStageEnum,
-} from '../types/CommonEnum';
+import {ShaderStage, ShaderStageEnum} from '../types/CommonEnum';
 import {NodeId} from '../types/CommonType';
 import AbstractSocket from '../sockets/AbstractSocket';
 import InputSocket from '../sockets/InputSocket';
@@ -15,8 +10,6 @@ export default class Node {
   private __nodeName: string;
   private __shaderStage: ShaderStageEnum;
   private __shaderCode: string;
-  // TODO: support change precision in shader
-  private __shaderPrecision: ShaderPrecisionEnum = ShaderPrecision.High;
 
   private __nodeId: NodeId = 0;
   private __inputSockets: {[key: string]: InputSocket} = {};
@@ -25,12 +18,10 @@ export default class Node {
   constructor(
     shaderStage: ShaderStageEnum,
     shaderCode: string,
-    shaderPrecision: ShaderPrecisionEnum,
     nodeName?: string
   ) {
     this.__shaderStage = shaderStage;
     this.__shaderCode = shaderCode;
-    this.__shaderPrecision = shaderPrecision;
 
     this.__nodeId = this.__nodeId++;
     Node.nodes[this.__nodeId] = this;
