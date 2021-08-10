@@ -1,8 +1,21 @@
 import System from './system/System';
-import {ShaderCodes} from './types/CommonType';
+import {SocketType, SocketTypeEnum} from './types/CommonEnum';
+import {
+  ConnectedNode,
+  ShaderCodes,
+  ShaderityGraphJson,
+  ShaderityGraphNodeJson,
+} from './types/CommonType';
 
 export default {
   System,
+  SocketType,
 };
 
-export type {ShaderCodes};
+export type {
+  ShaderCodes,
+  ShaderityGraphJson,
+  ShaderityGraphNodeJson,
+  ConnectedNode,
+  SocketTypeEnum,
+};

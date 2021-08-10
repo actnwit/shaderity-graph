@@ -4,7 +4,6 @@ import {
   SocketTypeEnum,
 } from '../types/CommonEnum';
 import {NodeId} from '../types/CommonType';
-import AbstractSocket from '../sockets/AbstractSocket';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
 
@@ -15,7 +14,7 @@ export default class Node {
   private __shaderStage: ShaderStageEnum;
   private __shaderCode: string;
 
-  private __nodeId: NodeId = 0;
+  private __nodeId: NodeId;
   private __inputSockets: {[key: string]: InputSocket} = {};
   private __outputSockets: {[key: string]: OutputSocket} = {};
 
@@ -27,10 +26,14 @@ export default class Node {
     this.__shaderStage = shaderStage;
     this.__shaderCode = shaderCode;
 
-    this.__nodeId = this.__nodeId++;
+    this.__nodeId = Node.__nodes.length;
     Node.__nodes[this.__nodeId] = this;
 
     this.__nodeName = nodeName ?? this.nodeId.toString();
+  }
+
+  static get allNodes(): Node[] {
+    return this.__nodes;
   }
 
   static get vertexNodes(): Node[] {
@@ -53,27 +56,8 @@ export default class Node {
     return pixelNodes;
   }
 
-  static connectSockets(
-    inputNode: Node,
-    keyOfSocketForInputNode: string,
-    outputNode: Node,
-    keyOfSocketForOutputNode: string
-  ) {
-    const socketsInInputNode = inputNode.__outputSockets;
-    const targetSocketInInputNode = socketsInInputNode[keyOfSocketForInputNode];
-
-    const socketsInOutputNode = outputNode.__inputSockets;
-    const targetSocketInOutputNode =
-      socketsInOutputNode[keyOfSocketForOutputNode];
-
-    if (targetSocketInInputNode != null && targetSocketInOutputNode != null) {
-      AbstractSocket.connectSockets(
-        targetSocketInInputNode,
-        targetSocketInOutputNode
-      );
-    } else {
-      console.error('Node.connectWith: Wrong key of socket');
-    }
+  static resetNodes() {
+    this.__nodes.length = 0;
   }
 
   get nodeName() {
@@ -117,14 +101,23 @@ export default class Node {
   }
 
   public getInputNode(keyOfSocket: string): Node | undefined {
+    const targetSocket = this.getInputSocket(keyOfSocket);
+    if (targetSocket != null) {
+      const connectedNodeID = targetSocket?.connectedNodeIDs[0];
+      return Node.__nodes[connectedNodeID];
+    } else {
+      return undefined;
+    }
+  }
+
+  public getInputSocket(keyOfSocket: string): InputSocket | undefined {
     const targetSocket = this.__inputSockets[keyOfSocket];
     if (targetSocket == null) {
-      console.error('Node.getConnectedNodesWithSocket: Wrong key of socket');
+      console.error('Node.getInputSocket: Wrong key of socket');
       return undefined;
     }
 
-    const connectedNodeID = targetSocket.connectedNodeIDs[0];
-    return Node.__nodes[connectedNodeID];
+    return targetSocket;
   }
 
   public getOutputNodesAll(): {[key: string]: Node[] | undefined} {
@@ -136,18 +129,27 @@ export default class Node {
   }
 
   public getOutputNodes(keyOfSocket: string): Node[] {
-    const targetSocket = this.__outputSockets[keyOfSocket];
-    if (targetSocket == null) {
-      console.error('Node.getConnectedNodesWithSocket: Wrong key of socket');
+    const targetSocket = this.getOutputSocket(keyOfSocket);
+
+    if (targetSocket != null) {
+      const connectedNodeIDs = targetSocket.connectedNodeIDs;
+      const connectedNodes: Node[] = [];
+      for (const nodeId of connectedNodeIDs) {
+        connectedNodes.push(Node.__nodes[nodeId]);
+      }
+      return connectedNodes;
+    } else {
       return [];
     }
+  }
 
-    const connectedNodeIDs = targetSocket.connectedNodeIDs;
-    const connectedNodes: Node[] = [];
-    for (const nodeId of connectedNodeIDs) {
-      connectedNodes.push(Node.__nodes[nodeId]);
+  public getOutputSocket(keyOfSocket: string): OutputSocket | undefined {
+    const targetSocket = this.__outputSockets[keyOfSocket];
+    if (targetSocket == null) {
+      console.error('Node.getOutputSocket: Wrong key of socket');
+      return undefined;
     }
 
-    return connectedNodes;
+    return targetSocket;
   }
 }

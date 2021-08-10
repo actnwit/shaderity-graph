@@ -1,18 +1,28 @@
-import {ShaderCodes} from '../types/CommonType';
+import Node from '../nodes/Node';
+import {ShaderCodes, ShaderityGraphJson} from '../types/CommonType';
+import JsonImporter from '../import/JsonImporter';
 
 export default class System {
-  public static createShaderCodes(json: Object): ShaderCodes {
+  public static createShaderCodes(json: ShaderityGraphJson): ShaderCodes {
+    Node.resetNodes();
+
     // TODO: implement this method
-    const shaderityNodes = this.createShaderityNodes(json);
+    JsonImporter.importJsonToNodes(json.nodes);
+
+    // TODO: implement this method
+    const sortedShaderityGraphNodes = {
+      vertexNodes: this.sortTopologically(Node.vertexNodes),
+      pixelNodes: this.sortTopologically(Node.pixelNodes),
+    };
 
     // TODO: implement this method
     const vertexShaderCode = this.createVertexShaderCode(
-      shaderityNodes.vertexShaderNodes
+      sortedShaderityGraphNodes.vertexNodes
     );
 
     // TODO: implement this method
     const pixelShaderCode = this.createPixelShaderCode(
-      shaderityNodes.pixelShaderNodes
+      sortedShaderityGraphNodes.pixelNodes
     );
 
     return {
@@ -21,20 +31,17 @@ export default class System {
     };
   }
 
-  static createShaderityNodes(json: Object) {
-    console.log(json);
-    return {
-      vertexShaderNodes: [] as unknown[],
-      pixelShaderNodes: [] as unknown[],
-    };
+  static sortTopologically(shaderityNodes: Node[]): Node[] {
+    console.log(shaderityNodes);
+    return [];
   }
 
-  static createVertexShaderCode(vertexShaderityNodes: unknown[]) {
+  static createVertexShaderCode(vertexShaderityNodes: Node[]) {
     console.log(vertexShaderityNodes);
     return '';
   }
 
-  static createPixelShaderCode(pixelShaderityNodes: unknown[]) {
+  static createPixelShaderCode(pixelShaderityNodes: Node[]) {
     console.log(pixelShaderityNodes);
     return '';
   }
