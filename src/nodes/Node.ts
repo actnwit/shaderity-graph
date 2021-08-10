@@ -76,7 +76,7 @@ export default class Node {
     return this.__nodeId;
   }
 
-  public addInputSocket(key: string, SocketType: SocketTypeEnum) {
+  addInputSocket(key: string, SocketType: SocketTypeEnum) {
     if (this.__inputSockets[key] != null) {
       console.warn('Node.addInputSocket: duplicate the key');
     }
@@ -84,7 +84,7 @@ export default class Node {
     this.__inputSockets[key] = new InputSocket(SocketType, this.__nodeId);
   }
 
-  public addOutputSocket(key: string, SocketType: SocketTypeEnum) {
+  addOutputSocket(key: string, SocketType: SocketTypeEnum) {
     if (this.__outputSockets[key] != null) {
       console.warn('Node.addOutputSocket: duplicate the key');
     }
@@ -92,7 +92,7 @@ export default class Node {
     this.__outputSockets[key] = new OutputSocket(SocketType, this.__nodeId);
   }
 
-  public getInputNodeAll(): {[key: string]: Node | undefined} {
+  getInputNodeAll(): {[key: string]: Node | undefined} {
     const inputNodes: {[key: string]: Node | undefined} = {};
     for (const key in this.__inputSockets) {
       inputNodes[key] = this.getInputNode(key);
@@ -100,7 +100,7 @@ export default class Node {
     return inputNodes;
   }
 
-  public getInputNode(keyOfSocket: string): Node | undefined {
+  getInputNode(keyOfSocket: string): Node | undefined {
     const targetSocket = this.getInputSocket(keyOfSocket);
     if (targetSocket != null) {
       const connectedNodeID = targetSocket?.connectedNodeIDs[0];
@@ -110,7 +110,7 @@ export default class Node {
     }
   }
 
-  public getInputSocket(keyOfSocket: string): InputSocket | undefined {
+  getInputSocket(keyOfSocket: string): InputSocket | undefined {
     const targetSocket = this.__inputSockets[keyOfSocket];
     if (targetSocket == null) {
       console.error('Node.getInputSocket: Wrong key of socket');
@@ -120,7 +120,7 @@ export default class Node {
     return targetSocket;
   }
 
-  public getOutputNodesAll(): {[key: string]: Node[] | undefined} {
+  getOutputNodesAll(): {[key: string]: Node[] | undefined} {
     const outputNodes: {[key: string]: Node[] | undefined} = {};
     for (const key in this.__outputSockets) {
       outputNodes[key] = this.getOutputNodes(key);
@@ -128,7 +128,7 @@ export default class Node {
     return outputNodes;
   }
 
-  public getOutputNodes(keyOfSocket: string): Node[] {
+  getOutputNodes(keyOfSocket: string): Node[] {
     const targetSocket = this.getOutputSocket(keyOfSocket);
 
     if (targetSocket != null) {
@@ -143,7 +143,7 @@ export default class Node {
     }
   }
 
-  public getOutputSocket(keyOfSocket: string): OutputSocket | undefined {
+  getOutputSocket(keyOfSocket: string): OutputSocket | undefined {
     const targetSocket = this.__outputSockets[keyOfSocket];
     if (targetSocket == null) {
       console.error('Node.getOutputSocket: Wrong key of socket');

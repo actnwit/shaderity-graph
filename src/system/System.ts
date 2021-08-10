@@ -3,7 +3,19 @@ import {ShaderCodes, ShaderityGraphJson} from '../types/CommonType';
 import JsonImporter from '../import/JsonImporter';
 
 export default class System {
-  public static createShaderCodes(json: ShaderityGraphJson): ShaderCodes {
+  public static createShaderCodesFromJsonFile(
+    src: string
+  ): Promise<ShaderCodes> {
+    return fetch(src)
+      .then(response => response.json())
+      .then((data: ShaderityGraphJson) => {
+        return this.createShaderCodesFromJsonObject(data);
+      });
+  }
+
+  public static createShaderCodesFromJsonObject(
+    json: ShaderityGraphJson
+  ): ShaderCodes {
     Node.resetNodes();
 
     // TODO: implement this method
