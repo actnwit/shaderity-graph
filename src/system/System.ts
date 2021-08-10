@@ -1,6 +1,7 @@
 import Node from '../node/Node';
 import {ShaderCodes, ShaderityGraphJson} from '../types/CommonType';
 import JsonImporter from '../import/JsonImporter';
+import NodeSorter from '../node/NodeSorter';
 
 export default class System {
   public static createShaderCodesFromJsonFile(
@@ -23,8 +24,8 @@ export default class System {
 
     // TODO: implement this method
     const sortedShaderityGraphNodes = {
-      vertexNodes: this.sortTopologically(Node.vertexNodes),
-      pixelNodes: this.sortTopologically(Node.pixelNodes),
+      vertexNodes: NodeSorter.sortTopologically(Node.vertexNodes),
+      pixelNodes: NodeSorter.sortTopologically(Node.pixelNodes),
     };
 
     // TODO: implement this method
@@ -41,11 +42,6 @@ export default class System {
       vertexShaderCode: vertexShaderCode,
       pixelShaderCode: pixelShaderCode,
     };
-  }
-
-  static sortTopologically(shaderityNodes: Node[]): Node[] {
-    console.log(shaderityNodes);
-    return [];
   }
 
   static createVertexShaderCode(vertexShaderityNodes: Node[]) {
