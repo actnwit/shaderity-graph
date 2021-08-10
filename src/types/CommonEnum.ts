@@ -9,9 +9,9 @@ export type ShaderStageEnum = typeof ShaderStage[keyof typeof ShaderStage];
 const _SocketType = {
   Int: 'int',
   Float: 'float',
-  Vector2: 'vector2',
-  Vector3: 'vector3',
-  Vector4: 'vector4',
+  Vec2: 'vec2',
+  Vec3: 'vec3',
+  Vec4: 'vec4',
   Mat22: 'mat22',
   Mat33: 'mat33',
   Mat44: 'mat44',
