@@ -39,7 +39,7 @@ export default class Node {
   static get vertexNodes(): Node[] {
     const vertexNodes: Node[] = [];
     for (const node of this.__nodes) {
-      if (node.shaderStage === ShaderStage.Vertex) {
+      if (node.__shaderStage === ShaderStage.Vertex) {
         vertexNodes.push(node);
       }
     }
@@ -49,7 +49,7 @@ export default class Node {
   static get pixelNodes(): Node[] {
     const pixelNodes: Node[] = [];
     for (const node of this.__nodes) {
-      if (node.shaderStage === ShaderStage.Pixel) {
+      if (node.__shaderStage === ShaderStage.Pixel) {
         pixelNodes.push(node);
       }
     }
