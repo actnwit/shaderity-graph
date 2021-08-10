@@ -92,10 +92,10 @@ export default class Node {
     this.__outputSockets[key] = new OutputSocket(SocketType, this.__id);
   }
 
-  getInputNodeAll(): {[key: string]: Node | undefined} {
-    const inputNodes: {[key: string]: Node | undefined} = {};
+  getInputNodeAll(): {[key: string]: Node} {
+    const inputNodes: {[key: string]: Node} = {};
     for (const key in this.__inputSockets) {
-      inputNodes[key] = this.getInputNode(key);
+      inputNodes[key] = this.getInputNode(key) as Node;
     }
     return inputNodes;
   }
@@ -120,8 +120,8 @@ export default class Node {
     return targetSocket;
   }
 
-  getOutputNodesAll(): {[key: string]: Node[] | undefined} {
-    const outputNodes: {[key: string]: Node[] | undefined} = {};
+  getOutputNodesAll(): {[key: string]: Node[]} {
+    const outputNodes: {[key: string]: Node[]} = {};
     for (const key in this.__outputSockets) {
       outputNodes[key] = this.getOutputNodes(key);
     }
