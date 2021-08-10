@@ -72,6 +72,10 @@ export default class Node {
     return this.__id;
   }
 
+  get inputSockets() {
+    return this.__inputSockets;
+  }
+
   addInputSocket(key: string, SocketType: SocketTypeEnum) {
     if (this.__inputSockets[key] != null) {
       console.warn('Node.addInputSocket: duplicate the key');

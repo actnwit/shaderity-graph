@@ -32,6 +32,7 @@ export default abstract class AbstractSocket {
     }
   }
 
+  // In the case of an input socket, the length of the return value must be 1 or 0.
   get connectedNodeIDs() {
     const nodeIDs: NodeId[] = [];
     for (const socket of this.__connectedSockets) {
