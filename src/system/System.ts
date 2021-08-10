@@ -2,6 +2,7 @@ import Node from '../node/Node';
 import {ShaderCodes, ShaderityGraphJson} from '../types/CommonType';
 import JsonImporter from '../import/JsonImporter';
 import NodeSorter from '../node/NodeSorter';
+import ShaderGraphResolver from '../shader/ShaderGraphResolver';
 
 export default class System {
   //TODO: need to set version
@@ -38,12 +39,12 @@ export default class System {
     };
 
     // TODO: implement this method
-    const vertexShaderCode = this.createVertexShaderCode(
+    const vertexShaderCode = ShaderGraphResolver.createVertexShaderCode(
       sortedShaderityGraphNodes.vertexNodes
     );
 
     // TODO: implement this method
-    const pixelShaderCode = this.createPixelShaderCode(
+    const pixelShaderCode = ShaderGraphResolver.createPixelShaderCode(
       sortedShaderityGraphNodes.pixelNodes
     );
 
@@ -51,15 +52,5 @@ export default class System {
       vertexShaderCode: vertexShaderCode,
       pixelShaderCode: pixelShaderCode,
     };
-  }
-
-  static createVertexShaderCode(vertexShaderityNodes: Node[]) {
-    console.log(vertexShaderityNodes);
-    return '';
-  }
-
-  static createPixelShaderCode(pixelShaderityNodes: Node[]) {
-    console.log(pixelShaderityNodes);
-    return '';
   }
 }
