@@ -1,4 +1,4 @@
-import Node from '../nodes/Node';
+import Node from '../node/Node';
 import AbstractSocket from '../sockets/AbstractSocket';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
