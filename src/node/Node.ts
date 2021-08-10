@@ -10,26 +10,22 @@ import OutputSocket from '../sockets/OutputSocket';
 export default class Node {
   private static __nodes: Node[] = [];
 
-  private __nodeName: string;
+  private __name: string;
   private __shaderStage: ShaderStageEnum;
   private __shaderCode: string;
 
-  private __nodeId: NodeId;
+  private __id: NodeId;
   private __inputSockets: {[key: string]: InputSocket} = {};
   private __outputSockets: {[key: string]: OutputSocket} = {};
 
-  constructor(
-    shaderStage: ShaderStageEnum,
-    shaderCode: string,
-    nodeName?: string
-  ) {
+  constructor(shaderStage: ShaderStageEnum, shaderCode: string, name?: string) {
     this.__shaderStage = shaderStage;
     this.__shaderCode = shaderCode;
 
-    this.__nodeId = Node.__nodes.length;
-    Node.__nodes[this.__nodeId] = this;
+    this.__id = Node.__nodes.length;
+    Node.__nodes[this.__id] = this;
 
-    this.__nodeName = nodeName ?? this.nodeId.toString();
+    this.__name = name ?? this.id.toString();
   }
 
   static get allNodes(): Node[] {
@@ -60,8 +56,8 @@ export default class Node {
     this.__nodes.length = 0;
   }
 
-  get nodeName() {
-    return this.__nodeName;
+  get name() {
+    return this.__name;
   }
 
   get shaderCode() {
@@ -72,8 +68,8 @@ export default class Node {
     return this.__shaderStage;
   }
 
-  get nodeId() {
-    return this.__nodeId;
+  get id() {
+    return this.__id;
   }
 
   addInputSocket(key: string, SocketType: SocketTypeEnum) {
@@ -81,7 +77,7 @@ export default class Node {
       console.warn('Node.addInputSocket: duplicate the key');
     }
 
-    this.__inputSockets[key] = new InputSocket(SocketType, this.__nodeId);
+    this.__inputSockets[key] = new InputSocket(SocketType, this.__id);
   }
 
   addOutputSocket(key: string, SocketType: SocketTypeEnum) {
@@ -89,7 +85,7 @@ export default class Node {
       console.warn('Node.addOutputSocket: duplicate the key');
     }
 
-    this.__outputSockets[key] = new OutputSocket(SocketType, this.__nodeId);
+    this.__outputSockets[key] = new OutputSocket(SocketType, this.__id);
   }
 
   getInputNodeAll(): {[key: string]: Node | undefined} {
