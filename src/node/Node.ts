@@ -16,7 +16,7 @@ export default class Node {
 
   private __id: NodeId;
   private __inputSockets: Map<string, InputSocket> = new Map();
-  private __outputSockets: {[key: string]: OutputSocket} = {};
+  private __outputSockets: Map<string, OutputSocket> = new Map();
 
   constructor(shaderStage: ShaderStageEnum, shaderCode: string, name?: string) {
     this.__shaderStage = shaderStage;
@@ -86,11 +86,11 @@ export default class Node {
   }
 
   addOutputSocket(key: string, SocketType: SocketTypeEnum) {
-    if (this.__outputSockets[key] != null) {
+    if (this.__outputSockets.has(key)) {
       console.warn('Node.addOutputSocket: duplicate the key');
     }
 
-    this.__outputSockets[key] = new OutputSocket(SocketType, this.__id);
+    this.__outputSockets.set(key, new OutputSocket(SocketType, this.__id));
   }
 
   getInputNodeAll(): Map<string, Node> {
@@ -122,16 +122,16 @@ export default class Node {
     return targetSocket;
   }
 
-  getOutputNodesAll(): {[key: string]: Node[]} {
-    const outputNodes: {[key: string]: Node[]} = {};
+  getOutputNodesAll(): Map<string, Node[]> {
+    const outputNodes: Map<string, Node[]> = new Map();
     for (const key in this.__outputSockets) {
-      outputNodes[key] = this.getOutputNodes(key);
+      outputNodes.set(key, this.getOutputNodes(key));
     }
     return outputNodes;
   }
 
-  getOutputNodes(keyOfSocket: string): Node[] {
-    const targetSocket = this.getOutputSocket(keyOfSocket);
+  getOutputNodes(socketKey: string): Node[] {
+    const targetSocket = this.getOutputSocket(socketKey);
 
     if (targetSocket != null) {
       const connectedNodeIDs = targetSocket.connectedNodeIDs;
@@ -145,13 +145,13 @@ export default class Node {
     }
   }
 
-  getOutputSocket(keyOfSocket: string): OutputSocket | undefined {
-    const targetSocket = this.__outputSockets[keyOfSocket];
-    if (targetSocket == null) {
+  getOutputSocket(socketKey: string): OutputSocket | undefined {
+    if (!this.__outputSockets.has(socketKey)) {
       console.error('Node.getOutputSocket: Wrong key of socket');
       return undefined;
     }
 
+    const targetSocket = this.__outputSockets.get(socketKey);
     return targetSocket;
   }
 }
