@@ -10,22 +10,26 @@ import OutputSocket from '../sockets/OutputSocket';
 export default class Node {
   private static __nodes: Node[] = [];
 
-  private __name: string;
+  private __shaderFunctionName: string;
+  private __shaderFunctionCode: string;
   private __shaderStage: ShaderStageEnum;
-  private __shaderCode: string;
 
   private __id: NodeId;
   private __inputSockets: Map<string, InputSocket> = new Map();
   private __outputSockets: Map<string, OutputSocket> = new Map();
 
-  constructor(shaderStage: ShaderStageEnum, shaderCode: string, name?: string) {
+  constructor(
+    shaderFunctionName: string,
+    shaderFunctionCode: string,
+    shaderStage: ShaderStageEnum
+  ) {
+    this.__shaderFunctionName = shaderFunctionName;
+    this.__shaderFunctionCode = shaderFunctionCode;
     this.__shaderStage = shaderStage;
-    this.__shaderCode = shaderCode;
 
     this.__id = Node.__nodes.length;
     Node.__nodes[this.__id] = this;
 
-    this.__name = name ?? this.id.toString();
   }
 
   static get allNodes(): Node[] {
