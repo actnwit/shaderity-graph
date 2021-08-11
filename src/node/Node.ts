@@ -15,7 +15,7 @@ export default class Node {
   private __shaderCode: string;
 
   private __id: NodeId;
-  private __inputSockets: {[key: string]: InputSocket} = {};
+  private __inputSockets: Map<string, InputSocket> = new Map();
   private __outputSockets: {[key: string]: OutputSocket} = {};
 
   constructor(shaderStage: ShaderStageEnum, shaderCode: string, name?: string) {
@@ -77,11 +77,12 @@ export default class Node {
   }
 
   addInputSocket(key: string, SocketType: SocketTypeEnum) {
-    if (this.__inputSockets[key] != null) {
+    if (this.__inputSockets.has(key)) {
       console.warn('Node.addInputSocket: duplicate the key');
     }
 
-    this.__inputSockets[key] = new InputSocket(SocketType, this.__id);
+    const inputSocket = new InputSocket(SocketType, this.__id);
+    this.__inputSockets.set(key, inputSocket);
   }
 
   addOutputSocket(key: string, SocketType: SocketTypeEnum) {
@@ -92,16 +93,17 @@ export default class Node {
     this.__outputSockets[key] = new OutputSocket(SocketType, this.__id);
   }
 
-  getInputNodeAll(): {[key: string]: Node} {
-    const inputNodes: {[key: string]: Node} = {};
-    for (const key in this.__inputSockets) {
-      inputNodes[key] = this.getInputNode(key) as Node;
+  getInputNodeAll(): Map<string, Node> {
+    const inputNodes: Map<string, Node> = new Map();
+    for (const key of this.__inputSockets.keys()) {
+      const node = this.getInputNode(key) as Node;
+      inputNodes.set(key, node);
     }
     return inputNodes;
   }
 
-  getInputNode(keyOfSocket: string): Node | undefined {
-    const targetSocket = this.getInputSocket(keyOfSocket);
+  getInputNode(socketKey: string): Node | undefined {
+    const targetSocket = this.getInputSocket(socketKey);
     if (targetSocket != null) {
       const connectedNodeID = targetSocket?.connectedNodeIDs[0];
       return Node.__nodes[connectedNodeID];
@@ -110,13 +112,13 @@ export default class Node {
     }
   }
 
-  getInputSocket(keyOfSocket: string): InputSocket | undefined {
-    const targetSocket = this.__inputSockets[keyOfSocket];
-    if (targetSocket == null) {
+  getInputSocket(socketKey: string): InputSocket | undefined {
+    if (!this.__inputSockets.has(socketKey)) {
       console.error('Node.getInputSocket: Wrong key of socket');
       return undefined;
     }
 
+    const targetSocket = this.__inputSockets.get(socketKey);
     return targetSocket;
   }
 
