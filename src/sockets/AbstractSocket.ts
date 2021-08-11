@@ -45,6 +45,10 @@ export default abstract class AbstractSocket {
     return nodeIDs;
   }
 
+  get connectedSockets() {
+    return this.__connectedSockets;
+  }
+
   get glslTypeStr() {
     switch (this.__socketType) {
       case SocketType.Int:

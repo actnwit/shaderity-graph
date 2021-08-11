@@ -29,7 +29,6 @@ export default class Node {
 
     this.__id = Node.__nodes.length;
     Node.__nodes[this.__id] = this;
-
   }
 
   static get allNodes(): Node[] {
@@ -60,12 +59,16 @@ export default class Node {
     this.__nodes.length = 0;
   }
 
+  static getNodeById(id: NodeId) {
+    return this.__nodes[id];
+  }
+
   get name() {
-    return this.__name;
+    return this.__shaderFunctionName;
   }
 
   get shaderCode() {
-    return this.__shaderCode;
+    return this.__shaderFunctionCode;
   }
 
   get shaderStage() {
@@ -78,6 +81,10 @@ export default class Node {
 
   get inputSockets() {
     return this.__inputSockets;
+  }
+
+  get outputSockets() {
+    return this.__outputSockets;
   }
 
   addInputSocket(key: string, SocketType: SocketTypeEnum) {
@@ -157,5 +164,27 @@ export default class Node {
 
     const targetSocket = this.__outputSockets.get(socketKey);
     return targetSocket;
+  }
+
+  getInputSocketKey(socket: InputSocket): string | undefined {
+    let socketKey: string | undefined;
+    for (const [key, inputSocket] of this.__inputSockets) {
+      if (socket === inputSocket) {
+        socketKey = key;
+        break;
+      }
+    }
+    return socketKey;
+  }
+
+  getOutputSocketKey(socket: OutputSocket): string | undefined {
+    let socketKey: string | undefined;
+    for (const [key, outputSocket] of this.__outputSockets) {
+      if (socket === outputSocket) {
+        socketKey = key;
+        break;
+      }
+    }
+    return socketKey;
   }
 }
