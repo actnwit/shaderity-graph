@@ -10,6 +10,7 @@ import {
 export default {
   System,
   SocketType,
+  Version: System.shaderityGraphVersion,
 };
 
 export type {
