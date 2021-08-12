@@ -49,8 +49,8 @@ export default class System {
     );
 
     return {
-      vertexShaderCode: vertexShaderCode,
-      pixelShaderCode: pixelShaderCode,
+      vertexShaderCode,
+      pixelShaderCode,
     };
   }
 }
