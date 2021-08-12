@@ -29,21 +29,17 @@ export default class System {
 
     Node.resetNodes();
 
-    // TODO: implement this method
     JsonImporter.importJsonToNodes(json.nodes);
 
-    // TODO: implement this method
     const sortedShaderityGraphNodes = {
       vertexNodes: NodeSorter.sortTopologically(Node.vertexNodes),
       pixelNodes: NodeSorter.sortTopologically(Node.pixelNodes),
     };
 
-    // TODO: implement this method
     const vertexShaderCode = ShaderGraphResolver.createVertexShaderCode(
       sortedShaderityGraphNodes.vertexNodes
     );
 
-    // TODO: implement this method
     const pixelShaderCode = ShaderGraphResolver.createPixelShaderCode(
       sortedShaderityGraphNodes.pixelNodes
     );
