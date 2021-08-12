@@ -33,7 +33,20 @@ shaderity: @{getters}
   }
 
   static createPixelShaderCode(sortedPixelNodes: Node[]): string {
-    return '';
+    const pixelShaderPrerequisites = `
+#version 300 es
+${glslPrecisionShaderityObject.code}
+${prerequisitesShaderityObject.code}
+shaderity: @{getters}
+`;
+
+    let shaderBody =
+      ShaderGraphResolver.__constructFunctionDefinition(sortedPixelNodes);
+
+    shaderBody += ShaderGraphResolver.__constructMainFunction(sortedPixelNodes);
+
+    const shader = pixelShaderPrerequisites + shaderBody;
+    return shader;
   }
 
   private static __constructFunctionDefinition(shaderNodes: Node[]) {
