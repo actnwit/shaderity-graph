@@ -16,9 +16,9 @@ export default class JsonImporter {
 
       // Node.__nodeId equals to index of the nodesJson array
       const node = new Node(
-        nodeJson.shaderityData.shaderStage,
-        nodeJson.shaderityData.shaderCode,
-        nodeJson.shaderityData.nodeName
+        nodeJson.shaderityData.shaderFunctionName,
+        nodeJson.shaderityData.shaderFunctionCode,
+        nodeJson.shaderityData.shaderStage
       );
 
       for (const key in nodeJson.inputNodes) {

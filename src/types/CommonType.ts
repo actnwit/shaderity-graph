@@ -17,9 +17,9 @@ export type ShaderityGraphNodeJson = {
   inputNodes: {[key: string]: ConnectedNode};
   outputNodes: {[key: string]: ConnectedNode};
   shaderityData: {
-    nodeName?: string;
+    shaderFunctionName: string;
+    shaderFunctionCode: string;
     shaderStage: 'vertex' | 'pixel' | 'noUse';
-    shaderCode: string;
     extras: {[key: string]: unknown};
   };
   extras: {[key: string]: unknown};

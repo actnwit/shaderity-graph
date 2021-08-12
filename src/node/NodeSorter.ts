@@ -15,7 +15,7 @@ export default class NodeSorter {
     let noInputSocketNode: Node | undefined;
     for (const node of nodes) {
       const sockets = node.inputSockets;
-      const inputSocketCount = Object.keys(sockets).length;
+      const inputSocketCount = sockets.size;
       if (inputSocketCount === 0) {
         noInputSocketNode = node;
         break;
@@ -42,8 +42,7 @@ export default class NodeSorter {
       unsortedNodes.forEach(node => {
         let hasNoUnsortedInputNode = true;
 
-        for (const key in node.inputSockets) {
-          const inputSocket = node.inputSockets[key];
+        for (const inputSocket of node.inputSockets.values()) {
           if (
             ignoredInputNodeIds.indexOf(inputSocket.connectedNodeIDs[0]) === -1
           ) {
