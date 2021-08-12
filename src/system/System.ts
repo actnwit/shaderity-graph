@@ -4,6 +4,9 @@ import JsonImporter from '../import/JsonImporter';
 import NodeSorter from '../node/NodeSorter';
 
 export default class System {
+  //TODO: need to set version
+  static readonly shaderityGraphVersion = '';
+
   public static createShaderCodesFromJsonFile(
     src: string
   ): Promise<ShaderCodes> {
@@ -17,6 +20,12 @@ export default class System {
   public static createShaderCodesFromJsonObject(
     json: ShaderityGraphJson
   ): ShaderCodes {
+    if (json.version !== this.shaderityGraphVersion) {
+      console.warn(
+        'System.createShaderCodesFromJsonObject: mismatch version between json and system'
+      );
+    }
+
     Node.resetNodes();
 
     // TODO: implement this method
