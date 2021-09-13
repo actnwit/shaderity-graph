@@ -34,7 +34,7 @@ export const SocketType = {
     }
     return void 0;
   },
-};
+} as const;
 
 export type SocketTypeEnum = typeof SocketType[keyof typeof _SocketType];
 
