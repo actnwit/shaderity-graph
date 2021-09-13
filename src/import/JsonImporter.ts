@@ -2,23 +2,23 @@ import Node from '../node/Node';
 import AbstractSocket from '../sockets/AbstractSocket';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
-import {ShaderityGraphNodeJson} from '../types/CommonType';
+import {ShaderityGraphNode} from '../types/CommonType';
 
 export default class JsonImporter {
-  static importJsonToNodes(nodesJson: ShaderityGraphNodeJson[]) {
+  static importJsonToNodes(nodesJson: ShaderityGraphNode[]) {
     this.__createNodes(nodesJson);
     this.__connectSockets(nodesJson);
   }
 
-  private static __createNodes(nodesJson: ShaderityGraphNodeJson[]) {
+  private static __createNodes(nodesJson: ShaderityGraphNode[]) {
     for (let i = 0; i < nodesJson.length; i++) {
       const nodeJson = nodesJson[i];
 
       // Node.__nodeId equals to index of the nodesJson array
       const node = new Node(
-        nodeJson.shaderityData.shaderFunctionName,
-        nodeJson.shaderityData.shaderFunctionCode,
-        nodeJson.shaderityData.shaderStage
+        nodeJson.nodeData.shaderFunctionName,
+        nodeJson.nodeData.shaderFunctionCode,
+        nodeJson.nodeData.shaderStage
       );
 
       for (const key in nodeJson.inputNodes) {
@@ -33,7 +33,7 @@ export default class JsonImporter {
     }
   }
 
-  private static __connectSockets(nodesJson: ShaderityGraphNodeJson[]) {
+  private static __connectSockets(nodesJson: ShaderityGraphNode[]) {
     const nodes = Node.allNodes;
     for (let i = 0; i < nodesJson.length; i++) {
       const outputNodeId = i;

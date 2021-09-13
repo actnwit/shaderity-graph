@@ -4,7 +4,7 @@ import {
   ConnectedNode,
   ShaderCodes,
   ShaderityGraphJson,
-  ShaderityGraphNodeJson,
+  ShaderityGraphNode,
 } from './types/CommonType';
 
 export default {
@@ -16,7 +16,7 @@ export default {
 export type {
   ShaderCodes,
   ShaderityGraphJson,
-  ShaderityGraphNodeJson,
+  ShaderityGraphNode,
   ConnectedNode,
   SocketTypeEnum,
 };
