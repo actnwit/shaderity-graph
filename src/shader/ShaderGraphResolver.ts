@@ -1,10 +1,12 @@
 import Node from '../node/Node';
 import OutputSocket from '../sockets/OutputSocket';
+import {ShaderGlobalData} from '../types/CommonType';
 import glslPrecisionShaderityObject from './shaderityShaders/glslPrecision.glsl';
 import prerequisitesShaderityObject from './shaderityShaders/prerequisites.glsl';
 import mainPrerequisitesShaderityObject from './shaderityShaders/mainPrerequisites.glsl';
 import {SocketType} from '../types/CommonEnum';
 import {INode} from '../node/INode';
+import Shaderity, {ShaderStageStr} from 'shaderity/dist/esm';
 
 export default class ShaderGraphResolver {
   static createVertexShaderCode(sortedVertexNodes: Node[]): string {
@@ -48,6 +50,20 @@ shaderity: @{getters}
 
     const shader = pixelShaderPrerequisites + shaderBody;
     return shader;
+  }
+
+  static createShaderCode(
+    sortedNodes: Node[],
+    shaderStage: ShaderStageStr,
+    globalData?: ShaderGlobalData
+  ): string {
+    const shaderityObjectCreator =
+      Shaderity.createShaderityObjectCreator(shaderStage);
+
+    console.log(sortedNodes);
+    console.log(shaderityObjectCreator);
+    console.log(globalData);
+    return '';
   }
 
   private static __constructFunctionDefinition(shaderNodes: Node[]) {
