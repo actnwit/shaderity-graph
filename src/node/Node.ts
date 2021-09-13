@@ -1,31 +1,19 @@
-import {
-  ShaderStage,
-  ShaderStageEnum,
-  SocketTypeEnum,
-} from '../types/CommonEnum';
-import {NodeId} from '../types/CommonType';
+import {ShaderStage, SocketTypeEnum} from '../types/CommonEnum';
+import {NodeData, NodeId} from '../types/CommonType';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
 
 export default class Node {
   private static __nodes: Node[] = [];
 
-  private __shaderFunctionName: string;
-  private __shaderFunctionCode: string;
-  private __shaderStage: ShaderStageEnum;
+  private __nodeData: NodeData;
 
   private __id: NodeId;
   private __inputSockets: Map<string, InputSocket> = new Map();
   private __outputSockets: Map<string, OutputSocket> = new Map();
 
-  constructor(
-    shaderFunctionName: string,
-    shaderFunctionCode: string,
-    shaderStage: ShaderStageEnum
-  ) {
-    this.__shaderFunctionName = shaderFunctionName;
-    this.__shaderFunctionCode = shaderFunctionCode;
-    this.__shaderStage = shaderStage;
+  constructor(nodeData: NodeData) {
+    this.__nodeData = nodeData;
 
     this.__id = Node.__nodes.length;
     Node.__nodes[this.__id] = this;
@@ -38,7 +26,7 @@ export default class Node {
   static get vertexNodes(): Node[] {
     const vertexNodes: Node[] = [];
     for (const node of this.__nodes) {
-      if (node.__shaderStage === ShaderStage.Vertex) {
+      if (node.shaderStage === ShaderStage.Vertex) {
         vertexNodes.push(node);
       }
     }
@@ -48,7 +36,7 @@ export default class Node {
   static get pixelNodes(): Node[] {
     const pixelNodes: Node[] = [];
     for (const node of this.__nodes) {
-      if (node.__shaderStage === ShaderStage.Pixel) {
+      if (node.shaderStage === ShaderStage.Pixel) {
         pixelNodes.push(node);
       }
     }
@@ -64,15 +52,15 @@ export default class Node {
   }
 
   get name() {
-    return this.__shaderFunctionName;
+    return this.__nodeData.shaderFunctionName;
   }
 
   get shaderCode() {
-    return this.__shaderFunctionCode;
+    return this.__nodeData.shaderFunctionCode;
   }
 
   get shaderStage() {
-    return this.__shaderStage;
+    return this.__nodeData.shaderStage;
   }
 
   get id() {

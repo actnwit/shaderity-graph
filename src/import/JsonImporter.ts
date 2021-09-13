@@ -15,11 +15,7 @@ export default class JsonImporter {
       const nodeJson = nodesJson[i];
 
       // Node.__nodeId equals to index of the nodesJson array
-      const node = new Node(
-        nodeJson.nodeData.shaderFunctionName,
-        nodeJson.nodeData.shaderFunctionCode,
-        nodeJson.nodeData.shaderStage
-      );
+      const node = new Node(nodeJson.nodeData);
 
       for (const key in nodeJson.inputNodes) {
         const socketType = nodeJson.inputNodes[key].socketType;
