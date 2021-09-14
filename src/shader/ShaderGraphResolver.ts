@@ -60,10 +60,24 @@ shaderity: @{getters}
     const shaderityObjectCreator =
       Shaderity.createShaderityObjectCreator(shaderStage);
 
+    if (globalData != null) {
+      // shaderityObjectCreator.addDefineDirective();
+      // shaderityObjectCreator.updateGlobalPrecision();
+      // shaderityObjectCreator.addGlobalConstantValue();
+    }
+
+    // shaderityObjectCreator.addExtension();
+    // shaderityObjectCreator.addAttributeDeclaration();
+    // shaderityObjectCreator.addVaryingDeclaration();
+    // shaderityObjectCreator.addUniformDeclaration();
+    // shaderityObjectCreator.addFunctionDefinition();
+
+    // shaderityObjectCreator.updateMainFunction();
+
+    const shaderityObject = shaderityObjectCreator.createShaderityObject();
     console.log(sortedNodes);
-    console.log(shaderityObjectCreator);
-    console.log(globalData);
-    return '';
+    console.log(shaderityObject.code);
+    return shaderityObject.code;
   }
 
   private static __constructFunctionDefinition(shaderNodes: Node[]) {
