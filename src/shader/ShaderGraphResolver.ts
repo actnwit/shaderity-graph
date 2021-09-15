@@ -61,7 +61,13 @@ shaderity: @{getters}
       Shaderity.createShaderityObjectCreator(shaderStage);
 
     if (globalData != null) {
-      // shaderityObjectCreator.addDefineDirective();
+      if (globalData.defineDirectives != null) {
+        for (let i = 0; i < globalData.defineDirectives.length; i++) {
+          const defineDirective = globalData.defineDirectives[i];
+          shaderityObjectCreator.addDefineDirective(defineDirective);
+        }
+      }
+
       // shaderityObjectCreator.updateGlobalPrecision();
       // shaderityObjectCreator.addGlobalConstantValue();
     }
