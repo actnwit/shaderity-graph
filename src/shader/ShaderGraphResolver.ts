@@ -72,7 +72,16 @@ shaderity: @{getters}
         shaderityObjectCreator.updateGlobalPrecision(globalData.precision);
       }
 
-      // shaderityObjectCreator.addGlobalConstantValue();
+      if (globalData.constantValues != null) {
+        for (let i = 0; i < globalData.constantValues.length; i++) {
+          const shaderConstantValueObject = globalData.constantValues[i];
+          shaderityObjectCreator.addGlobalConstantValue(
+            shaderConstantValueObject.variableName,
+            shaderConstantValueObject.type,
+            shaderConstantValueObject.values
+          );
+        }
+      }
     }
 
     // shaderityObjectCreator.addExtension();
