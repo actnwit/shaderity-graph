@@ -1,8 +1,16 @@
+import AttributeInputNode from '../node/AttributeInputNode';
 import Node from '../node/Node';
+import UniformInputNode from '../node/UniformInputNode';
+import VaryingInputNode from '../node/VaryingInputNode';
 import AbstractSocket from '../sockets/AbstractSocket';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
-import {ShaderityGraphNode} from '../types/CommonType';
+import {
+  AttributeInputNodeData,
+  ShaderityGraphNode,
+  UniformInputNodeData,
+  VaryingInputNodeData,
+} from '../types/CommonType';
 
 export default class JsonImporter {
   static importJsonToNodes(nodesJson: ShaderityGraphNode[]) {
@@ -13,9 +21,19 @@ export default class JsonImporter {
   private static __createNodes(nodesJson: ShaderityGraphNode[]) {
     for (let i = 0; i < nodesJson.length; i++) {
       const nodeJson = nodesJson[i];
+      const nodeData = nodeJson.nodeData;
 
       // Node.__nodeId equals to index of the nodesJson array
-      const node = new Node(nodeJson.nodeData);
+      let node: Node;
+      if ((nodeData as AttributeInputNodeData).attribute != null) {
+        node = new AttributeInputNode(nodeData as AttributeInputNodeData);
+      } else if ((nodeData as VaryingInputNodeData).varying != null) {
+        node = new VaryingInputNode(nodeData as VaryingInputNodeData);
+      } else if ((nodeData as UniformInputNodeData).uniform != null) {
+        node = new UniformInputNode(nodeData as UniformInputNodeData);
+      } else {
+        node = new Node(nodeData);
+      }
 
       for (const key in nodeJson.inputNodes) {
         const socketType = nodeJson.inputNodes[key].socketType;
