@@ -68,7 +68,10 @@ shaderity: @{getters}
         }
       }
 
-      // shaderityObjectCreator.updateGlobalPrecision();
+      if (globalData.precision) {
+        shaderityObjectCreator.updateGlobalPrecision(globalData.precision);
+      }
+
       // shaderityObjectCreator.addGlobalConstantValue();
     }
 
