@@ -3,14 +3,20 @@ import {NodeData, NodeId} from '../types/CommonType';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
 
+export type NodeClassNames =
+  | 'Node'
+  | 'AttributeInputNode'
+  | 'VaryingInputNode'
+  | 'UniformInputNode';
+
 export default class Node {
-  private static __nodes: Node[] = [];
+  protected static __nodes: Node[] = [];
 
-  private __nodeData: NodeData;
+  protected __nodeData: NodeData;
 
-  private __id: NodeId;
-  private __inputSockets: Map<string, InputSocket> = new Map();
-  private __outputSockets: Map<string, OutputSocket> = new Map();
+  protected __id: NodeId;
+  protected __inputSockets: Map<string, InputSocket> = new Map();
+  protected __outputSockets: Map<string, OutputSocket> = new Map();
 
   constructor(nodeData: NodeData) {
     this.__nodeData = nodeData;
@@ -49,6 +55,10 @@ export default class Node {
 
   static getNodeById(id: NodeId) {
     return this.__nodes[id];
+  }
+
+  get className(): NodeClassNames {
+    return 'Node';
   }
 
   get name() {
