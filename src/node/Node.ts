@@ -63,6 +63,10 @@ export default class Node {
     return this.__nodeData.shaderStage;
   }
 
+  get extensions() {
+    return this.__nodeData.extensions ?? [];
+  }
+
   get id() {
     return this.__id;
   }
