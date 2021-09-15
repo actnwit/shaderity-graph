@@ -6,7 +6,10 @@ import prerequisitesShaderityObject from './shaderityShaders/prerequisites.glsl'
 import mainPrerequisitesShaderityObject from './shaderityShaders/mainPrerequisites.glsl';
 import {SocketType} from '../types/CommonEnum';
 import {INode} from '../node/INode';
-import Shaderity, {ShaderStageStr} from 'shaderity/dist/esm';
+import Shaderity, {
+  ShaderStageStr,
+  ShaderityObjectCreator,
+} from 'shaderity/dist/esm';
 
 export default class ShaderGraphResolver {
   static createVertexShaderCode(sortedVertexNodes: Node[]): string {
@@ -61,27 +64,10 @@ shaderity: @{getters}
       Shaderity.createShaderityObjectCreator(shaderStage);
 
     if (globalData != null) {
-      if (globalData.defineDirectives != null) {
-        for (let i = 0; i < globalData.defineDirectives.length; i++) {
-          const defineDirective = globalData.defineDirectives[i];
-          shaderityObjectCreator.addDefineDirective(defineDirective);
-        }
-      }
-
-      if (globalData.precision) {
-        shaderityObjectCreator.updateGlobalPrecision(globalData.precision);
-      }
-
-      if (globalData.constantValues != null) {
-        for (let i = 0; i < globalData.constantValues.length; i++) {
-          const shaderConstantValueObject = globalData.constantValues[i];
-          shaderityObjectCreator.addGlobalConstantValue(
-            shaderConstantValueObject.variableName,
-            shaderConstantValueObject.type,
-            shaderConstantValueObject.values
-          );
-        }
-      }
+      this.__addGlobalDataToShaderityObjectCreator(
+        shaderityObjectCreator,
+        globalData
+      );
     }
 
     // shaderityObjectCreator.addExtension();
@@ -111,6 +97,33 @@ shaderity: @{getters}
     }
 
     return shaderText;
+  }
+
+  private static __addGlobalDataToShaderityObjectCreator(
+    shaderityObjectCreator: ShaderityObjectCreator,
+    globalData: ShaderGlobalData
+  ) {
+    if (globalData.defineDirectives != null) {
+      for (let i = 0; i < globalData.defineDirectives.length; i++) {
+        const defineDirective = globalData.defineDirectives[i];
+        shaderityObjectCreator.addDefineDirective(defineDirective);
+      }
+    }
+
+    if (globalData.precision) {
+      shaderityObjectCreator.updateGlobalPrecision(globalData.precision);
+    }
+
+    if (globalData.constantValues != null) {
+      for (let i = 0; i < globalData.constantValues.length; i++) {
+        const shaderConstantValueObject = globalData.constantValues[i];
+        shaderityObjectCreator.addGlobalConstantValue(
+          shaderConstantValueObject.variableName,
+          shaderConstantValueObject.type,
+          shaderConstantValueObject.values
+        );
+      }
+    }
   }
 
   private static __constructMainFunction(nodes: Node[]) {
