@@ -76,51 +76,11 @@ shaderity: @{getters}
     const nodeNames: string[] = [];
     for (let i = 0; i < sortedNodes.length; i++) {
       const node = sortedNodes[i];
-
-      for (const extension of node.extensions) {
-        shaderityObjectCreator.addExtension(extension);
-      }
-
-      if (node.className === 'AttributeInputNode') {
-        const attributeInputNode = node as AttributeInputNode;
-        shaderityObjectCreator.addAttributeDeclaration(
-          `${attributeInputNode.variableName}_${attributeInputNode.id}`,
-          attributeInputNode.type,
-          {
-            precision: attributeInputNode.precision,
-            location: attributeInputNode.location,
-          }
-        );
-      }
-
-      if (node.className === 'VaryingInputNode') {
-        const varyingInputNode = node as VaryingInputNode;
-        shaderityObjectCreator.addVaryingDeclaration(
-          `${varyingInputNode.variableName}_${varyingInputNode.id}`,
-          varyingInputNode.type,
-          {
-            precision: varyingInputNode.precision,
-            interpolationType: varyingInputNode.interpolationType,
-          }
-        );
-      }
-
-      if (node.className === 'UniformInputNode') {
-        const uniformInputNode = node as UniformInputNode;
-        shaderityObjectCreator.addUniformDeclaration(
-          `${uniformInputNode.variableName}_${uniformInputNode.id}`,
-          uniformInputNode.type,
-          {
-            precision: uniformInputNode.precision,
-          }
-        );
-      }
-
-      const existSameNameNode = nodeNames.includes(node.name);
-      if (!existSameNameNode) {
-        nodeNames.push(node.name);
-        shaderityObjectCreator.addFunctionDefinition(node.shaderCode);
-      }
+      this.__addNodeDataToShaderityObjectCreator(
+        shaderityObjectCreator,
+        node,
+        nodeNames
+      );
     }
 
     // shaderityObjectCreator.updateMainFunction();
@@ -170,6 +130,57 @@ shaderity: @{getters}
           shaderConstantValueObject.values
         );
       }
+    }
+  }
+
+  private static __addNodeDataToShaderityObjectCreator(
+    shaderityObjectCreator: ShaderityObjectCreator,
+    node: Node,
+    nodeNames: string[]
+  ) {
+    for (const extension of node.extensions) {
+      shaderityObjectCreator.addExtension(extension);
+    }
+
+    if (node.className === 'AttributeInputNode') {
+      const attributeInputNode = node as AttributeInputNode;
+      shaderityObjectCreator.addAttributeDeclaration(
+        `${attributeInputNode.variableName}_${attributeInputNode.id}`,
+        attributeInputNode.type,
+        {
+          precision: attributeInputNode.precision,
+          location: attributeInputNode.location,
+        }
+      );
+    }
+
+    if (node.className === 'VaryingInputNode') {
+      const varyingInputNode = node as VaryingInputNode;
+      shaderityObjectCreator.addVaryingDeclaration(
+        `${varyingInputNode.variableName}_${varyingInputNode.id}`,
+        varyingInputNode.type,
+        {
+          precision: varyingInputNode.precision,
+          interpolationType: varyingInputNode.interpolationType,
+        }
+      );
+    }
+
+    if (node.className === 'UniformInputNode') {
+      const uniformInputNode = node as UniformInputNode;
+      shaderityObjectCreator.addUniformDeclaration(
+        `${uniformInputNode.variableName}_${uniformInputNode.id}`,
+        uniformInputNode.type,
+        {
+          precision: uniformInputNode.precision,
+        }
+      );
+    }
+
+    const existSameNameNode = nodeNames.includes(node.functionName);
+    if (!existSameNameNode) {
+      nodeNames.push(node.functionName);
+      shaderityObjectCreator.addFunctionDefinition(node.shaderCode);
     }
   }
 
