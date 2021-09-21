@@ -37,12 +37,20 @@ export default class JsonImporter {
 
       for (const key in nodeJson.inputNodes) {
         const socketType = nodeJson.inputNodes[key].socketType;
-        node.addInputSocket(key, socketType);
+        node.addInputSocket(
+          key,
+          socketType,
+          nodeJson.inputNodes[key].argumentId
+        );
       }
 
       for (const key in nodeJson.outputNodes) {
         const socketType = nodeJson.outputNodes[key].socketType;
-        node.addOutputSocket(key, socketType);
+        node.addOutputSocket(
+          key,
+          socketType,
+          nodeJson.outputNodes[key].argumentId
+        );
       }
     }
   }

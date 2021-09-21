@@ -94,6 +94,7 @@ export interface ShaderGlobalData {
 
 export interface ConnectedNode {
   nodeId: number;
+  argumentId: number;
   socketType: SocketTypeEnum;
 }
 

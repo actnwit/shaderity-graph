@@ -91,7 +91,12 @@ export default class Node {
     return this.__outputSockets;
   }
 
-  addInputSocket(socketName: string, SocketType: SocketTypeEnum) {
+  // The argumentId indicates that this socket corresponds to the nth argument of the node's function.
+  addInputSocket(
+    socketName: string,
+    SocketType: SocketTypeEnum,
+    argumentId: number
+  ) {
     const existSocketName = this.__inputSockets.some(
       socket => socket.name === socketName
     );
@@ -100,11 +105,20 @@ export default class Node {
       console.warn('Node.addInputSocket: duplicate socketName');
     }
 
-    const inputSocket = new InputSocket(SocketType, this.__id, socketName);
+    const inputSocket = new InputSocket(
+      SocketType,
+      this.__id,
+      socketName,
+      argumentId
+    );
     this.__inputSockets.push(inputSocket);
   }
 
-  addOutputSocket(socketName: string, SocketType: SocketTypeEnum) {
+  addOutputSocket(
+    socketName: string,
+    SocketType: SocketTypeEnum,
+    argumentId: number
+  ) {
     const existSocketName = this.__outputSockets.some(
       socket => socket.name === socketName
     );
@@ -113,7 +127,12 @@ export default class Node {
       console.warn('Node.addOutputSocket: duplicate socketName');
     }
 
-    const outputSocket = new OutputSocket(SocketType, this.__id, socketName);
+    const outputSocket = new OutputSocket(
+      SocketType,
+      this.__id,
+      socketName,
+      argumentId
+    );
     this.__outputSockets.push(outputSocket);
   }
 

@@ -8,11 +8,18 @@ export default abstract class AbstractSocket implements ISocket {
   private __name: string;
   private __socketType: SocketTypeEnum;
   private __nodeId: NodeId;
+  private __argumentId: number;
 
-  constructor(socketType: SocketTypeEnum, nodeId: NodeId, socketName: string) {
+  constructor(
+    socketType: SocketTypeEnum,
+    nodeId: NodeId,
+    socketName: string,
+    argumentId: number
+  ) {
     this.__name = socketName;
     this.__socketType = socketType;
     this.__nodeId = nodeId;
+    this.__argumentId = argumentId;
   }
 
   static connectSockets(
@@ -37,6 +44,10 @@ export default abstract class AbstractSocket implements ISocket {
 
   get nodeId() {
     return this.__nodeId;
+  }
+
+  get argumentId() {
+    return this.__argumentId;
   }
 
   abstract get className(): SocketClassName;
