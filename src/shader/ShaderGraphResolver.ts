@@ -12,6 +12,7 @@ import Shaderity, {
 } from 'shaderity/dist/esm';
 import AttributeInputNode from '../node/AttributeInputNode';
 import VaryingInputNode from '../node/VaryingInputNode';
+import UniformInputNode from '../node/UniformInputNode';
 
 export default class ShaderGraphResolver {
   static createVertexShaderCode(sortedVertexNodes: Node[]): string {
@@ -102,9 +103,19 @@ shaderity: @{getters}
           }
         );
       }
+
+      if (node.className === 'UniformInputNode') {
+        const uniformInputNode = node as UniformInputNode;
+        shaderityObjectCreator.addUniformDeclaration(
+          `${uniformInputNode.variableName}_${uniformInputNode.id}`,
+          uniformInputNode.type,
+          {
+            precision: uniformInputNode.precision,
+          }
+        );
+      }
     }
 
-    // shaderityObjectCreator.addUniformDeclaration();
     // shaderityObjectCreator.addFunctionDefinition();
 
     // shaderityObjectCreator.updateMainFunction();
