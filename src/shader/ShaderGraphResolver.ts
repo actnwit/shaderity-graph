@@ -73,6 +73,7 @@ shaderity: @{getters}
       );
     }
 
+    const nodeNames: string[] = [];
     for (let i = 0; i < sortedNodes.length; i++) {
       const node = sortedNodes[i];
 
@@ -114,9 +115,13 @@ shaderity: @{getters}
           }
         );
       }
-    }
 
-    // shaderityObjectCreator.addFunctionDefinition();
+      const existSameNameNode = nodeNames.includes(node.name);
+      if (!existSameNameNode) {
+        nodeNames.push(node.name);
+        shaderityObjectCreator.addFunctionDefinition(node.shaderCode);
+      }
+    }
 
     // shaderityObjectCreator.updateMainFunction();
 
