@@ -83,7 +83,8 @@ shaderity: @{getters}
       );
     }
 
-    // shaderityObjectCreator.updateMainFunction();
+    const mainFunction = this.__createMainFunctionCode(sortedNodes);
+    shaderityObjectCreator.updateMainFunction(mainFunction);
 
     const shaderityObject = shaderityObjectCreator.createShaderityObject();
     console.log(sortedNodes);
@@ -182,6 +183,11 @@ shaderity: @{getters}
       nodeNames.push(node.functionName);
       shaderityObjectCreator.addFunctionDefinition(node.shaderCode);
     }
+  }
+
+  private static __createMainFunctionCode(sortedNodes: Node[]) {
+    console.log(sortedNodes);
+    return '';
   }
 
   private static __constructMainFunction(nodes: Node[]) {
