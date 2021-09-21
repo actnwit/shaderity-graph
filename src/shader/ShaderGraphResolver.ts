@@ -70,7 +70,14 @@ shaderity: @{getters}
       );
     }
 
-    // shaderityObjectCreator.addExtension();
+    for (let i = 0; i < sortedNodes.length; i++) {
+      const node = sortedNodes[i];
+
+      for (const extension of node.extensions) {
+        shaderityObjectCreator.addExtension(extension);
+      }
+    }
+
     // shaderityObjectCreator.addAttributeDeclaration();
     // shaderityObjectCreator.addVaryingDeclaration();
     // shaderityObjectCreator.addUniformDeclaration();
