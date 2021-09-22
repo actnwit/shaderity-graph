@@ -186,8 +186,42 @@ shaderity: @{getters}
   }
 
   private static __createMainFunctionCode(sortedNodes: Node[]) {
-    console.log(sortedNodes);
-    return '';
+    let variableDeclarations = '';
+    for (let i = 0; i < sortedNodes.length; i++) {
+      const node = sortedNodes[i];
+      variableDeclarations += this.__createOutVariableDeclarations(node);
+    }
+
+    const mainFunctionCode = `void main() {
+${variableDeclarations}
+}`;
+
+    console.log(mainFunctionCode);
+    return mainFunctionCode;
+  }
+
+  private static __createOutVariableDeclarations(node: Node): string {
+    let returnStr = '';
+    for (const outputSocket of node._outputSockets) {
+      let variableName = `node${node.id}_${outputSocket.name}_to`;
+
+      const connectedNodes = outputSocket.connectedNodes;
+
+      // connectedSockets is for debugging
+      // const connectedSockets = outputSocket.connectedSockets;
+      for (let i = 0; i < connectedNodes.length; i++) {
+        const connectedNode = connectedNodes[i];
+        variableName += `_node${connectedNode.id}`;
+
+        // const connectedSocketName = connectedSockets[i].name;
+        // returnStr += `_node${connectedNodeId}_${connectedSocketName}`;
+      }
+
+      const glslTypeStr = SocketType.getGlslTypeStr(outputSocket.socketType);
+      returnStr += `  ${glslTypeStr} ${variableName};\n`;
+    }
+
+    return returnStr;
   }
 
   private static __constructMainFunction(nodes: Node[]) {
