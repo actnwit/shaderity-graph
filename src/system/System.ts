@@ -31,6 +31,18 @@ export default class System {
 
     JsonImporter.importJsonToNodes(json.nodes);
 
+    if (Node.vertexNodes.length === 0) {
+      console.warn(
+        'System.createShaderCodesFromJsonObject: no vertex node is found'
+      );
+    }
+
+    if (Node.pixelNodes.length === 0) {
+      console.warn(
+        'System.createShaderCodesFromJsonObject: no pixel node is found'
+      );
+    }
+
     const sortedShaderityGraphNodes = {
       vertexNodes: NodeSorter.sortTopologically(Node.vertexNodes),
       pixelNodes: NodeSorter.sortTopologically(Node.pixelNodes),

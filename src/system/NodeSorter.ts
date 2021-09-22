@@ -5,6 +5,9 @@ export default class NodeSorter {
   static sortTopologically(nodes: Node[]): Node[] {
     // Will be change the algorithm like the following:
     // https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/
+    if (nodes.length === 0) {
+      return nodes;
+    }
 
     const beginNode = this.__findBeginNode(nodes);
     const sortedNodes = this.__sortTopologically(beginNode, nodes);
