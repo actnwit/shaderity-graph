@@ -1,10 +1,7 @@
 import Node from '../node/Node';
-import {NodeId} from '../types/CommonType';
 
 export default class NodeSorter {
   static sortTopologically(nodes: Node[]): Node[] {
-    // Will be change the algorithm like the following:
-    // https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/
     if (nodes.length === 0) {
       return nodes;
     }
@@ -33,41 +30,67 @@ export default class NodeSorter {
   }
 
   private static __sortTopologically(beginNode: Node, unsortedNodes: Node[]) {
-    const ignoredInputNodeIds: NodeId[] = [beginNode.id];
-    const sortedNodes: Node[] = [beginNode];
+    // this sort is based on https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/
 
-    const indexOfBeginNode = unsortedNodes.indexOf(beginNode);
-    unsortedNodes.splice(indexOfBeginNode, 1);
+    // Storage of edges (e.g. edge[0] = [1] means unsortedNodes[0] has the edge to unsortedNodes[1])
+    const edges: number[][] = Array(unsortedNodes.length);
+    for (let i = 0; i < edges.length; i++) {
+      edges[i] = [];
+    }
 
-    // take out the nodes that do not have the nodes contained in unsortedNodes as input nodes.
-    while (unsortedNodes.length !== 0) {
-      const nodesWillBeSorted: Node[] = new Array(unsortedNodes.length);
-      unsortedNodes.forEach(node => {
-        let hasNoUnsortedInputNode = true;
-
-        for (const inputSocket of node._inputSockets.values()) {
-          if (ignoredInputNodeIds.indexOf(inputSocket.connectedNodeId) === -1) {
-            hasNoUnsortedInputNode = false;
-            break;
-          }
+    // count input nodes
+    const inputNodeCounts: number[] = Array(unsortedNodes.length);
+    inputNodeCounts.fill(0);
+    for (let i = 0; i < unsortedNodes.length; i++) {
+      const node = unsortedNodes[i];
+      for (const inputSocket of node._inputSockets) {
+        const inputNodeId = inputSocket.connectedNodeId;
+        if (inputNodeId === -1) {
+          // non-connected socket
+          continue;
         }
 
-        if (hasNoUnsortedInputNode) {
-          nodesWillBeSorted.push(node);
-        }
-      });
-
-      nodesWillBeSorted.forEach(node => {
-        ignoredInputNodeIds.push(node.id);
-        sortedNodes.push(node);
-        unsortedNodes.splice(unsortedNodes.indexOf(node), 1);
-      });
-
-      if (nodesWillBeSorted.length === 0) {
-        throw Error('NodeSorter.__sortTopologically: failed to sort...');
+        const inputNode = Node.getNodeById(inputNodeId);
+        const inputIndex = unsortedNodes.findIndex(node => node === inputNode);
+        inputNodeCounts[i]++;
+        edges[inputIndex].push(i);
       }
     }
 
+    // pick no input nodes
+    const noUnsortedInputNodes: Node[] = [];
+    for (let i = 0; i < inputNodeCounts.length; i++) {
+      const inputNodeCount = inputNodeCounts[i];
+      if (inputNodeCount === 0) {
+        noUnsortedInputNodes.push(unsortedNodes[i]);
+      }
+    }
+
+    // decrease input counts and sort topologically
+    const sortedNodes: Node[] = [];
+    while (noUnsortedInputNodes.length !== 0) {
+      const sortingNode = noUnsortedInputNodes.shift() as Node;
+      sortedNodes.push(sortingNode);
+
+      const sortingNodeIndex = unsortedNodes.findIndex(
+        node => node === sortingNode
+      );
+
+      for (const index of edges[sortingNodeIndex]) {
+        inputNodeCounts[index]--;
+
+        if (inputNodeCounts[index] === 0) {
+          const noUnsortedInputNode = unsortedNodes[index];
+          noUnsortedInputNodes.push(noUnsortedInputNode);
+        }
+      }
+    }
+
+    if (sortedNodes.length !== unsortedNodes.length) {
+      console.error(
+        'NodeSorter.__sortTopologically: failed to topological sort.'
+      );
+    }
     return sortedNodes;
   }
 }
