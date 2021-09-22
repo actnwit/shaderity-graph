@@ -1,6 +1,6 @@
 import Node from '../node/Node';
 import OutputSocket from '../sockets/OutputSocket';
-import {ShaderGlobalData} from '../types/CommonType';
+import {FragmentShaderGlobalData, ShaderGlobalData} from '../types/CommonType';
 import glslPrecisionShaderityObject from './shaderityShaders/glslPrecision.glsl';
 import prerequisitesShaderityObject from './shaderityShaders/prerequisites.glsl';
 import mainPrerequisitesShaderityObject from './shaderityShaders/mainPrerequisites.glsl';
@@ -131,6 +131,12 @@ shaderity: @{getters}
           shaderConstantValueObject.values
         );
       }
+    }
+
+    if ((globalData as FragmentShaderGlobalData).outputVariableName != null) {
+      shaderityObjectCreator.updateOutputColorVariableName(
+        (globalData as FragmentShaderGlobalData).outputVariableName
+      );
     }
   }
 
