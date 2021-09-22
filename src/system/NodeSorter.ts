@@ -10,9 +10,39 @@ export default class NodeSorter {
       edges[i] = [];
     }
 
-    // count input nodes
+    const inputNodeCounts = this.__countInputNodesAndSetEdges(
+      unsortedNodes,
+      edges
+    );
+
+    const noUnsortedInputNodes = this.__getNoInputNodes(
+      unsortedNodes,
+      inputNodeCounts
+    );
+
+    // decrease input counts and sort topologically
+    const sortedNodes = this.__sortTopologically(
+      unsortedNodes,
+      inputNodeCounts,
+      noUnsortedInputNodes,
+      edges
+    );
+
+    if (sortedNodes.length !== unsortedNodes.length) {
+      console.error(
+        'NodeSorter.__sortTopologically: failed to topological sort.'
+      );
+    }
+    return sortedNodes;
+  }
+
+  private static __countInputNodesAndSetEdges(
+    unsortedNodes: Node[],
+    edges: number[][]
+  ) {
     const inputNodeCounts: number[] = Array(unsortedNodes.length);
     inputNodeCounts.fill(0);
+
     for (let i = 0; i < unsortedNodes.length; i++) {
       const node = unsortedNodes[i];
       for (const inputSocket of node._inputSockets) {
@@ -28,8 +58,13 @@ export default class NodeSorter {
         edges[inputIndex].push(i);
       }
     }
+    return inputNodeCounts;
+  }
 
-    // pick no input nodes
+  private static __getNoInputNodes(
+    unsortedNodes: Node[],
+    inputNodeCounts: number[]
+  ) {
     const noUnsortedInputNodes: Node[] = [];
     for (let i = 0; i < inputNodeCounts.length; i++) {
       const inputNodeCount = inputNodeCounts[i];
@@ -38,7 +73,15 @@ export default class NodeSorter {
       }
     }
 
-    // decrease input counts and sort topologically
+    return noUnsortedInputNodes;
+  }
+
+  private static __sortTopologically(
+    unsortedNodes: Node[],
+    inputNodeCounts: number[],
+    noUnsortedInputNodes: Node[],
+    edges: number[][]
+  ) {
     const sortedNodes: Node[] = [];
     while (noUnsortedInputNodes.length !== 0) {
       const sortingNode = noUnsortedInputNodes.shift() as Node;
@@ -58,11 +101,6 @@ export default class NodeSorter {
       }
     }
 
-    if (sortedNodes.length !== unsortedNodes.length) {
-      console.error(
-        'NodeSorter.__sortTopologically: failed to topological sort.'
-      );
-    }
     return sortedNodes;
   }
 }
