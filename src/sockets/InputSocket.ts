@@ -12,13 +12,21 @@ export default class InputSocket
 {
   _connectedSocket: IOutputSocket | undefined = undefined;
 
+  private __defaultValue: number[];
+
   constructor(
     SocketType: SocketTypeEnum,
     node: INode,
     socketName: string,
-    argumentId: number
+    argumentId: number,
+    defaultValue: number[]
   ) {
     super(SocketType, node, socketName, argumentId);
+    this.__defaultValue = defaultValue;
+  }
+
+  get defaultValue() {
+    return this.__defaultValue;
   }
 
   get className(): SocketClassName {

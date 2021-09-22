@@ -41,7 +41,8 @@ export default class JsonImporter {
           node.addInputSocket(
             socketData.name,
             socketType,
-            socketData.argumentId
+            socketData.argumentId,
+            (socketData as InputSocketData).defaultValue
           );
         } else {
           node.addOutputSocket(
