@@ -197,8 +197,14 @@ shaderity: @{getters}
       this.__initializeVariableNames(sortedNodes);
 
     let variableDeclarations = '';
+    let inputValueDefinitions = '';
     for (let i = 0; i < sortedNodes.length; i++) {
       const node = sortedNodes[i];
+
+      // for non-connected input sockets
+      inputValueDefinitions += this.__createInputVariableDefinitions(node);
+
+      // for connected sockets
       variableDeclarations += this.__createOutVariableDeclarations(
         node,
         variableNames
@@ -206,6 +212,7 @@ shaderity: @{getters}
     }
 
     const mainFunctionCode = `void main() {
+${inputValueDefinitions}
 ${variableDeclarations}
 }`;
 
@@ -228,6 +235,41 @@ ${variableDeclarations}
     }
 
     return variableNames;
+  }
+  private static __createInputVariableDefinitions(node: Node): string {
+    let returnStr = '';
+    for (const inputSocket of node._inputSockets) {
+      if (inputSocket.connectedSocket != null) {
+        continue;
+      }
+
+      const socketType = inputSocket.socketType;
+      const glslComponentNumber = SocketType.getGlslComponentNumber(socketType);
+
+      if (glslComponentNumber === 0) {
+        const message = `ShaderGraphResolver.__getInputVariableDefinitions: ${socketType} type cannot take default value`;
+        console.error(message);
+
+        return `  // ${message}\n`;
+      } else if (inputSocket.defaultValue.length !== glslComponentNumber) {
+        console.warn(
+          'ShaderGraphResolver.__getInputVariableDefinitions: defaultValue.length is invalid'
+        );
+      }
+
+      const glslTypeStr = SocketType.getGlslTypeStr(socketType);
+
+      let defaultValue = glslTypeStr + '(';
+      for (let i = 0; i < glslComponentNumber; i++) {
+        defaultValue += inputSocket.defaultValue[i] + ', ';
+      }
+      defaultValue = defaultValue.replace(/,\s$/, ')');
+
+      const variableName = `${inputSocket.name}_${node.id}`;
+      returnStr += `  ${glslTypeStr} ${variableName} = ${defaultValue};\n`;
+    }
+
+    return returnStr;
   }
 
   private static __createOutVariableDeclarations(
