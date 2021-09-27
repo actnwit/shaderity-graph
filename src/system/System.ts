@@ -1,7 +1,7 @@
 import Node from '../node/Node';
 import {ShaderCodes, ShaderityGraphJson} from '../types/CommonType';
 import JsonImporter from '../import/JsonImporter';
-import NodeSorter from '../node/NodeSorter';
+import NodeSorter from './NodeSorter';
 import ShaderGraphResolver from '../shader/ShaderGraphResolver';
 
 export default class System {
