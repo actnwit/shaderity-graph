@@ -24,7 +24,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "shaderity": "^0.1.28"
+    "shaderity": ".\\shaderity-v0.2.0.tgz"
   },
   "scripts": {
     "prepare": "husky install",
