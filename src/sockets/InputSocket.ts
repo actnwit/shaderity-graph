@@ -12,8 +12,8 @@ export default class InputSocket
 {
   _connectedSocket: IOutputSocket | undefined = undefined;
 
-  constructor(SocketType: SocketTypeEnum, nodeId: NodeId) {
-    super(SocketType, nodeId);
+  constructor(SocketType: SocketTypeEnum, nodeId: NodeId, socketName: string) {
+    super(SocketType, nodeId, socketName);
   }
 
   get className(): SocketClassName {

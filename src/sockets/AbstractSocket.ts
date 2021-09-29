@@ -5,10 +5,12 @@ import {IOutputSocket} from './IOutputSocket';
 import {ISocket, SocketClassName} from './ISocket';
 
 export default abstract class AbstractSocket implements ISocket {
+  private __name: string;
   private __socketType: SocketTypeEnum;
   private __nodeId: NodeId;
 
-  constructor(socketType: SocketTypeEnum, nodeId: NodeId) {
+  constructor(socketType: SocketTypeEnum, nodeId: NodeId, socketName: string) {
+    this.__name = socketName;
     this.__socketType = socketType;
     this.__nodeId = nodeId;
   }
@@ -23,6 +25,10 @@ export default abstract class AbstractSocket implements ISocket {
     } else {
       console.error('AbstractSocket.connectSockets: socketType is different');
     }
+  }
+
+  get name() {
+    return this.__name;
   }
 
   get socketType() {

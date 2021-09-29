@@ -89,21 +89,24 @@ export default class Node {
     return this.__outputSockets;
   }
 
-  addInputSocket(key: string, SocketType: SocketTypeEnum) {
-    if (this.__inputSockets.has(key)) {
+  addInputSocket(socketName: string, SocketType: SocketTypeEnum) {
+    if (this.__inputSockets.has(socketName)) {
       console.warn('Node.addInputSocket: duplicate the key');
     }
 
-    const inputSocket = new InputSocket(SocketType, this.__id);
-    this.__inputSockets.set(key, inputSocket);
+    const inputSocket = new InputSocket(SocketType, this.__id, socketName);
+    this.__inputSockets.set(socketName, inputSocket);
   }
 
-  addOutputSocket(key: string, SocketType: SocketTypeEnum) {
-    if (this.__outputSockets.has(key)) {
+  addOutputSocket(socketName: string, SocketType: SocketTypeEnum) {
+    if (this.__outputSockets.has(socketName)) {
       console.warn('Node.addOutputSocket: duplicate the key');
     }
 
-    this.__outputSockets.set(key, new OutputSocket(SocketType, this.__id));
+    this.__outputSockets.set(
+      socketName,
+      new OutputSocket(SocketType, this.__id, socketName)
+    );
   }
 
   getInputNodeAll(): Map<string, Node> {
