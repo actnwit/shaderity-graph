@@ -1,6 +1,6 @@
 import AbstractSocket from './AbstractSocket';
 import {NodeId} from '../types/CommonType';
-import {SocketDirection, SocketTypeEnum} from '../types/CommonEnum';
+import {SocketTypeEnum} from '../types/CommonEnum';
 import {SocketClassName} from './ISocket';
 import {IInputSocket} from './IInputSocket';
 import {IOutputSocket} from './IOutputSocket';
@@ -13,7 +13,7 @@ export default class InputSocket
   _connectedSocket: IOutputSocket | undefined = undefined;
 
   constructor(SocketType: SocketTypeEnum, nodeId: NodeId) {
-    super(SocketType, SocketDirection.Input, nodeId);
+    super(SocketType, nodeId);
   }
 
   get className(): SocketClassName {

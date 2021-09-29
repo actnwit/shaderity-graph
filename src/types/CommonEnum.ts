@@ -76,10 +76,3 @@ function getGlslTypeStr(socketType: SocketTypeEnum): GlslTypeStr {
 }
 
 export type SocketTypeEnum = typeof SocketType[keyof typeof _SocketType];
-
-export const SocketDirection = {
-  Input: 'input',
-  Output: 'output',
-} as const;
-export type SocketDirectionEnum =
-  typeof SocketDirection[keyof typeof SocketDirection];

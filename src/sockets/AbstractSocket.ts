@@ -1,4 +1,4 @@
-import {SocketDirectionEnum, SocketTypeEnum} from '../types/CommonEnum';
+import {SocketTypeEnum} from '../types/CommonEnum';
 import {NodeId} from '../types/CommonType';
 import {IInputSocket} from './IInputSocket';
 import {IOutputSocket} from './IOutputSocket';
@@ -6,16 +6,10 @@ import {ISocket, SocketClassName} from './ISocket';
 
 export default abstract class AbstractSocket implements ISocket {
   private __socketType: SocketTypeEnum;
-  private __socketDirection: SocketDirectionEnum;
   private __nodeId: NodeId;
 
-  constructor(
-    socketType: SocketTypeEnum,
-    socketDirection: SocketDirectionEnum,
-    nodeId: NodeId
-  ) {
+  constructor(socketType: SocketTypeEnum, nodeId: NodeId) {
     this.__socketType = socketType;
-    this.__socketDirection = socketDirection;
     this.__nodeId = nodeId;
   }
 
