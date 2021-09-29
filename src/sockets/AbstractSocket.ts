@@ -1,9 +1,10 @@
 import {SocketDirectionEnum, SocketTypeEnum} from '../types/CommonEnum';
 import {NodeId} from '../types/CommonType';
+import {IInputSocket} from './IInputSocket';
+import {IOutputSocket} from './IOutputSocket';
+import {ISocket, SocketClassName} from './ISocket';
 
-export default abstract class AbstractSocket {
-  protected __connectedSockets: AbstractSocket[] = [];
-
+export default abstract class AbstractSocket implements ISocket {
   private __socketType: SocketTypeEnum;
   private __socketDirection: SocketDirectionEnum;
   private __nodeId: NodeId;
@@ -18,36 +19,26 @@ export default abstract class AbstractSocket {
     this.__nodeId = nodeId;
   }
 
-  static connectSockets(socketA: AbstractSocket, socketB: AbstractSocket) {
-    if (
-      socketA.__socketType === socketB.__socketType &&
-      socketA.__socketDirection !== socketB.__socketDirection
-    ) {
-      socketA.__connectSocket(socketB);
-      socketB.__connectSocket(socketA);
+  static connectSockets(
+    inputSocket: IInputSocket,
+    outputSocket: IOutputSocket
+  ) {
+    if (inputSocket.socketType === outputSocket.socketType) {
+      inputSocket._connectSocketWith(outputSocket);
+      outputSocket._connectSocketWith(inputSocket);
     } else {
-      console.error(
-        'AbstractSocket.connectSockets: Invalid socket connection.'
-      );
+      console.error('AbstractSocket.connectSockets: socketType is different');
     }
-  }
-
-  // In the case of an input socket, the length of the return value must be 1 or 0.
-  get connectedNodeIDs() {
-    const nodeIDs: NodeId[] = [];
-    for (const socket of this.__connectedSockets) {
-      nodeIDs.push(socket.__nodeId);
-    }
-    return nodeIDs;
-  }
-
-  get connectedSockets() {
-    return this.__connectedSockets;
   }
 
   get socketType() {
     return this.__socketType;
   }
 
-  protected abstract __connectSocket(socket: AbstractSocket): void;
+  get nodeId() {
+    return this.__nodeId;
+  }
+
+  abstract get className(): SocketClassName;
+  abstract _connectSocketWith(socket: ISocket): void;
 }

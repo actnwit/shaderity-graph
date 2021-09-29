@@ -43,9 +43,7 @@ export default class NodeSorter {
         let hasNoUnsortedInputNode = true;
 
         for (const inputSocket of node.inputSockets.values()) {
-          if (
-            ignoredInputNodeIds.indexOf(inputSocket.connectedNodeIDs[0]) === -1
-          ) {
+          if (ignoredInputNodeIds.indexOf(inputSocket.connectedNodeId) === -1) {
             hasNoUnsortedInputNode = false;
             break;
           }

@@ -118,8 +118,8 @@ export default class Node {
   getInputNode(socketKey: string): Node | undefined {
     const targetSocket = this.getInputSocket(socketKey);
     if (targetSocket != null) {
-      const connectedNodeID = targetSocket?.connectedNodeIDs[0];
-      return Node.__nodes[connectedNodeID];
+      const connectedNodeId = targetSocket?.connectedNodeId;
+      return Node.__nodes[connectedNodeId];
     } else {
       return undefined;
     }
@@ -147,9 +147,9 @@ export default class Node {
     const targetSocket = this.getOutputSocket(socketKey);
 
     if (targetSocket != null) {
-      const connectedNodeIDs = targetSocket.connectedNodeIDs;
+      const connectedNodeIds = targetSocket.connectedNodeIds;
       const connectedNodes: Node[] = [];
-      for (const nodeId of connectedNodeIDs) {
+      for (const nodeId of connectedNodeIds) {
         connectedNodes.push(Node.__nodes[nodeId]);
       }
       return connectedNodes;

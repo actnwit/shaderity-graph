@@ -71,8 +71,8 @@ export default class JsonImporter {
             ) as InputSocket;
 
             AbstractSocket.connectSockets(
-              socketOfInputNode,
-              socketOfOutputNode
+              socketOfOutputNode,
+              socketOfInputNode
             );
             break;
           }

@@ -104,10 +104,10 @@ void main() {
 
       // write variable
       for (const inputSocket of inputSockets.values()) {
-        const prevNodeId = inputSocket.connectedNodeIDs[0];
+        const prevNodeId = inputSocket.connectedNodeId;
         const prevNode = Node.getNodeById(prevNodeId);
-        const outputSocketOfPrevNode = inputSocket
-          .connectedSockets[0] as OutputSocket;
+        const outputSocketOfPrevNode =
+          inputSocket.connectedSocket as OutputSocket;
         const outputSocketKeyOfPrevNode = prevNode.getOutputSocketKey(
           outputSocketOfPrevNode
         );
@@ -138,7 +138,7 @@ void main() {
         outputSocketKey,
         outputSocketOfPrevNode,
       ] of outputSocketsOfPrevNode) {
-        const backNodeIds = outputSocketOfPrevNode.connectedNodeIDs;
+        const backNodeIds = outputSocketOfPrevNode.connectedNodeIds;
 
         for (const backNodeId of backNodeIds) {
           const varName = `${outputSocketKey}_${prevNode.id}_to_${backNodeId}`;
