@@ -5,6 +5,7 @@ import glslPrecisionShaderityObject from './shaderityShaders/glslPrecision.glsl'
 import prerequisitesShaderityObject from './shaderityShaders/prerequisites.glsl';
 import mainPrerequisitesShaderityObject from './shaderityShaders/mainPrerequisites.glsl';
 import {SocketType} from '../types/CommonEnum';
+import {INode} from '../node/INode';
 
 export default class ShaderGraphResolver {
   static createVertexShaderCode(sortedVertexNodes: Node[]): string {
@@ -104,14 +105,13 @@ void main() {
 
       // write variable
       for (const inputSocket of inputSockets.values()) {
-        const prevNodeId = inputSocket.connectedNodeId;
-        const prevNode = Node.getNodeById(prevNodeId);
+        const prevNode = inputSocket.connectedNode as INode;
         const outputSocketOfPrevNode =
           inputSocket.connectedSocket as OutputSocket;
         const outputSocketNameOfPrevNode = outputSocketOfPrevNode.name;
 
         // TODO: substitute uniform value
-        let varName = `${outputSocketNameOfPrevNode}_${prevNodeId}_to_${targetNode.id}`;
+        let varName = `${outputSocketNameOfPrevNode}_${prevNode.id}_to_${targetNode.id}`;
 
         if (existingInputs.indexOf(prevNode.id) === -1) {
           const socketType = inputSocket.socketType;
@@ -125,7 +125,7 @@ void main() {
           varName = existVarName;
         }
         inputVarNames[index].push(varName);
-        existingInputs.push(prevNodeId);
+        existingInputs.push(prevNode.id);
       }
 
       // avoid duplication of variable
@@ -133,7 +133,7 @@ void main() {
       const outputSocketsOfPrevNode = prevNode._outputSockets;
 
       for (const outputSocketOfPrevNode of outputSocketsOfPrevNode) {
-        const backNodeIds = outputSocketOfPrevNode.connectedNodeIds;
+        const backNodeIds = outputSocketOfPrevNode.connectedNodes;
         const outputSocketName = outputSocketOfPrevNode.name;
 
         for (const backNodeId of backNodeIds) {

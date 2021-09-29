@@ -1,9 +1,9 @@
 import AbstractSocket from './AbstractSocket';
-import {NodeId} from '../types/CommonType';
 import {SocketTypeEnum} from '../types/CommonEnum';
 import {SocketClassName} from './ISocket';
 import {IInputSocket} from './IInputSocket';
 import {IOutputSocket} from './IOutputSocket';
+import {INode} from '../node/INode';
 
 // An InputSocket can connect only one OutputSocket
 export default class InputSocket
@@ -14,19 +14,19 @@ export default class InputSocket
 
   constructor(
     SocketType: SocketTypeEnum,
-    nodeId: NodeId,
+    node: INode,
     socketName: string,
     argumentId: number
   ) {
-    super(SocketType, nodeId, socketName, argumentId);
+    super(SocketType, node, socketName, argumentId);
   }
 
   get className(): SocketClassName {
     return 'InputSocket';
   }
 
-  get connectedNodeId() {
-    return this._connectedSocket?.nodeId ?? -1;
+  get connectedNode() {
+    return this._connectedSocket?.node;
   }
 
   get connectedSocket() {

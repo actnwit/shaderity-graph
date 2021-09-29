@@ -1,5 +1,5 @@
+import {INode} from '../node/INode';
 import {SocketTypeEnum} from '../types/CommonEnum';
-import {NodeId} from '../types/CommonType';
 import {IInputSocket} from './IInputSocket';
 import {IOutputSocket} from './IOutputSocket';
 import {ISocket, SocketClassName} from './ISocket';
@@ -7,18 +7,18 @@ import {ISocket, SocketClassName} from './ISocket';
 export default abstract class AbstractSocket implements ISocket {
   private __name: string;
   private __socketType: SocketTypeEnum;
-  private __nodeId: NodeId;
+  private __node: INode;
   private __argumentId: number;
 
   constructor(
     socketType: SocketTypeEnum,
-    nodeId: NodeId,
+    node: INode,
     socketName: string,
     argumentId: number
   ) {
     this.__name = socketName;
     this.__socketType = socketType;
-    this.__nodeId = nodeId;
+    this.__node = node;
     this.__argumentId = argumentId;
   }
 
@@ -42,8 +42,8 @@ export default abstract class AbstractSocket implements ISocket {
     return this.__socketType;
   }
 
-  get nodeId() {
-    return this.__nodeId;
+  get node() {
+    return this.__node;
   }
 
   get argumentId() {

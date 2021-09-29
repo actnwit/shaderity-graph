@@ -128,7 +128,7 @@ export default class Node implements INode {
 
     const inputSocket = new InputSocket(
       SocketType,
-      this.__id,
+      this,
       socketName,
       argumentId
     );
@@ -150,7 +150,7 @@ export default class Node implements INode {
 
     const outputSocket = new OutputSocket(
       SocketType,
-      this.__id,
+      this,
       socketName,
       argumentId
     );
@@ -163,8 +163,8 @@ export default class Node implements INode {
       return undefined;
     }
 
-    const connectedNodeId = targetSocket.connectedNodeId;
-    return Node.__nodes[connectedNodeId];
+    const connectedNode = targetSocket.connectedNode;
+    return connectedNode;
   }
 
   getOutputNodes(socketName: string) {
@@ -173,11 +173,7 @@ export default class Node implements INode {
       return [];
     }
 
-    const connectedNodeIds = targetSocket.connectedNodeIds;
-    const connectedNodes: Node[] = [];
-    for (const nodeId of connectedNodeIds) {
-      connectedNodes.push(Node.__nodes[nodeId]);
-    }
+    const connectedNodes = targetSocket.connectedNodes;
     return connectedNodes;
   }
 

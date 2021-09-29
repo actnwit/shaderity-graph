@@ -1,3 +1,4 @@
+import {INode} from '../node/INode';
 import {IOutputSocket} from './IOutputSocket';
 import {ISocket} from './ISocket';
 
@@ -6,6 +7,6 @@ export interface IInputSocket extends ISocket {
 
   _connectSocketWith(socket: IOutputSocket): void;
 
-  get connectedNodeId(): number;
+  get connectedNode(): INode | undefined;
   get connectedSocket(): IOutputSocket | undefined;
 }

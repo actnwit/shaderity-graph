@@ -46,13 +46,12 @@ export default class NodeSorter {
     for (let i = 0; i < unsortedNodes.length; i++) {
       const node = unsortedNodes[i];
       for (const inputSocket of node._inputSockets) {
-        const inputNodeId = inputSocket.connectedNodeId;
-        if (inputNodeId === -1) {
+        const inputNode = inputSocket.connectedNode;
+        if (inputNode == null) {
           // non-connected socket
           continue;
         }
 
-        const inputNode = Node.getNodeById(inputNodeId);
         const inputIndex = unsortedNodes.findIndex(node => node === inputNode);
         inputNodeCounts[i]++;
         edges[inputIndex].push(i);
