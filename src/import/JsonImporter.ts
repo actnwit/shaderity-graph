@@ -70,11 +70,11 @@ export default class JsonImporter {
 
           if (nodeId === outputNodeId) {
             const inputNode = nodes[inputNodeId];
-            const socketOfInputNode = inputNode.getOutputSocket(
+            const socketOfInputNode = inputNode._getOutputSocket(
               outSocketKey
             ) as OutputSocket;
             const outputNode = nodes[outputNodeId];
-            const socketOfOutputNode = outputNode.getInputSocket(
+            const socketOfOutputNode = outputNode._getInputSocket(
               inSocketKey
             ) as InputSocket;
 

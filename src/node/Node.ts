@@ -83,11 +83,11 @@ export default class Node {
     return this.__id;
   }
 
-  get inputSockets() {
+  get _inputSockets() {
     return this.__inputSockets;
   }
 
-  get outputSockets() {
+  get _outputSockets() {
     return this.__outputSockets;
   }
 
@@ -137,7 +137,7 @@ export default class Node {
   }
 
   getInputNode(socketName: string): Node | undefined {
-    const targetSocket = this.getInputSocket(socketName);
+    const targetSocket = this._getInputSocket(socketName);
     if (targetSocket == null) {
       return undefined;
     }
@@ -146,7 +146,21 @@ export default class Node {
     return Node.__nodes[connectedNodeId];
   }
 
-  getInputSocket(socketName: string): IInputSocket | undefined {
+  getOutputNodes(socketName: string): Node[] {
+    const targetSocket = this._getOutputSocket(socketName);
+    if (targetSocket == null) {
+      return [];
+    }
+
+    const connectedNodeIds = targetSocket.connectedNodeIds;
+    const connectedNodes: Node[] = [];
+    for (const nodeId of connectedNodeIds) {
+      connectedNodes.push(Node.__nodes[nodeId]);
+    }
+    return connectedNodes;
+  }
+
+  _getInputSocket(socketName: string): IInputSocket | undefined {
     const resultSocket = this.__inputSockets.find(
       inputSockets => inputSockets.name === socketName
     );
@@ -161,21 +175,7 @@ export default class Node {
     return resultSocket;
   }
 
-  getOutputNodes(socketName: string): Node[] {
-    const targetSocket = this.getOutputSocket(socketName);
-    if (targetSocket == null) {
-      return [];
-    }
-
-    const connectedNodeIds = targetSocket.connectedNodeIds;
-    const connectedNodes: Node[] = [];
-    for (const nodeId of connectedNodeIds) {
-      connectedNodes.push(Node.__nodes[nodeId]);
-    }
-    return connectedNodes;
-  }
-
-  getOutputSocket(socketName: string): IOutputSocket | undefined {
+  _getOutputSocket(socketName: string): IOutputSocket | undefined {
     const resultSocket = this.__outputSockets.find(
       outputSockets => outputSockets.name === socketName
     );

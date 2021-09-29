@@ -100,7 +100,7 @@ void main() {
       inputVarNames[index] = inputVarNames[index] ?? [];
       outputVarNames[index - 1] = outputVarNames[index - 1] ?? [];
 
-      const inputSockets = targetNode.inputSockets;
+      const inputSockets = targetNode._inputSockets;
 
       // write variable
       for (const inputSocket of inputSockets.values()) {
@@ -130,7 +130,7 @@ void main() {
 
       // avoid duplication of variable
       const prevNode = nodes[index - 1];
-      const outputSocketsOfPrevNode = prevNode.outputSockets;
+      const outputSocketsOfPrevNode = prevNode._outputSockets;
 
       for (const outputSocketOfPrevNode of outputSocketsOfPrevNode) {
         const backNodeIds = outputSocketOfPrevNode.connectedNodeIds;
@@ -155,8 +155,8 @@ void main() {
 
       // do we need this check?
       if (
-        node.inputSockets.length !== inputVarNames[index].length ||
-        node.outputSockets.length !== outputVarNames[index].length
+        node._inputSockets.length !== inputVarNames[index].length ||
+        node._outputSockets.length !== outputVarNames[index].length
       ) {
         return;
       }
