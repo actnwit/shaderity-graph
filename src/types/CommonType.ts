@@ -61,8 +61,7 @@ export interface ShaderityGraphNode {
     | AttributeInputNodeData
     | VaryingInputNodeData
     | UniformInputNodeData;
-  inputNodes?: {[key: string]: ConnectedInputNode};
-  outputNodes?: {[key: string]: ConnectedNode};
+  socketData: (InputSocketData | OutputSocketData)[]; // the order must be the order of the function arguments for this node
   extras?: {[key: string]: unknown};
 }
 
@@ -92,12 +91,23 @@ export interface ShaderGlobalData {
   constantValues?: ShaderConstantValueObject[];
 }
 
-export interface ConnectedNode {
-  nodeId: number;
-  argumentId: number;
-  socketType: SocketTypeEnum;
+export interface SocketConnectionDatum {
+  connectedSocketName: string;
+  connectedNodeId: number;
 }
 
-export interface ConnectedInputNode extends ConnectedNode {
+// if the direction is input/output, the socket is InputSocket/OutputSocket
+export interface SocketData {
+  name: string;
+  argumentId: number;
+  type: SocketTypeEnum;
+  direction: 'input' | 'output';
+}
+
+export interface InputSocketData extends SocketData {
   defaultValue: number[];
+  socketConnectionDatum?: SocketConnectionDatum;
+}
+export interface OutputSocketData extends SocketData {
+  socketConnectionData?: SocketConnectionDatum[];
 }

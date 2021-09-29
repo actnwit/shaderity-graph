@@ -2,11 +2,9 @@ import AttributeInputNode from '../node/AttributeInputNode';
 import Node from '../node/Node';
 import UniformInputNode from '../node/UniformInputNode';
 import VaryingInputNode from '../node/VaryingInputNode';
-import AbstractSocket from '../sockets/AbstractSocket';
-import InputSocket from '../sockets/InputSocket';
-import OutputSocket from '../sockets/OutputSocket';
 import {
   AttributeInputNodeData,
+  InputSocketData,
   ShaderityGraphNode,
   UniformInputNodeData,
   VaryingInputNodeData,
@@ -35,56 +33,57 @@ export default class JsonImporter {
         node = new Node(nodeData);
       }
 
-      for (const key in nodeJson.inputNodes) {
-        const socketType = nodeJson.inputNodes[key].socketType;
-        node.addInputSocket(
-          key,
-          socketType,
-          nodeJson.inputNodes[key].argumentId
-        );
-      }
+      for (let i = 0; i < nodeJson.socketData.length; i++) {
+        const socketData = nodeJson.socketData[i];
+        const socketType = socketData.type;
 
-      for (const key in nodeJson.outputNodes) {
-        const socketType = nodeJson.outputNodes[key].socketType;
-        node.addOutputSocket(
-          key,
-          socketType,
-          nodeJson.outputNodes[key].argumentId
-        );
+        if (socketData.direction === 'input') {
+          node.addInputSocket(
+            socketData.name,
+            socketType,
+            socketData.argumentId
+          );
+        } else {
+          node.addOutputSocket(
+            socketData.name,
+            socketType,
+            socketData.argumentId
+          );
+        }
       }
     }
   }
 
   private static __connectSockets(nodesJson: ShaderityGraphNode[]) {
-    const nodes = Node.allNodes;
     for (let i = 0; i < nodesJson.length; i++) {
       const outputNodeId = i;
       const outputNodeJson = nodesJson[outputNodeId];
 
-      for (const inSocketKey in outputNodeJson.inputNodes) {
-        const inputNodeId = outputNodeJson.inputNodes[inSocketKey].nodeId;
-        const inputNodeJson = nodesJson[inputNodeId];
-
-        for (const outSocketKey in inputNodeJson.outputNodes) {
-          const nodeId = inputNodeJson.outputNodes[outSocketKey].nodeId;
-
-          if (nodeId === outputNodeId) {
-            const inputNode = nodes[inputNodeId];
-            const socketOfInputNode = inputNode._getOutputSocket(
-              outSocketKey
-            ) as OutputSocket;
-            const outputNode = nodes[outputNodeId];
-            const socketOfOutputNode = outputNode._getInputSocket(
-              inSocketKey
-            ) as InputSocket;
-
-            AbstractSocket.connectSockets(
-              socketOfOutputNode,
-              socketOfInputNode
-            );
-            break;
-          }
+      for (const socketData of outputNodeJson.socketData) {
+        if (socketData.direction === 'output') {
+          continue;
         }
+
+        const inputSocketData = socketData as InputSocketData;
+        const socketConnectionData = inputSocketData.socketConnectionDatum;
+        if (socketConnectionData == null) {
+          continue;
+        }
+
+        const inputNode = Node.getNodeById(
+          socketConnectionData.connectedNodeId
+        );
+        const outputSocketNameOfInputNode =
+          socketConnectionData.connectedSocketName;
+        const outputNode = Node.getNodeById(outputNodeId);
+        const inputSocketNameOfOutputNode = inputSocketData.name;
+
+        Node.connectNodes(
+          inputNode,
+          outputSocketNameOfInputNode,
+          outputNode,
+          inputSocketNameOfOutputNode
+        );
       }
     }
   }

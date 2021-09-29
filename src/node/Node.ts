@@ -4,6 +4,7 @@ import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
 import {IOutputSocket} from '../sockets/IOutputSocket';
 import {IInputSocket} from '../sockets/IInputSocket';
+import AbstractSocket from '../sockets/AbstractSocket';
 
 export type NodeClassNames =
   | 'Node'
@@ -57,6 +58,25 @@ export default class Node {
 
   static getNodeById(id: NodeId) {
     return this.__nodes[id];
+  }
+
+  static connectNodes(
+    inputNode: Node,
+    outputSocketNameOfInputNode: string,
+    outputNode: Node,
+    inputSocketNameOfOutputNode: string
+  ) {
+    const outputSocket = inputNode._getOutputSocket(
+      outputSocketNameOfInputNode
+    );
+    const inputSocket = outputNode._getInputSocket(inputSocketNameOfOutputNode);
+
+    if (inputSocket == null || outputSocket == null) {
+      console.error('Node.connectNodes: socket is not found');
+      return;
+    }
+
+    AbstractSocket.connectSockets(inputSocket, outputSocket);
   }
 
   get className(): NodeClassNames {

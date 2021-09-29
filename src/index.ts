@@ -1,7 +1,7 @@
 import System from './system/System';
 import {SocketType, SocketTypeEnum} from './types/CommonEnum';
 import {
-  ConnectedNode,
+  SocketData,
   ShaderCodes,
   ShaderityGraphJson,
   ShaderityGraphNode,
@@ -17,6 +17,6 @@ export type {
   ShaderCodes,
   ShaderityGraphJson,
   ShaderityGraphNode,
-  ConnectedNode,
+  SocketData,
   SocketTypeEnum,
 };
