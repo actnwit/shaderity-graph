@@ -1,6 +1,5 @@
 import {IInputSocket} from '../sockets/IInputSocket';
 import {IOutputSocket} from '../sockets/IOutputSocket';
-import {ISocket} from '../sockets/ISocket';
 import {ShaderStageEnum, SocketTypeEnum} from '../types/CommonEnum';
 
 export type NodeClassNames =

@@ -55,11 +55,11 @@ shaderity: @{getters}
     const existVertexFunctions: string[] = [];
     for (let i = 0; i < shaderNodes.length; i++) {
       const node = shaderNodes[i];
-      if (existVertexFunctions.indexOf(node.name) !== -1) {
+      if (existVertexFunctions.indexOf(node.functionName) !== -1) {
         continue;
       }
       shaderText += node.shaderCode;
-      existVertexFunctions.push(node.name);
+      existVertexFunctions.push(node.functionName);
     }
 
     return shaderText;
@@ -148,7 +148,7 @@ void main() {
 
     function addFunctionCallingToShaderBody(index: number) {
       const node = nodes[index];
-      const functionName = node.name;
+      const functionName = node.functionName;
 
       inputVarNames[index] = inputVarNames[index] ?? [];
       outputVarNames[index] = outputVarNames[index] ?? [];
