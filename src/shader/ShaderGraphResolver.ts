@@ -4,6 +4,7 @@ import {NodeId} from '../types/CommonType';
 import glslPrecisionShaderityObject from './shaderityShaders/glslPrecision.glsl';
 import prerequisitesShaderityObject from './shaderityShaders/prerequisites.glsl';
 import mainPrerequisitesShaderityObject from './shaderityShaders/mainPrerequisites.glsl';
+import {SocketType} from '../types/CommonEnum';
 
 export default class ShaderGraphResolver {
   static createVertexShaderCode(sortedVertexNodes: Node[]): string {
@@ -115,7 +116,8 @@ void main() {
         let varName = `${outputSocketKeyOfPrevNode}_${prevNodeId}_to_${targetNode.id}`;
 
         if (existingInputs.indexOf(prevNode.id) === -1) {
-          const glslTypeStr = inputSocket.glslTypeStr;
+          const socketType = inputSocket.socketType;
+          const glslTypeStr = SocketType.getGlslTypeStr(socketType);
           const rowStr = `  ${glslTypeStr} ${varName};\n`;
           shaderBody += rowStr;
         }

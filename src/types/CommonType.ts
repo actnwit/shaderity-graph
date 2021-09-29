@@ -25,6 +25,23 @@ export type ShaderVaryingObject = _ShaderVaryingObject;
 
 export type NodeId = number;
 
+export type GlslTypeStr =
+  | 'bool'
+  | 'int'
+  | 'float'
+  | 'vec2'
+  | 'vec3'
+  | 'vec4'
+  | 'ivec2'
+  | 'ivec3'
+  | 'ivec4'
+  | 'sampler2D'
+  | 'samplerCube'
+  | 'mat2'
+  | 'mat3'
+  | 'mat4'
+  | 'unknown';
+
 export interface ShaderCodes {
   vertexShaderCode: string;
   pixelShaderCode: string;
