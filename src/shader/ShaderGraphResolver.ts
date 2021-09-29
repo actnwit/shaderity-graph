@@ -108,12 +108,10 @@ void main() {
         const prevNode = Node.getNodeById(prevNodeId);
         const outputSocketOfPrevNode =
           inputSocket.connectedSocket as OutputSocket;
-        const outputSocketKeyOfPrevNode = prevNode.getOutputSocketKey(
-          outputSocketOfPrevNode
-        );
+        const outputSocketNameOfPrevNode = outputSocketOfPrevNode.name;
 
         // TODO: substitute uniform value
-        let varName = `${outputSocketKeyOfPrevNode}_${prevNodeId}_to_${targetNode.id}`;
+        let varName = `${outputSocketNameOfPrevNode}_${prevNodeId}_to_${targetNode.id}`;
 
         if (existingInputs.indexOf(prevNode.id) === -1) {
           const socketType = inputSocket.socketType;
@@ -134,14 +132,12 @@ void main() {
       const prevNode = nodes[index - 1];
       const outputSocketsOfPrevNode = prevNode.outputSockets;
 
-      for (const [
-        outputSocketKey,
-        outputSocketOfPrevNode,
-      ] of outputSocketsOfPrevNode) {
+      for (const outputSocketOfPrevNode of outputSocketsOfPrevNode) {
         const backNodeIds = outputSocketOfPrevNode.connectedNodeIds;
+        const outputSocketName = outputSocketOfPrevNode.name;
 
         for (const backNodeId of backNodeIds) {
-          const varName = `${outputSocketKey}_${prevNode.id}_to_${backNodeId}`;
+          const varName = `${outputSocketName}_${prevNode.id}_to_${backNodeId}`;
 
           outputVarNames[index - 1].push(varName);
           existingOutputsVarName.set(prevNode.id, varName);
@@ -159,8 +155,8 @@ void main() {
 
       // do we need this check?
       if (
-        node.inputSockets.size !== inputVarNames[index].length ||
-        node.outputSockets.size !== outputVarNames[index].length
+        node.inputSockets.length !== inputVarNames[index].length ||
+        node.outputSockets.length !== outputVarNames[index].length
       ) {
         return;
       }

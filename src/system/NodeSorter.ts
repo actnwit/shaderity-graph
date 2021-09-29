@@ -15,7 +15,7 @@ export default class NodeSorter {
     let noInputSocketNode: Node | undefined;
     for (const node of nodes) {
       const sockets = node.inputSockets;
-      const inputSocketCount = sockets.size;
+      const inputSocketCount = sockets.length;
       if (inputSocketCount === 0) {
         noInputSocketNode = node;
         break;

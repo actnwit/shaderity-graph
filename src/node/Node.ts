@@ -2,6 +2,8 @@ import {ShaderStage, SocketTypeEnum} from '../types/CommonEnum';
 import {NodeData, NodeId} from '../types/CommonType';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
+import {IOutputSocket} from '../sockets/IOutputSocket';
+import {IInputSocket} from '../sockets/IInputSocket';
 
 export type NodeClassNames =
   | 'Node'
@@ -15,8 +17,8 @@ export default class Node {
   protected __nodeData: NodeData;
 
   protected __id: NodeId;
-  protected __inputSockets: Map<string, InputSocket> = new Map();
-  protected __outputSockets: Map<string, OutputSocket> = new Map();
+  protected __inputSockets: IInputSocket[] = [];
+  protected __outputSockets: IOutputSocket[] = [];
 
   constructor(nodeData: NodeData) {
     this.__nodeData = nodeData;
@@ -90,106 +92,82 @@ export default class Node {
   }
 
   addInputSocket(socketName: string, SocketType: SocketTypeEnum) {
-    if (this.__inputSockets.has(socketName)) {
-      console.warn('Node.addInputSocket: duplicate the key');
+    const existSocketName = this.__inputSockets.some(
+      socket => socket.name === socketName
+    );
+
+    if (existSocketName) {
+      console.warn('Node.addInputSocket: duplicate socketName');
     }
 
     const inputSocket = new InputSocket(SocketType, this.__id, socketName);
-    this.__inputSockets.set(socketName, inputSocket);
+    this.__inputSockets.push(inputSocket);
   }
 
   addOutputSocket(socketName: string, SocketType: SocketTypeEnum) {
-    if (this.__outputSockets.has(socketName)) {
-      console.warn('Node.addOutputSocket: duplicate the key');
-    }
-
-    this.__outputSockets.set(
-      socketName,
-      new OutputSocket(SocketType, this.__id, socketName)
+    const existSocketName = this.__outputSockets.some(
+      socket => socket.name === socketName
     );
-  }
 
-  getInputNodeAll(): Map<string, Node> {
-    const inputNodes: Map<string, Node> = new Map();
-    for (const key of this.__inputSockets.keys()) {
-      const node = this.getInputNode(key) as Node;
-      inputNodes.set(key, node);
+    if (existSocketName) {
+      console.warn('Node.addOutputSocket: duplicate socketName');
     }
-    return inputNodes;
+
+    const outputSocket = new OutputSocket(SocketType, this.__id, socketName);
+    this.__outputSockets.push(outputSocket);
   }
 
-  getInputNode(socketKey: string): Node | undefined {
-    const targetSocket = this.getInputSocket(socketKey);
-    if (targetSocket != null) {
-      const connectedNodeId = targetSocket?.connectedNodeId;
-      return Node.__nodes[connectedNodeId];
-    } else {
-      return undefined;
-    }
-  }
-
-  getInputSocket(socketKey: string): InputSocket | undefined {
-    if (!this.__inputSockets.has(socketKey)) {
-      console.error('Node.getInputSocket: Wrong key of socket');
+  getInputNode(socketName: string): Node | undefined {
+    const targetSocket = this.getInputSocket(socketName);
+    if (targetSocket == null) {
       return undefined;
     }
 
-    const targetSocket = this.__inputSockets.get(socketKey);
-    return targetSocket;
+    const connectedNodeId = targetSocket.connectedNodeId;
+    return Node.__nodes[connectedNodeId];
   }
 
-  getOutputNodesAll(): Map<string, Node[]> {
-    const outputNodes: Map<string, Node[]> = new Map();
-    for (const key in this.__outputSockets) {
-      outputNodes.set(key, this.getOutputNodes(key));
+  getInputSocket(socketName: string): IInputSocket | undefined {
+    const resultSocket = this.__inputSockets.find(
+      inputSockets => inputSockets.name === socketName
+    );
+
+    if (resultSocket == null) {
+      console.error(
+        `Node.getInputSocket: socket name ${socketName} is not exist`
+      );
+      return undefined;
     }
-    return outputNodes;
+
+    return resultSocket;
   }
 
-  getOutputNodes(socketKey: string): Node[] {
-    const targetSocket = this.getOutputSocket(socketKey);
-
-    if (targetSocket != null) {
-      const connectedNodeIds = targetSocket.connectedNodeIds;
-      const connectedNodes: Node[] = [];
-      for (const nodeId of connectedNodeIds) {
-        connectedNodes.push(Node.__nodes[nodeId]);
-      }
-      return connectedNodes;
-    } else {
+  getOutputNodes(socketName: string): Node[] {
+    const targetSocket = this.getOutputSocket(socketName);
+    if (targetSocket == null) {
       return [];
     }
+
+    const connectedNodeIds = targetSocket.connectedNodeIds;
+    const connectedNodes: Node[] = [];
+    for (const nodeId of connectedNodeIds) {
+      connectedNodes.push(Node.__nodes[nodeId]);
+    }
+    return connectedNodes;
   }
 
-  getOutputSocket(socketKey: string): OutputSocket | undefined {
-    if (!this.__outputSockets.has(socketKey)) {
-      console.error('Node.getOutputSocket: Wrong key of socket');
+  getOutputSocket(socketName: string): IOutputSocket | undefined {
+    const resultSocket = this.__outputSockets.find(
+      outputSockets => outputSockets.name === socketName
+    );
+
+    if (resultSocket == null) {
+      console.error(
+        `Node.getOutputSocket: socket name ${socketName} is not exist`
+      );
       return undefined;
     }
 
-    const targetSocket = this.__outputSockets.get(socketKey);
-    return targetSocket;
-  }
-
-  getInputSocketKey(socket: InputSocket): string | undefined {
-    let socketKey: string | undefined;
-    for (const [key, inputSocket] of this.__inputSockets) {
-      if (socket === inputSocket) {
-        socketKey = key;
-        break;
-      }
-    }
-    return socketKey;
-  }
-
-  getOutputSocketKey(socket: OutputSocket): string | undefined {
-    let socketKey: string | undefined;
-    for (const [key, outputSocket] of this.__outputSockets) {
-      if (socket === outputSocket) {
-        socketKey = key;
-        break;
-      }
-    }
-    return socketKey;
+    return resultSocket;
   }
 }
