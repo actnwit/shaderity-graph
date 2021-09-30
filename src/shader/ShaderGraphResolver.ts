@@ -212,6 +212,8 @@ shaderity: @{getters}
         node,
         variableNames
       );
+
+      this.__addStorageQualifierVariableName(node, variableNames);
     }
 
     const mainFunctionCode = `void main() {
@@ -313,6 +315,24 @@ ${variableDeclarations}
     }
 
     return returnStr;
+  }
+
+  private static __addStorageQualifierVariableName(
+    node: Node,
+    variableNames: string[][]
+  ): void {
+    const nodeId = node.id;
+
+    if (node.className === 'AttributeInputNode') {
+      const attributeInputNode = node as AttributeInputNode;
+      variableNames[nodeId][0] = `${attributeInputNode.variableName}_${nodeId}`;
+    } else if (node.className === 'VaryingInputNode') {
+      const varyingInputNode = node as VaryingInputNode;
+      variableNames[nodeId][0] = `${varyingInputNode.variableName}_${nodeId}`;
+    } else if (node.className === 'UniformInputNode') {
+      const uniformInputNode = node as UniformInputNode;
+      variableNames[nodeId][0] = `${uniformInputNode.variableName}_${nodeId}`;
+    }
   }
 
   private static __constructMainFunction(nodes: Node[]) {
