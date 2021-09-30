@@ -1,5 +1,5 @@
 import {ShaderStage, SocketTypeEnum} from '../types/CommonEnum';
-import {NodeData, NodeId} from '../types/CommonType';
+import {NodeData} from '../types/CommonType';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
 import {IOutputSocket} from '../sockets/IOutputSocket';
@@ -18,7 +18,7 @@ export default class Node implements INode {
 
   protected __nodeData: NodeData;
 
-  protected __id: NodeId;
+  protected __id: number;
   protected __inputSockets: IInputSocket[] = [];
   protected __outputSockets: IOutputSocket[] = [];
 
@@ -57,7 +57,7 @@ export default class Node implements INode {
     this.__nodes.length = 0;
   }
 
-  static getNodeById(id: NodeId) {
+  static getNodeById(id: number) {
     return this.__nodes[id];
   }
 

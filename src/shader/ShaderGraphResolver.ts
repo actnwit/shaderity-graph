@@ -1,6 +1,5 @@
 import Node from '../node/Node';
 import OutputSocket from '../sockets/OutputSocket';
-import {NodeId} from '../types/CommonType';
 import glslPrecisionShaderityObject from './shaderityShaders/glslPrecision.glsl';
 import prerequisitesShaderityObject from './shaderityShaders/prerequisites.glsl';
 import mainPrerequisitesShaderityObject from './shaderityShaders/mainPrerequisites.glsl';
@@ -75,9 +74,9 @@ void main() {
     // TODO: refactor of the following codes
     const inputVarNames: Array<Array<string>> = [];
     const outputVarNames: Array<Array<string>> = [];
-    const existingInputs: NodeId[] = [];
-    const existingOutputsVarName: Map<NodeId, string> = new Map();
-    const existingOutputs: NodeId[] = [];
+    const existingInputs: number[] = [];
+    const existingOutputsVarName: Map<number, string> = new Map();
+    const existingOutputs: number[] = [];
 
     // TODO: support uniform value as input
     for (let i = 1; i < nodes.length; i++) {

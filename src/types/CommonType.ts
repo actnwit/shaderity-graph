@@ -23,8 +23,6 @@ export type ShaderConstantValueObject = _ShaderConstantValueObject;
 export type ShaderUniformObject = _ShaderUniformObject;
 export type ShaderVaryingObject = _ShaderVaryingObject;
 
-export type NodeId = number;
-
 export type GlslTypeStr =
   | 'bool'
   | 'int'
