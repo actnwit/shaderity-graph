@@ -192,6 +192,11 @@ shaderity: @{getters}
   }
 
   private static __createMainFunctionCode(sortedNodes: Node[]) {
+    // usage: variableNames[node.id][socket.argumentId] = variableName;
+    const variableNames: Array<Array<string>> =
+      this.__initializeVariableNames(sortedNodes);
+    console.log(variableNames);
+
     let variableDeclarations = '';
     for (let i = 0; i < sortedNodes.length; i++) {
       const node = sortedNodes[i];
@@ -204,6 +209,23 @@ ${variableDeclarations}
 
     console.log(mainFunctionCode);
     return mainFunctionCode;
+  }
+
+  private static __initializeVariableNames(nodes: Node[]) {
+    const variableNames: Array<Array<string>> = new Array(nodes.length);
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+
+      const storageQualifierInputCount = node.className === 'Node' ? 0 : 1;
+      const argumentCount =
+        node._inputSockets.length +
+        node._outputSockets.length +
+        storageQualifierInputCount;
+
+      variableNames[node.id] = new Array(argumentCount);
+    }
+
+    return variableNames;
   }
 
   private static __createOutVariableDeclarations(node: Node): string {
