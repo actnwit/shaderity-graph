@@ -195,12 +195,14 @@ shaderity: @{getters}
     // usage: variableNames[node.id][socket.argumentId] = variableName;
     const variableNames: Array<Array<string>> =
       this.__initializeVariableNames(sortedNodes);
-    console.log(variableNames);
 
     let variableDeclarations = '';
     for (let i = 0; i < sortedNodes.length; i++) {
       const node = sortedNodes[i];
-      variableDeclarations += this.__createOutVariableDeclarations(node);
+      variableDeclarations += this.__createOutVariableDeclarations(
+        node,
+        variableNames
+      );
     }
 
     const mainFunctionCode = `void main() {
@@ -228,25 +230,36 @@ ${variableDeclarations}
     return variableNames;
   }
 
-  private static __createOutVariableDeclarations(node: Node): string {
+  private static __createOutVariableDeclarations(
+    node: Node,
+    variableNames: string[][]
+  ): string {
     let returnStr = '';
     for (const outputSocket of node._outputSockets) {
-      let variableName = `node${node.id}_${outputSocket.name}_to`;
-
       const connectedNodes = outputSocket.connectedNodes;
+      const connectedSockets = outputSocket.connectedSockets;
 
-      // connectedSockets is for debugging
-      // const connectedSockets = outputSocket.connectedSockets;
+      let variableName = `node${node.id}_${outputSocket.name}_to`;
       for (let i = 0; i < connectedNodes.length; i++) {
         const connectedNode = connectedNodes[i];
         variableName += `_node${connectedNode.id}`;
 
+        // for debugging
         // const connectedSocketName = connectedSockets[i].name;
-        // returnStr += `_node${connectedNodeId}_${connectedSocketName}`;
+        // returnStr += `_node${connectedNode.id}_${connectedSocketName}`;
       }
 
       const glslTypeStr = SocketType.getGlslTypeStr(outputSocket.socketType);
       returnStr += `  ${glslTypeStr} ${variableName};\n`;
+
+      variableNames[node.id][outputSocket.argumentId] = variableName;
+      for (let i = 0; i < connectedNodes.length; i++) {
+        const connectedNodeId = connectedNodes[i].id;
+        const connectedSocket = connectedSockets[i];
+
+        variableNames[connectedNodeId][connectedSocket.argumentId] =
+          variableName;
+      }
     }
 
     return returnStr;
