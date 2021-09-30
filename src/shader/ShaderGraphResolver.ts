@@ -87,8 +87,6 @@ shaderity: @{getters}
     shaderityObjectCreator.updateMainFunction(mainFunction);
 
     const shaderityObject = shaderityObjectCreator.createShaderityObject();
-    console.log(sortedNodes);
-    console.log(shaderityObject.code);
     return shaderityObject.code;
   }
 
@@ -216,12 +214,22 @@ shaderity: @{getters}
       this.__addStorageQualifierVariableName(node, variableNames);
     }
 
+    let functionCalls = '';
+    for (let i = 0; i < sortedNodes.length; i++) {
+      const node = sortedNodes[i];
+      const argumentNames = variableNames[node.id];
+      functionCalls += this.__createShaderGraphFunctionCalls(
+        node,
+        argumentNames
+      );
+    }
+
     const mainFunctionCode = `void main() {
 ${inputValueDefinitions}
 ${variableDeclarations}
+${functionCalls}
 }`;
 
-    console.log(mainFunctionCode);
     return mainFunctionCode;
   }
 
@@ -333,6 +341,22 @@ ${variableDeclarations}
       const uniformInputNode = node as UniformInputNode;
       variableNames[nodeId][0] = `${uniformInputNode.variableName}_${nodeId}`;
     }
+  }
+
+  private static __createShaderGraphFunctionCalls(
+    node: Node,
+    argumentNames: string[]
+  ): string {
+    let returnStr = `  ${node.functionName}(`;
+
+    for (let i = 0; i < argumentNames.length; i++) {
+      const argumentName = argumentNames[i];
+      returnStr += argumentName + ', ';
+    }
+
+    returnStr = returnStr.replace(/,\s$/, ');\n');
+    // returnStr += ');\n';
+    return returnStr;
   }
 
   private static __constructMainFunction(nodes: Node[]) {
