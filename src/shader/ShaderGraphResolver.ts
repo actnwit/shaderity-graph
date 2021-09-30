@@ -202,7 +202,10 @@ shaderity: @{getters}
       const node = sortedNodes[i];
 
       // for non-connected input sockets
-      inputValueDefinitions += this.__createInputVariableDefinitions(node);
+      inputValueDefinitions += this.__createInputVariableDefinitions(
+        node,
+        variableNames
+      );
 
       // for connected sockets
       variableDeclarations += this.__createOutVariableDeclarations(
@@ -236,7 +239,10 @@ ${variableDeclarations}
 
     return variableNames;
   }
-  private static __createInputVariableDefinitions(node: Node): string {
+  private static __createInputVariableDefinitions(
+    node: Node,
+    variableNames: string[][]
+  ): string {
     let returnStr = '';
     for (const inputSocket of node._inputSockets) {
       if (inputSocket.connectedSocket != null) {
@@ -267,6 +273,8 @@ ${variableDeclarations}
 
       const variableName = `${inputSocket.name}_${node.id}`;
       returnStr += `  ${glslTypeStr} ${variableName} = ${defaultValue};\n`;
+
+      variableNames[node.id][inputSocket.argumentId] = variableName;
     }
 
     return returnStr;
