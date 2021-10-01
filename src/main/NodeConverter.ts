@@ -1,11 +1,11 @@
 import Node from '../node/Node';
 import {ShaderCodes, ShaderityGraphJson} from '../types/CommonType';
 import JsonImporter from '../import/JsonImporter';
-import NodeSorter from './NodeSorter';
-import ShaderGraphResolver from '../shader/ShaderGraphResolver';
+import NodeSorter from '../shaderGraph/NodeSorter';
+import ShaderGraphResolver from '../shaderGraph/ShaderGraphResolver';
 import ShaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
 
-export default class System {
+export default class NodeConverter {
   //TODO: need to set version
   static readonly shaderityGraphVersion = '';
 
