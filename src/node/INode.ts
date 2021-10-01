@@ -17,6 +17,7 @@ export interface INode {
   get id(): number;
   get _inputSockets(): IInputSocket[];
   get _outputSockets(): IOutputSocket[];
+  get _shaderFunctionDataId(): number;
 
   addInputSocket(
     socketName: string,
