@@ -45,6 +45,11 @@ export interface ShaderCodes {
   fragmentShader: string;
 }
 
+export interface ShaderFunctionData {
+  shaderFunctionCode: string;
+  extensions?: string[];
+}
+
 export interface ShaderityGraphJson {
   version: string;
   shaderName: string;
