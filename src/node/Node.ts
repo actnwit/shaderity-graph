@@ -12,6 +12,12 @@ import AbstractSocket from '../sockets/AbstractSocket';
 import {INode, NodeClassNames} from './INode';
 import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
 
+/**
+ * The node is a object that has a function.
+ * Nodes can be connected to each other via input/output sockets.
+ * The function corresponding to a node is managed in the ShaderFunctionDataRepository.
+ * Nodes with inputs other than sockets are defined as child classes of this node.
+ */
 export default class Node implements INode {
   protected static __nodes: Node[] = [];
 
@@ -40,10 +46,16 @@ export default class Node implements INode {
     Node.__nodes[this.__id] = this;
   }
 
+  /**
+   * Get all created nodes
+   */
   static get allNodes(): Node[] {
     return this.__nodes;
   }
 
+  /**
+   * Get all created vertex nodes
+   */
   static get vertexNodes(): Node[] {
     const vertexNodes: Node[] = [];
     for (const node of this.__nodes) {
@@ -54,6 +66,9 @@ export default class Node implements INode {
     return vertexNodes;
   }
 
+  /**
+   * Get all created fragment nodes
+   */
   static get fragmentNodes(): Node[] {
     const fragmentNodes: Node[] = [];
     for (const node of this.__nodes) {
@@ -64,14 +79,27 @@ export default class Node implements INode {
     return fragmentNodes;
   }
 
+  /**
+   * Remove all created nodes
+   */
   static resetNodes() {
     this.__nodes.length = 0;
   }
 
+  /**
+   * Get the node with the specified id
+   */
   static getNodeById(id: number) {
     return this.__nodes[id];
   }
 
+  /**
+   * Connects two nodes via a specified socket.
+   * @param inputNode previous node
+   * @param outputSocketNameOfInputNode the socket name to be connected on the previous node
+   * @param outputNode post node
+   * @param inputSocketNameOfOutputNode the socket name to be connected on the post node
+   */
   static connectNodes(
     inputNode: Node,
     outputSocketNameOfInputNode: string,
@@ -91,14 +119,23 @@ export default class Node implements INode {
     AbstractSocket.connectSockets(inputSocket, outputSocket);
   }
 
+  /**
+   * Get the className
+   */
   get className(): NodeClassNames {
     return 'Node';
   }
 
+  /**
+   * Get the name of the function that corresponds to this node in the shader
+   */
   get functionName() {
     return this.__shaderFunctionName;
   }
 
+  /**
+   * Get the corresponding node function from ShaderFunctionDataRepository
+   */
   get shaderCode() {
     const shaderCode =
       ShaderFunctionDataRepository.getShaderFunctionData(
@@ -109,10 +146,16 @@ export default class Node implements INode {
     return shaderCode;
   }
 
+  /**
+   * Get the shaderStage where this node will be used
+   */
   get shaderStage() {
     return this.__shaderStage;
   }
 
+  /**
+   * Get the webgl extension used by the functions of this node
+   */
   get extensions() {
     const extensions =
       ShaderFunctionDataRepository.getShaderFunctionData(
@@ -122,22 +165,41 @@ export default class Node implements INode {
     return extensions;
   }
 
+  /**
+   * Get the id of this node
+   */
   get id() {
     return this.__id;
   }
 
+  /**
+   * @private
+   * Get the inputSockets of this node
+   */
   get _inputSockets() {
     return this.__inputSockets;
   }
 
+  /**
+   * @private
+   * Get the outputSockets of this node
+   */
   get _outputSockets() {
     return this.__outputSockets;
   }
 
-  // The argumentId indicates that this socket corresponds to the nth argument of the node's function.
+  /**
+   * Add input socket of this node to connect another node
+   * @param socketName name(key) of adding input socket
+   * @param socketType glsl type of data to be passed by this socket.
+   * @param argumentId The location of the argument of the node function corresponding to this input socket.
+   *                   (e.g. argumentId=0 means that this socket corresponds to the first argument of the node's function)
+   *                   (e.g. argumentId=1 means that this socket corresponds to the second argument of the node's function)
+   * @param defaultValue use this value as input if this socket does not connect with any socket
+   */
   addInputSocket(
     socketName: string,
-    SocketType: SocketTypeEnum,
+    socketType: SocketTypeEnum,
     argumentId: number,
     defaultValue: number[]
   ) {
@@ -150,7 +212,7 @@ export default class Node implements INode {
     }
 
     const inputSocket = new InputSocket(
-      SocketType,
+      socketType,
       this,
       socketName,
       argumentId,
@@ -159,9 +221,19 @@ export default class Node implements INode {
     this.__inputSockets.push(inputSocket);
   }
 
+  /**
+   * Add output socket of this node to connect another node
+   * @param socketName name(key) of adding output socket
+   * @param socketType glsl type of adding output socket
+   * @param argumentId The location of the argument of the node function corresponding to this output socket.
+   *                   (e.g. argumentId=0 means that this socket corresponds to the first argument of the node's function)
+   *                   (e.g. argumentId=1 means that this socket corresponds to the second argument of the node's function)
+   * @param defaultValue use this value as output if this socket does not connect with any socket
+   */
+
   addOutputSocket(
     socketName: string,
-    SocketType: SocketTypeEnum,
+    socketType: SocketTypeEnum,
     argumentId: number
   ) {
     const existSocketName = this.__outputSockets.some(
@@ -173,7 +245,7 @@ export default class Node implements INode {
     }
 
     const outputSocket = new OutputSocket(
-      SocketType,
+      socketType,
       this,
       socketName,
       argumentId
@@ -181,6 +253,9 @@ export default class Node implements INode {
     this.__outputSockets.push(outputSocket);
   }
 
+  /**
+   * Get connected input node by input socket name
+   * */
   getInputNode(socketName: string) {
     const targetSocket = this._getInputSocket(socketName);
     if (targetSocket == null) {
@@ -191,6 +266,9 @@ export default class Node implements INode {
     return connectedNode;
   }
 
+  /**
+   * Get connected output node by output socket name
+   * */
   getOutputNodes(socketName: string) {
     const targetSocket = this._getOutputSocket(socketName);
     if (targetSocket == null) {
@@ -201,6 +279,10 @@ export default class Node implements INode {
     return connectedNodes;
   }
 
+  /**
+   * @private
+   * Get input socket by socket name
+   * */
   _getInputSocket(socketName: string) {
     const resultSocket = this.__inputSockets.find(
       inputSockets => inputSockets.name === socketName
@@ -216,6 +298,10 @@ export default class Node implements INode {
     return resultSocket;
   }
 
+  /**
+   * @private
+   * Get output socket by socket name
+   * */
   _getOutputSocket(socketName: string) {
     const resultSocket = this.__outputSockets.find(
       outputSockets => outputSockets.name === socketName
