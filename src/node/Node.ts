@@ -17,14 +17,18 @@ export type NodeClassNames =
 export default class Node implements INode {
   protected static __nodes: Node[] = [];
 
-  protected __nodeData: NodeData;
+  protected __shaderFunctionName: string;
+  protected __shaderFunctionDataId: number;
+  protected __shaderStage: 'vertex' | 'fragment' | 'noUse';
 
   protected __id: number;
   protected __inputSockets: IInputSocket[] = [];
   protected __outputSockets: IOutputSocket[] = [];
 
   constructor(nodeData: NodeData) {
-    this.__nodeData = nodeData;
+    this.__shaderFunctionName = nodeData.shaderFunctionName;
+    this.__shaderFunctionDataId = nodeData.shaderFunctionDataId;
+    this.__shaderStage = nodeData.shaderStage;
 
     this.__id = Node.__nodes.length;
     Node.__nodes[this.__id] = this;
@@ -86,27 +90,27 @@ export default class Node implements INode {
   }
 
   get functionName() {
-    return this.__nodeData.shaderFunctionName;
+    return this.__shaderFunctionName;
   }
 
   get shaderCode() {
     const shaderCode =
       ShaderFunctionDataRepository.getShaderFunctionDataById(
-        this.__nodeData.shaderFunctionDataId
+        this.__shaderFunctionDataId
       )?.shaderFunctionCode ??
-      `// no shader code in the node with id=${this.__nodeData.shaderFunctionDataId}`;
+      `// no shader code in the node with id=${this.__shaderFunctionDataId}`;
 
     return shaderCode;
   }
 
   get shaderStage() {
-    return this.__nodeData.shaderStage;
+    return this.__shaderStage;
   }
 
   get extensions() {
     const extensions =
       ShaderFunctionDataRepository.getShaderFunctionDataById(
-        this.__nodeData.shaderFunctionDataId
+        this.__shaderFunctionDataId
       )?.extensions ?? [];
 
     return extensions;
