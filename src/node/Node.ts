@@ -17,21 +17,24 @@ export type NodeClassNames =
 export default class Node implements INode {
   protected static __nodes: Node[] = [];
 
-  protected __nodeData: NodeData;
+  protected __shaderFunctionName: string;
+  protected __shaderStage: 'vertex' | 'fragment' | 'noUse';
 
   protected __id: number;
   protected __inputSockets: IInputSocket[] = [];
   protected __outputSockets: IOutputSocket[] = [];
 
   constructor(nodeData: NodeData) {
-    this.__nodeData = nodeData;
+    this.__shaderFunctionName = nodeData.shaderFunctionName;
+    this.__shaderStage = nodeData.shaderStage;
 
-    const shaderFunctionName = nodeData.shaderFunctionName;
     const existShaderFunctionData =
-      ShaderFunctionDataRepository.existShaderFunctionData(shaderFunctionName);
+      ShaderFunctionDataRepository.existShaderFunctionData(
+        this.__shaderFunctionName
+      );
     if (!existShaderFunctionData) {
       console.warn(
-        `Node: function ${shaderFunctionName} is not found in ShaderFunctionDataRepository`
+        `Node: function ${this.__shaderFunctionName} is not found in ShaderFunctionDataRepository`
       );
     }
 
@@ -95,27 +98,27 @@ export default class Node implements INode {
   }
 
   get functionName() {
-    return this.__nodeData.shaderFunctionName;
+    return this.__shaderFunctionName;
   }
 
   get shaderCode() {
     const shaderCode =
       ShaderFunctionDataRepository.getShaderFunctionData(
-        this.__nodeData.shaderFunctionName
+        this.__shaderFunctionName
       )?.shaderFunctionCode ??
-      `// function name ${this.__nodeData.shaderFunctionName} is not found`;
+      `// function name ${this.__shaderFunctionName} is not found`;
 
     return shaderCode;
   }
 
   get shaderStage() {
-    return this.__nodeData.shaderStage;
+    return this.__shaderStage;
   }
 
   get extensions() {
     const extensions =
       ShaderFunctionDataRepository.getShaderFunctionData(
-        this.__nodeData.shaderFunctionName
+        this.__shaderFunctionName
       )?.extensions ?? [];
 
     return extensions;
