@@ -3,6 +3,7 @@ import {ShaderCodes, ShaderityGraphJson} from '../types/CommonType';
 import JsonImporter from '../import/JsonImporter';
 import NodeSorter from './NodeSorter';
 import ShaderGraphResolver from '../shader/ShaderGraphResolver';
+import ShaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
 
 export default class System {
   //TODO: need to set version
@@ -28,8 +29,9 @@ export default class System {
     }
 
     Node.resetNodes();
+    ShaderFunctionDataRepository.resetShaderFunctionData();
 
-    JsonImporter.importJsonToNodes(json.nodes);
+    JsonImporter.importShaderityGraphJson(json);
 
     if (Node.vertexNodes.length === 0) {
       console.warn(
