@@ -1,86 +1,55 @@
-import {
-  SocketDirectionEnum,
-  SocketType,
-  SocketTypeEnum,
-} from '../types/CommonEnum';
+import {SocketTypeEnum} from '../types/CommonEnum';
 import {NodeId} from '../types/CommonType';
+import {IInputSocket} from './IInputSocket';
+import {IOutputSocket} from './IOutputSocket';
+import {ISocket, SocketClassName} from './ISocket';
 
-export default abstract class AbstractSocket {
-  protected __connectedSockets: AbstractSocket[] = [];
-
+export default abstract class AbstractSocket implements ISocket {
+  private __name: string;
   private __socketType: SocketTypeEnum;
-  private __socketDirection: SocketDirectionEnum;
   private __nodeId: NodeId;
+  private __argumentId: number;
 
   constructor(
     socketType: SocketTypeEnum,
-    socketDirection: SocketDirectionEnum,
-    nodeId: NodeId
+    nodeId: NodeId,
+    socketName: string,
+    argumentId: number
   ) {
+    this.__name = socketName;
     this.__socketType = socketType;
-    this.__socketDirection = socketDirection;
     this.__nodeId = nodeId;
+    this.__argumentId = argumentId;
   }
 
-  static connectSockets(socketA: AbstractSocket, socketB: AbstractSocket) {
-    if (
-      socketA.__socketType === socketB.__socketType &&
-      socketA.__socketDirection !== socketB.__socketDirection
-    ) {
-      socketA.__connectSocket(socketB);
-      socketB.__connectSocket(socketA);
+  static connectSockets(
+    inputSocket: IInputSocket,
+    outputSocket: IOutputSocket
+  ) {
+    if (inputSocket.socketType === outputSocket.socketType) {
+      inputSocket._connectSocketWith(outputSocket);
+      outputSocket._connectSocketWith(inputSocket);
     } else {
-      console.error(
-        'AbstractSocket.connectSockets: Invalid socket connection.'
-      );
+      console.error('AbstractSocket.connectSockets: socketType is different');
     }
   }
 
-  // In the case of an input socket, the length of the return value must be 1 or 0.
-  get connectedNodeIDs() {
-    const nodeIDs: NodeId[] = [];
-    for (const socket of this.__connectedSockets) {
-      nodeIDs.push(socket.__nodeId);
-    }
-    return nodeIDs;
+  get name() {
+    return this.__name;
   }
 
-  get connectedSockets() {
-    return this.__connectedSockets;
+  get socketType() {
+    return this.__socketType;
   }
 
-  get glslTypeStr() {
-    switch (this.__socketType) {
-      case SocketType.Int:
-        return 'int';
-      case SocketType.Float:
-        return 'float';
-      case SocketType.Vec2:
-        return 'vec2';
-      case SocketType.Vec3:
-        return 'vec3';
-      case SocketType.Vec4:
-        return 'vec4';
-      case SocketType.IVec2:
-        return 'ivec2';
-      case SocketType.IVec3:
-        return 'ivec3';
-      case SocketType.IVec4:
-        return 'ivec4';
-      case SocketType.Mat22:
-        return 'mat2';
-      case SocketType.Mat33:
-        return 'mat3';
-      case SocketType.Mat44:
-        return 'mat4';
-      case SocketType.Texture2D:
-        return 'sampler2D';
-      case SocketType.TextureCube:
-        return 'samplerCube';
-      default:
-        return 'unknown';
-    }
+  get nodeId() {
+    return this.__nodeId;
   }
 
-  protected abstract __connectSocket(socket: AbstractSocket): void;
+  get argumentId() {
+    return this.__argumentId;
+  }
+
+  abstract get className(): SocketClassName;
+  abstract _connectSocketWith(socket: ISocket): void;
 }

@@ -1,7 +1,7 @@
 import Node from '../node/Node';
 import {ShaderCodes, ShaderityGraphJson} from '../types/CommonType';
 import JsonImporter from '../import/JsonImporter';
-import NodeSorter from '../node/NodeSorter';
+import NodeSorter from './NodeSorter';
 import ShaderGraphResolver from '../shader/ShaderGraphResolver';
 
 export default class System {
@@ -30,6 +30,18 @@ export default class System {
     Node.resetNodes();
 
     JsonImporter.importJsonToNodes(json.nodes);
+
+    if (Node.vertexNodes.length === 0) {
+      console.warn(
+        'System.createShaderCodesFromJsonObject: no vertex node is found'
+      );
+    }
+
+    if (Node.pixelNodes.length === 0) {
+      console.warn(
+        'System.createShaderCodesFromJsonObject: no pixel node is found'
+      );
+    }
 
     const sortedShaderityGraphNodes = {
       vertexNodes: NodeSorter.sortTopologically(Node.vertexNodes),

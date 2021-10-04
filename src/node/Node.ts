@@ -1,31 +1,28 @@
-import {
-  ShaderStage,
-  ShaderStageEnum,
-  SocketTypeEnum,
-} from '../types/CommonEnum';
-import {NodeId} from '../types/CommonType';
+import {ShaderStage, SocketTypeEnum} from '../types/CommonEnum';
+import {NodeData, NodeId} from '../types/CommonType';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
+import {IOutputSocket} from '../sockets/IOutputSocket';
+import {IInputSocket} from '../sockets/IInputSocket';
+import AbstractSocket from '../sockets/AbstractSocket';
+
+export type NodeClassNames =
+  | 'Node'
+  | 'AttributeInputNode'
+  | 'VaryingInputNode'
+  | 'UniformInputNode';
 
 export default class Node {
-  private static __nodes: Node[] = [];
+  protected static __nodes: Node[] = [];
 
-  private __shaderFunctionName: string;
-  private __shaderFunctionCode: string;
-  private __shaderStage: ShaderStageEnum;
+  protected __nodeData: NodeData;
 
-  private __id: NodeId;
-  private __inputSockets: Map<string, InputSocket> = new Map();
-  private __outputSockets: Map<string, OutputSocket> = new Map();
+  protected __id: NodeId;
+  protected __inputSockets: IInputSocket[] = [];
+  protected __outputSockets: IOutputSocket[] = [];
 
-  constructor(
-    shaderFunctionName: string,
-    shaderFunctionCode: string,
-    shaderStage: ShaderStageEnum
-  ) {
-    this.__shaderFunctionName = shaderFunctionName;
-    this.__shaderFunctionCode = shaderFunctionCode;
-    this.__shaderStage = shaderStage;
+  constructor(nodeData: NodeData) {
+    this.__nodeData = nodeData;
 
     this.__id = Node.__nodes.length;
     Node.__nodes[this.__id] = this;
@@ -38,7 +35,7 @@ export default class Node {
   static get vertexNodes(): Node[] {
     const vertexNodes: Node[] = [];
     for (const node of this.__nodes) {
-      if (node.__shaderStage === ShaderStage.Vertex) {
+      if (node.shaderStage === ShaderStage.Vertex) {
         vertexNodes.push(node);
       }
     }
@@ -48,7 +45,7 @@ export default class Node {
   static get pixelNodes(): Node[] {
     const pixelNodes: Node[] = [];
     for (const node of this.__nodes) {
-      if (node.__shaderStage === ShaderStage.Pixel) {
+      if (node.shaderStage === ShaderStage.Pixel) {
         pixelNodes.push(node);
       }
     }
@@ -63,128 +60,153 @@ export default class Node {
     return this.__nodes[id];
   }
 
+  static connectNodes(
+    inputNode: Node,
+    outputSocketNameOfInputNode: string,
+    outputNode: Node,
+    inputSocketNameOfOutputNode: string
+  ) {
+    const outputSocket = inputNode._getOutputSocket(
+      outputSocketNameOfInputNode
+    );
+    const inputSocket = outputNode._getInputSocket(inputSocketNameOfOutputNode);
+
+    if (inputSocket == null || outputSocket == null) {
+      console.error('Node.connectNodes: socket is not found');
+      return;
+    }
+
+    AbstractSocket.connectSockets(inputSocket, outputSocket);
+  }
+
+  get className(): NodeClassNames {
+    return 'Node';
+  }
+
   get name() {
-    return this.__shaderFunctionName;
+    return this.__nodeData.shaderFunctionName;
   }
 
   get shaderCode() {
-    return this.__shaderFunctionCode;
+    return this.__nodeData.shaderFunctionCode;
   }
 
   get shaderStage() {
-    return this.__shaderStage;
+    return this.__nodeData.shaderStage;
+  }
+
+  get extensions() {
+    return this.__nodeData.extensions ?? [];
   }
 
   get id() {
     return this.__id;
   }
 
-  get inputSockets() {
+  get _inputSockets() {
     return this.__inputSockets;
   }
 
-  get outputSockets() {
+  get _outputSockets() {
     return this.__outputSockets;
   }
 
-  addInputSocket(key: string, SocketType: SocketTypeEnum) {
-    if (this.__inputSockets.has(key)) {
-      console.warn('Node.addInputSocket: duplicate the key');
+  // The argumentId indicates that this socket corresponds to the nth argument of the node's function.
+  addInputSocket(
+    socketName: string,
+    SocketType: SocketTypeEnum,
+    argumentId: number
+  ) {
+    const existSocketName = this.__inputSockets.some(
+      socket => socket.name === socketName
+    );
+
+    if (existSocketName) {
+      console.warn('Node.addInputSocket: duplicate socketName');
     }
 
-    const inputSocket = new InputSocket(SocketType, this.__id);
-    this.__inputSockets.set(key, inputSocket);
+    const inputSocket = new InputSocket(
+      SocketType,
+      this.__id,
+      socketName,
+      argumentId
+    );
+    this.__inputSockets.push(inputSocket);
   }
 
-  addOutputSocket(key: string, SocketType: SocketTypeEnum) {
-    if (this.__outputSockets.has(key)) {
-      console.warn('Node.addOutputSocket: duplicate the key');
+  addOutputSocket(
+    socketName: string,
+    SocketType: SocketTypeEnum,
+    argumentId: number
+  ) {
+    const existSocketName = this.__outputSockets.some(
+      socket => socket.name === socketName
+    );
+
+    if (existSocketName) {
+      console.warn('Node.addOutputSocket: duplicate socketName');
     }
 
-    this.__outputSockets.set(key, new OutputSocket(SocketType, this.__id));
+    const outputSocket = new OutputSocket(
+      SocketType,
+      this.__id,
+      socketName,
+      argumentId
+    );
+    this.__outputSockets.push(outputSocket);
   }
 
-  getInputNodeAll(): Map<string, Node> {
-    const inputNodes: Map<string, Node> = new Map();
-    for (const key of this.__inputSockets.keys()) {
-      const node = this.getInputNode(key) as Node;
-      inputNodes.set(key, node);
-    }
-    return inputNodes;
-  }
-
-  getInputNode(socketKey: string): Node | undefined {
-    const targetSocket = this.getInputSocket(socketKey);
-    if (targetSocket != null) {
-      const connectedNodeID = targetSocket?.connectedNodeIDs[0];
-      return Node.__nodes[connectedNodeID];
-    } else {
+  getInputNode(socketName: string): Node | undefined {
+    const targetSocket = this._getInputSocket(socketName);
+    if (targetSocket == null) {
       return undefined;
     }
+
+    const connectedNodeId = targetSocket.connectedNodeId;
+    return Node.__nodes[connectedNodeId];
   }
 
-  getInputSocket(socketKey: string): InputSocket | undefined {
-    if (!this.__inputSockets.has(socketKey)) {
-      console.error('Node.getInputSocket: Wrong key of socket');
-      return undefined;
-    }
-
-    const targetSocket = this.__inputSockets.get(socketKey);
-    return targetSocket;
-  }
-
-  getOutputNodesAll(): Map<string, Node[]> {
-    const outputNodes: Map<string, Node[]> = new Map();
-    for (const key in this.__outputSockets) {
-      outputNodes.set(key, this.getOutputNodes(key));
-    }
-    return outputNodes;
-  }
-
-  getOutputNodes(socketKey: string): Node[] {
-    const targetSocket = this.getOutputSocket(socketKey);
-
-    if (targetSocket != null) {
-      const connectedNodeIDs = targetSocket.connectedNodeIDs;
-      const connectedNodes: Node[] = [];
-      for (const nodeId of connectedNodeIDs) {
-        connectedNodes.push(Node.__nodes[nodeId]);
-      }
-      return connectedNodes;
-    } else {
+  getOutputNodes(socketName: string): Node[] {
+    const targetSocket = this._getOutputSocket(socketName);
+    if (targetSocket == null) {
       return [];
     }
+
+    const connectedNodeIds = targetSocket.connectedNodeIds;
+    const connectedNodes: Node[] = [];
+    for (const nodeId of connectedNodeIds) {
+      connectedNodes.push(Node.__nodes[nodeId]);
+    }
+    return connectedNodes;
   }
 
-  getOutputSocket(socketKey: string): OutputSocket | undefined {
-    if (!this.__outputSockets.has(socketKey)) {
-      console.error('Node.getOutputSocket: Wrong key of socket');
+  _getInputSocket(socketName: string): IInputSocket | undefined {
+    const resultSocket = this.__inputSockets.find(
+      inputSockets => inputSockets.name === socketName
+    );
+
+    if (resultSocket == null) {
+      console.error(
+        `Node.getInputSocket: socket name ${socketName} is not exist`
+      );
       return undefined;
     }
 
-    const targetSocket = this.__outputSockets.get(socketKey);
-    return targetSocket;
+    return resultSocket;
   }
 
-  getInputSocketKey(socket: InputSocket): string | undefined {
-    let socketKey: string | undefined;
-    for (const [key, inputSocket] of this.__inputSockets) {
-      if (socket === inputSocket) {
-        socketKey = key;
-        break;
-      }
-    }
-    return socketKey;
-  }
+  _getOutputSocket(socketName: string): IOutputSocket | undefined {
+    const resultSocket = this.__outputSockets.find(
+      outputSockets => outputSockets.name === socketName
+    );
 
-  getOutputSocketKey(socket: OutputSocket): string | undefined {
-    let socketKey: string | undefined;
-    for (const [key, outputSocket] of this.__outputSockets) {
-      if (socket === outputSocket) {
-        socketKey = key;
-        break;
-      }
+    if (resultSocket == null) {
+      console.error(
+        `Node.getOutputSocket: socket name ${socketName} is not exist`
+      );
+      return undefined;
     }
-    return socketKey;
+
+    return resultSocket;
   }
 }

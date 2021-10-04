@@ -4,6 +4,7 @@ import {NodeId} from '../types/CommonType';
 import glslPrecisionShaderityObject from './shaderityShaders/glslPrecision.glsl';
 import prerequisitesShaderityObject from './shaderityShaders/prerequisites.glsl';
 import mainPrerequisitesShaderityObject from './shaderityShaders/mainPrerequisites.glsl';
+import {SocketType} from '../types/CommonEnum';
 
 export default class ShaderGraphResolver {
   static createVertexShaderCode(sortedVertexNodes: Node[]): string {
@@ -99,23 +100,22 @@ void main() {
       inputVarNames[index] = inputVarNames[index] ?? [];
       outputVarNames[index - 1] = outputVarNames[index - 1] ?? [];
 
-      const inputSockets = targetNode.inputSockets;
+      const inputSockets = targetNode._inputSockets;
 
       // write variable
       for (const inputSocket of inputSockets.values()) {
-        const prevNodeId = inputSocket.connectedNodeIDs[0];
+        const prevNodeId = inputSocket.connectedNodeId;
         const prevNode = Node.getNodeById(prevNodeId);
-        const outputSocketOfPrevNode = inputSocket
-          .connectedSockets[0] as OutputSocket;
-        const outputSocketKeyOfPrevNode = prevNode.getOutputSocketKey(
-          outputSocketOfPrevNode
-        );
+        const outputSocketOfPrevNode =
+          inputSocket.connectedSocket as OutputSocket;
+        const outputSocketNameOfPrevNode = outputSocketOfPrevNode.name;
 
         // TODO: substitute uniform value
-        let varName = `${outputSocketKeyOfPrevNode}_${prevNodeId}_to_${targetNode.id}`;
+        let varName = `${outputSocketNameOfPrevNode}_${prevNodeId}_to_${targetNode.id}`;
 
         if (existingInputs.indexOf(prevNode.id) === -1) {
-          const glslTypeStr = inputSocket.glslTypeStr;
+          const socketType = inputSocket.socketType;
+          const glslTypeStr = SocketType.getGlslTypeStr(socketType);
           const rowStr = `  ${glslTypeStr} ${varName};\n`;
           shaderBody += rowStr;
         }
@@ -130,16 +130,14 @@ void main() {
 
       // avoid duplication of variable
       const prevNode = nodes[index - 1];
-      const outputSocketsOfPrevNode = prevNode.outputSockets;
+      const outputSocketsOfPrevNode = prevNode._outputSockets;
 
-      for (const [
-        outputSocketKey,
-        outputSocketOfPrevNode,
-      ] of outputSocketsOfPrevNode) {
-        const backNodeIds = outputSocketOfPrevNode.connectedNodeIDs;
+      for (const outputSocketOfPrevNode of outputSocketsOfPrevNode) {
+        const backNodeIds = outputSocketOfPrevNode.connectedNodeIds;
+        const outputSocketName = outputSocketOfPrevNode.name;
 
         for (const backNodeId of backNodeIds) {
-          const varName = `${outputSocketKey}_${prevNode.id}_to_${backNodeId}`;
+          const varName = `${outputSocketName}_${prevNode.id}_to_${backNodeId}`;
 
           outputVarNames[index - 1].push(varName);
           existingOutputsVarName.set(prevNode.id, varName);
@@ -157,8 +155,8 @@ void main() {
 
       // do we need this check?
       if (
-        node.inputSockets.size !== inputVarNames[index].length ||
-        node.outputSockets.size !== outputVarNames[index].length
+        node._inputSockets.length !== inputVarNames[index].length ||
+        node._outputSockets.length !== outputVarNames[index].length
       ) {
         return;
       }

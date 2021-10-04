@@ -5,6 +5,9 @@ export default class NodeSorter {
   static sortTopologically(nodes: Node[]): Node[] {
     // Will be change the algorithm like the following:
     // https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/
+    if (nodes.length === 0) {
+      return nodes;
+    }
 
     const beginNode = this.__findBeginNode(nodes);
     const sortedNodes = this.__sortTopologically(beginNode, nodes);
@@ -14,8 +17,8 @@ export default class NodeSorter {
   private static __findBeginNode(nodes: Node[]): Node {
     let noInputSocketNode: Node | undefined;
     for (const node of nodes) {
-      const sockets = node.inputSockets;
-      const inputSocketCount = sockets.size;
+      const sockets = node._inputSockets;
+      const inputSocketCount = sockets.length;
       if (inputSocketCount === 0) {
         noInputSocketNode = node;
         break;
@@ -42,10 +45,8 @@ export default class NodeSorter {
       unsortedNodes.forEach(node => {
         let hasNoUnsortedInputNode = true;
 
-        for (const inputSocket of node.inputSockets.values()) {
-          if (
-            ignoredInputNodeIds.indexOf(inputSocket.connectedNodeIDs[0]) === -1
-          ) {
+        for (const inputSocket of node._inputSockets.values()) {
+          if (ignoredInputNodeIds.indexOf(inputSocket.connectedNodeId) === -1) {
             hasNoUnsortedInputNode = false;
             break;
           }
