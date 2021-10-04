@@ -4,6 +4,10 @@ import {IInputSocket} from './IInputSocket';
 import {IOutputSocket} from './IOutputSocket';
 import {ISocket, SocketClassName} from './ISocket';
 
+/**
+ * The roll of sockets are connecting nodes.
+ * Users are expected to use this class through Node class.
+ */
 export default abstract class AbstractSocket implements ISocket {
   private __name: string;
   private __socketType: SocketTypeEnum;
@@ -22,6 +26,11 @@ export default abstract class AbstractSocket implements ISocket {
     this.__argumentId = argumentId;
   }
 
+  /**
+   * Connecting input/output sockets
+   * @param inputSocket input socket contained in the output node
+   * @param outputSocket output socket contained in the input node
+   */
   static connectSockets(
     inputSocket: IInputSocket,
     outputSocket: IOutputSocket
@@ -34,18 +43,30 @@ export default abstract class AbstractSocket implements ISocket {
     }
   }
 
+  /**
+   * Get the socket name
+   */
   get name() {
     return this.__name;
   }
 
+  /**
+   * Get the glsl type of data to be passed between sockets
+   */
   get socketType() {
     return this.__socketType;
   }
 
+  /**
+   * Get the node to which this socket is attached
+   */
   get node() {
     return this.__node;
   }
 
+  /**
+   * Get the location of the argument of the node function corresponding to this socket
+   */
   get argumentId() {
     return this.__argumentId;
   }
