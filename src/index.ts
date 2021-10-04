@@ -1,4 +1,4 @@
-import System from './system/System';
+import NodeConverter from './main/NodeConverter';
 import {SocketType, SocketTypeEnum} from './types/CommonEnum';
 import {
   SocketData,
@@ -8,9 +8,9 @@ import {
 } from './types/CommonType';
 
 export default {
-  System,
+  NodeConverter,
   SocketType,
-  Version: System.shaderityGraphVersion,
+  Version: NodeConverter.shaderityGraphVersion,
 };
 
 export type {

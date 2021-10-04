@@ -23,26 +23,14 @@ export type ShaderConstantValueObject = _ShaderConstantValueObject;
 export type ShaderUniformObject = _ShaderUniformObject;
 export type ShaderVaryingObject = _ShaderVaryingObject;
 
-export type GlslTypeStr =
-  | 'bool'
-  | 'int'
-  | 'float'
-  | 'vec2'
-  | 'vec3'
-  | 'vec4'
-  | 'ivec2'
-  | 'ivec3'
-  | 'ivec4'
-  | 'sampler2D'
-  | 'samplerCube'
-  | 'mat2'
-  | 'mat3'
-  | 'mat4'
-  | 'unknown';
-
 export interface ShaderCodes {
   vertexShader: string;
   fragmentShader: string;
+}
+
+export interface ShaderFunctionData {
+  shaderFunctionCode: string;
+  extensions?: string[];
 }
 
 export interface ShaderityGraphJson {
@@ -51,6 +39,7 @@ export interface ShaderityGraphJson {
   nodes: ShaderityGraphNode[];
   vertexShaderGlobalData?: ShaderGlobalData;
   fragmentShaderGlobalData: FragmentShaderGlobalData;
+  shaderFunctionDataObject: {[shaderFunctionName: string]: ShaderFunctionData};
 }
 
 export interface ShaderityGraphNode {
@@ -65,9 +54,7 @@ export interface ShaderityGraphNode {
 
 export interface NodeData {
   shaderFunctionName: string;
-  shaderFunctionCode: string;
   shaderStage: 'vertex' | 'fragment' | 'noUse';
-  extensions?: string[];
   extras?: {[key: string]: unknown};
 }
 

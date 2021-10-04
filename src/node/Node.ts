@@ -1,29 +1,40 @@
-import {ShaderStage, SocketTypeEnum} from '../types/CommonEnum';
+import {
+  ShaderStage,
+  ShaderStageEnum,
+  SocketTypeEnum,
+} from '../types/CommonEnum';
 import {NodeData} from '../types/CommonType';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
 import {IOutputSocket} from '../sockets/IOutputSocket';
 import {IInputSocket} from '../sockets/IInputSocket';
 import AbstractSocket from '../sockets/AbstractSocket';
-import {INode} from './INode';
-
-export type NodeClassNames =
-  | 'Node'
-  | 'AttributeInputNode'
-  | 'VaryingInputNode'
-  | 'UniformInputNode';
+import {INode, NodeClassNames} from './INode';
+import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
 
 export default class Node implements INode {
   protected static __nodes: Node[] = [];
 
-  protected __nodeData: NodeData;
+  protected __shaderFunctionName: string;
+  protected __shaderStage: ShaderStageEnum;
 
   protected __id: number;
   protected __inputSockets: IInputSocket[] = [];
   protected __outputSockets: IOutputSocket[] = [];
 
   constructor(nodeData: NodeData) {
-    this.__nodeData = nodeData;
+    this.__shaderFunctionName = nodeData.shaderFunctionName;
+    this.__shaderStage = nodeData.shaderStage;
+
+    const existShaderFunctionData =
+      ShaderFunctionDataRepository.existShaderFunctionData(
+        this.__shaderFunctionName
+      );
+    if (!existShaderFunctionData) {
+      console.warn(
+        `Node: function ${this.__shaderFunctionName} is not found in ShaderFunctionDataRepository`
+      );
+    }
 
     this.__id = Node.__nodes.length;
     Node.__nodes[this.__id] = this;
@@ -85,19 +96,30 @@ export default class Node implements INode {
   }
 
   get functionName() {
-    return this.__nodeData.shaderFunctionName;
+    return this.__shaderFunctionName;
   }
 
   get shaderCode() {
-    return this.__nodeData.shaderFunctionCode;
+    const shaderCode =
+      ShaderFunctionDataRepository.getShaderFunctionData(
+        this.__shaderFunctionName
+      )?.shaderFunctionCode ??
+      `// function name ${this.__shaderFunctionName} is not found`;
+
+    return shaderCode;
   }
 
   get shaderStage() {
-    return this.__nodeData.shaderStage;
+    return this.__shaderStage;
   }
 
   get extensions() {
-    return this.__nodeData.extensions ?? [];
+    const extensions =
+      ShaderFunctionDataRepository.getShaderFunctionData(
+        this.__shaderFunctionName
+      )?.extensions ?? [];
+
+    return extensions;
   }
 
   get id() {

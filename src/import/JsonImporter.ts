@@ -1,5 +1,6 @@
 import AttributeInputNode from '../node/AttributeInputNode';
 import Node from '../node/Node';
+import shaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
 import UniformInputNode from '../node/UniformInputNode';
 import VaryingInputNode from '../node/VaryingInputNode';
 import {
@@ -8,12 +9,28 @@ import {
   ShaderityGraphNode,
   UniformInputNodeData,
   VaryingInputNodeData,
+  ShaderityGraphJson,
+  ShaderFunctionData,
 } from '../types/CommonType';
 
 export default class JsonImporter {
-  static importJsonToNodes(nodesJson: ShaderityGraphNode[]) {
-    this.__createNodes(nodesJson);
-    this.__connectSockets(nodesJson);
+  static importShaderityGraphJson(json: ShaderityGraphJson) {
+    this.shaderFunctionData(json.shaderFunctionDataObject);
+
+    this.__createNodes(json.nodes);
+    this.__connectSockets(json.nodes);
+  }
+
+  private static shaderFunctionData(shaderFunctionDataObject: {
+    [shaderFunctionName: string]: ShaderFunctionData;
+  }) {
+    for (const nodeFunctionName in shaderFunctionDataObject) {
+      const shaderFunctionData = shaderFunctionDataObject[nodeFunctionName];
+      shaderFunctionDataRepository.setShaderFunctionData(
+        nodeFunctionName,
+        shaderFunctionData
+      );
+    }
   }
 
   private static __createNodes(nodesJson: ShaderityGraphNode[]) {
