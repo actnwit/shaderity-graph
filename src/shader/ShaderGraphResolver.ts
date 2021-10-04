@@ -25,13 +25,13 @@ export default class ShaderGraphResolver {
       );
     }
 
-    const definedShaderFunctionDataId: number[] = [];
+    const nodeNames: string[] = [];
     for (let i = 0; i < sortedNodes.length; i++) {
       const node = sortedNodes[i];
       this.__addNodeDataToShaderityObjectCreator(
         shaderityObjectCreator,
         node,
-        definedShaderFunctionDataId
+        nodeNames
       );
     }
 
@@ -79,7 +79,7 @@ export default class ShaderGraphResolver {
   private static __addNodeDataToShaderityObjectCreator(
     shaderityObjectCreator: ShaderityObjectCreator,
     node: Node,
-    definedShaderFunctionDataId: number[]
+    nodeNames: string[]
   ) {
     for (const extension of node.extensions) {
       shaderityObjectCreator.addExtension(extension);
@@ -120,11 +120,9 @@ export default class ShaderGraphResolver {
       );
     }
 
-    const existFunctionDefinition = definedShaderFunctionDataId.includes(
-      node._shaderFunctionDataId
-    );
-    if (!existFunctionDefinition) {
-      definedShaderFunctionDataId.push(node._shaderFunctionDataId);
+    const existSameNameNode = nodeNames.includes(node.functionName);
+    if (!existSameNameNode) {
+      nodeNames.push(node.functionName);
       shaderityObjectCreator.addFunctionDefinition(node.shaderCode);
     }
   }

@@ -126,10 +126,6 @@ export default class Node implements INode {
     return this.__outputSockets;
   }
 
-  get _shaderFunctionDataId() {
-    return this.__shaderFunctionDataId;
-  }
-
   // The argumentId indicates that this socket corresponds to the nth argument of the node's function.
   addInputSocket(
     socketName: string,
