@@ -5,6 +5,7 @@ import OutputSocket from '../sockets/OutputSocket';
 import {IOutputSocket} from '../sockets/IOutputSocket';
 import {IInputSocket} from '../sockets/IInputSocket';
 import AbstractSocket from '../sockets/AbstractSocket';
+import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
 import {INode} from './INode';
 
 export type NodeClassNames =
@@ -24,6 +25,15 @@ export default class Node implements INode {
 
   constructor(nodeData: NodeData) {
     this.__nodeData = nodeData;
+
+    const shaderFunctionName = nodeData.shaderFunctionName;
+    const existShaderFunctionData =
+      ShaderFunctionDataRepository.existShaderFunctionData(shaderFunctionName);
+    if (!existShaderFunctionData) {
+      console.warn(
+        `Node: function ${shaderFunctionName} is not found in ShaderFunctionDataRepository`
+      );
+    }
 
     this.__id = Node.__nodes.length;
     Node.__nodes[this.__id] = this;
@@ -89,7 +99,13 @@ export default class Node implements INode {
   }
 
   get shaderCode() {
-    return this.__nodeData.shaderFunctionCode;
+    const shaderCode =
+      ShaderFunctionDataRepository.getShaderFunctionData(
+        this.__nodeData.shaderFunctionName
+      )?.shaderFunctionCode ??
+      `// function name ${this.__nodeData.shaderFunctionName} is not found`;
+
+    return shaderCode;
   }
 
   get shaderStage() {
@@ -97,7 +113,12 @@ export default class Node implements INode {
   }
 
   get extensions() {
-    return this.__nodeData.extensions ?? [];
+    const extensions =
+      ShaderFunctionDataRepository.getShaderFunctionData(
+        this.__nodeData.shaderFunctionName
+      )?.extensions ?? [];
+
+    return extensions;
   }
 
   get id() {

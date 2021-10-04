@@ -56,6 +56,7 @@ export interface ShaderityGraphJson {
   nodes: ShaderityGraphNode[];
   vertexShaderGlobalData?: ShaderGlobalData;
   fragmentShaderGlobalData: FragmentShaderGlobalData;
+  shaderFunctionDataObject: {[shaderFunctionName: string]: ShaderFunctionData};
 }
 
 export interface ShaderityGraphNode {
@@ -70,9 +71,7 @@ export interface ShaderityGraphNode {
 
 export interface NodeData {
   shaderFunctionName: string;
-  shaderFunctionCode: string;
   shaderStage: 'vertex' | 'fragment' | 'noUse';
-  extensions?: string[];
   extras?: {[key: string]: unknown};
 }
 
