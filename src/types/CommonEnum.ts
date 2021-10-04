@@ -1,3 +1,5 @@
+import {GlslTypeStr} from './CommonType';
+
 export const ShaderStage = {
   Vertex: 'vertex',
   Fragment: 'fragment',
@@ -38,23 +40,6 @@ export const SocketType = {
   getGlslTypeStr,
   getGlslComponentNumber,
 } as const;
-
-export type GlslTypeStr =
-  | 'bool'
-  | 'int'
-  | 'float'
-  | 'vec2'
-  | 'vec3'
-  | 'vec4'
-  | 'ivec2'
-  | 'ivec3'
-  | 'ivec4'
-  | 'sampler2D'
-  | 'samplerCube'
-  | 'mat2'
-  | 'mat3'
-  | 'mat4'
-  | 'unknown';
 
 function getGlslTypeStr(socketType: SocketTypeEnum): GlslTypeStr {
   switch (socketType) {

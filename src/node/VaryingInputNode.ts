@@ -1,6 +1,5 @@
 import {VaryingInputNodeData} from '../types/CommonType';
-import {NodeClassNames} from './INode';
-import Node from './Node';
+import Node, {NodeClassNames} from './Node';
 
 export default class VaryingInputNode extends Node {
   protected __nodeData: VaryingInputNodeData;

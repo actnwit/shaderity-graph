@@ -1,6 +1,5 @@
 import {UniformInputNodeData} from '../types/CommonType';
-import {NodeClassNames} from './INode';
-import Node from './Node';
+import Node, {NodeClassNames} from './Node';
 
 export default class UniformInputNode extends Node {
   protected __nodeData: UniformInputNodeData;

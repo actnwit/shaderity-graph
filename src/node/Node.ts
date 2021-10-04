@@ -1,23 +1,25 @@
-import {
-  ShaderStage,
-  ShaderStageEnum,
-  SocketTypeEnum,
-} from '../types/CommonEnum';
+import {ShaderStage, SocketTypeEnum} from '../types/CommonEnum';
 import {NodeData} from '../types/CommonType';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
 import {IOutputSocket} from '../sockets/IOutputSocket';
 import {IInputSocket} from '../sockets/IInputSocket';
 import AbstractSocket from '../sockets/AbstractSocket';
-import {INode, NodeClassNames} from './INode';
 import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
+import {INode} from './INode';
+
+export type NodeClassNames =
+  | 'Node'
+  | 'AttributeInputNode'
+  | 'VaryingInputNode'
+  | 'UniformInputNode';
 
 export default class Node implements INode {
   protected static __nodes: Node[] = [];
 
   protected __shaderFunctionName: string;
   protected __shaderFunctionDataId: number;
-  protected __shaderStage: ShaderStageEnum;
+  protected __shaderStage: 'vertex' | 'fragment' | 'noUse';
 
   protected __id: number;
   protected __inputSockets: IInputSocket[] = [];
