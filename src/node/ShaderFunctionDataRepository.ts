@@ -1,14 +1,25 @@
 import {ShaderFunctionData} from '../types/CommonType';
 
+/**
+ * ShaderFunctionDataRepository is a class that manages the function that Nodes have.
+ * The Data is managed by an object whose key is the function name.
+ */
 export default class ShaderFunctionDataRepository {
   private static __shaderFunctionData: {
     [functionName: string]: ShaderFunctionData;
   } = {};
 
+  /**
+   * Remove all set shaderFunctionData
+   */
   static resetShaderFunctionData() {
     this.__shaderFunctionData = {};
   }
 
+  /**
+   * Check if there is a shaderFunctionData with the specified function name
+   * @returns boolean
+   */
   static existShaderFunctionData(functionName: string) {
     const shaderFunctionData = this.__shaderFunctionData[functionName];
     if (shaderFunctionData != null) {
@@ -18,6 +29,9 @@ export default class ShaderFunctionDataRepository {
     }
   }
 
+  /**
+   * Add shaderFunctionData to this repository
+   */
   static setShaderFunctionData(
     functionName: string,
     shaderFunctionData: ShaderFunctionData
@@ -25,6 +39,9 @@ export default class ShaderFunctionDataRepository {
     this.__shaderFunctionData[functionName] = shaderFunctionData;
   }
 
+  /**
+   * Get the shaderFunctionData corresponding to the function name
+   */
   static getShaderFunctionData(functionName: string) {
     const shaderFunctionData = this.__shaderFunctionData[functionName];
     if (shaderFunctionData == null) {
