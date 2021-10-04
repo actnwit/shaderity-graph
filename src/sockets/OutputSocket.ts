@@ -1,9 +1,9 @@
 import AbstractSocket from './AbstractSocket';
-import {NodeId} from '../types/CommonType';
 import {SocketTypeEnum} from '../types/CommonEnum';
 import {SocketClassName} from './ISocket';
 import {IOutputSocket} from './IOutputSocket';
 import {IInputSocket} from './IInputSocket';
+import {INode} from '../node/INode';
 
 export default class OutputSocket
   extends AbstractSocket
@@ -13,23 +13,24 @@ export default class OutputSocket
 
   constructor(
     SocketType: SocketTypeEnum,
-    nodeId: NodeId,
+    node: INode,
     socketName: string,
     argumentId: number
   ) {
-    super(SocketType, nodeId, socketName, argumentId);
+    super(SocketType, node, socketName, argumentId);
   }
 
   get className(): SocketClassName {
     return 'OutputSocket';
   }
 
-  get connectedNodeIds() {
-    const nodeIds: NodeId[] = [];
-    for (const socket of this._connectedSockets) {
-      nodeIds.push(socket.nodeId);
+  get connectedNodes() {
+    const nodes: INode[] = new Array(this._connectedSockets.length);
+    // the order of nodes is same to this._connectedSockets
+    for (let i = 0; i < this._connectedSockets.length; i++) {
+      nodes[i] = this._connectedSockets[i].node;
     }
-    return nodeIds;
+    return nodes;
   }
 
   get connectedSockets() {

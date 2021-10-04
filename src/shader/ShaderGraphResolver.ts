@@ -1,10 +1,10 @@
 import Node from '../node/Node';
 import OutputSocket from '../sockets/OutputSocket';
-import {NodeId} from '../types/CommonType';
 import glslPrecisionShaderityObject from './shaderityShaders/glslPrecision.glsl';
 import prerequisitesShaderityObject from './shaderityShaders/prerequisites.glsl';
 import mainPrerequisitesShaderityObject from './shaderityShaders/mainPrerequisites.glsl';
 import {SocketType} from '../types/CommonEnum';
+import {INode} from '../node/INode';
 
 export default class ShaderGraphResolver {
   static createVertexShaderCode(sortedVertexNodes: Node[]): string {
@@ -55,11 +55,11 @@ shaderity: @{getters}
     const existVertexFunctions: string[] = [];
     for (let i = 0; i < shaderNodes.length; i++) {
       const node = shaderNodes[i];
-      if (existVertexFunctions.indexOf(node.name) !== -1) {
+      if (existVertexFunctions.indexOf(node.functionName) !== -1) {
         continue;
       }
       shaderText += node.shaderCode;
-      existVertexFunctions.push(node.name);
+      existVertexFunctions.push(node.functionName);
     }
 
     return shaderText;
@@ -74,9 +74,9 @@ void main() {
     // TODO: refactor of the following codes
     const inputVarNames: Array<Array<string>> = [];
     const outputVarNames: Array<Array<string>> = [];
-    const existingInputs: NodeId[] = [];
-    const existingOutputsVarName: Map<NodeId, string> = new Map();
-    const existingOutputs: NodeId[] = [];
+    const existingInputs: number[] = [];
+    const existingOutputsVarName: Map<number, string> = new Map();
+    const existingOutputs: number[] = [];
 
     // TODO: support uniform value as input
     for (let i = 1; i < nodes.length; i++) {
@@ -104,14 +104,13 @@ void main() {
 
       // write variable
       for (const inputSocket of inputSockets.values()) {
-        const prevNodeId = inputSocket.connectedNodeId;
-        const prevNode = Node.getNodeById(prevNodeId);
+        const prevNode = inputSocket.connectedNode as INode;
         const outputSocketOfPrevNode =
           inputSocket.connectedSocket as OutputSocket;
         const outputSocketNameOfPrevNode = outputSocketOfPrevNode.name;
 
         // TODO: substitute uniform value
-        let varName = `${outputSocketNameOfPrevNode}_${prevNodeId}_to_${targetNode.id}`;
+        let varName = `${outputSocketNameOfPrevNode}_${prevNode.id}_to_${targetNode.id}`;
 
         if (existingInputs.indexOf(prevNode.id) === -1) {
           const socketType = inputSocket.socketType;
@@ -125,7 +124,7 @@ void main() {
           varName = existVarName;
         }
         inputVarNames[index].push(varName);
-        existingInputs.push(prevNodeId);
+        existingInputs.push(prevNode.id);
       }
 
       // avoid duplication of variable
@@ -133,7 +132,7 @@ void main() {
       const outputSocketsOfPrevNode = prevNode._outputSockets;
 
       for (const outputSocketOfPrevNode of outputSocketsOfPrevNode) {
-        const backNodeIds = outputSocketOfPrevNode.connectedNodeIds;
+        const backNodeIds = outputSocketOfPrevNode.connectedNodes;
         const outputSocketName = outputSocketOfPrevNode.name;
 
         for (const backNodeId of backNodeIds) {
@@ -148,7 +147,7 @@ void main() {
 
     function addFunctionCallingToShaderBody(index: number) {
       const node = nodes[index];
-      const functionName = node.name;
+      const functionName = node.functionName;
 
       inputVarNames[index] = inputVarNames[index] ?? [];
       outputVarNames[index] = outputVarNames[index] ?? [];

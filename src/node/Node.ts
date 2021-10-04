@@ -1,10 +1,11 @@
 import {ShaderStage, SocketTypeEnum} from '../types/CommonEnum';
-import {NodeData, NodeId} from '../types/CommonType';
+import {NodeData} from '../types/CommonType';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
 import {IOutputSocket} from '../sockets/IOutputSocket';
 import {IInputSocket} from '../sockets/IInputSocket';
 import AbstractSocket from '../sockets/AbstractSocket';
+import {INode} from './INode';
 
 export type NodeClassNames =
   | 'Node'
@@ -12,12 +13,12 @@ export type NodeClassNames =
   | 'VaryingInputNode'
   | 'UniformInputNode';
 
-export default class Node {
+export default class Node implements INode {
   protected static __nodes: Node[] = [];
 
   protected __nodeData: NodeData;
 
-  protected __id: NodeId;
+  protected __id: number;
   protected __inputSockets: IInputSocket[] = [];
   protected __outputSockets: IOutputSocket[] = [];
 
@@ -56,7 +57,7 @@ export default class Node {
     this.__nodes.length = 0;
   }
 
-  static getNodeById(id: NodeId) {
+  static getNodeById(id: number) {
     return this.__nodes[id];
   }
 
@@ -83,7 +84,7 @@ export default class Node {
     return 'Node';
   }
 
-  get name() {
+  get functionName() {
     return this.__nodeData.shaderFunctionName;
   }
 
@@ -127,7 +128,7 @@ export default class Node {
 
     const inputSocket = new InputSocket(
       SocketType,
-      this.__id,
+      this,
       socketName,
       argumentId
     );
@@ -149,38 +150,34 @@ export default class Node {
 
     const outputSocket = new OutputSocket(
       SocketType,
-      this.__id,
+      this,
       socketName,
       argumentId
     );
     this.__outputSockets.push(outputSocket);
   }
 
-  getInputNode(socketName: string): Node | undefined {
+  getInputNode(socketName: string) {
     const targetSocket = this._getInputSocket(socketName);
     if (targetSocket == null) {
       return undefined;
     }
 
-    const connectedNodeId = targetSocket.connectedNodeId;
-    return Node.__nodes[connectedNodeId];
+    const connectedNode = targetSocket.connectedNode;
+    return connectedNode;
   }
 
-  getOutputNodes(socketName: string): Node[] {
+  getOutputNodes(socketName: string) {
     const targetSocket = this._getOutputSocket(socketName);
     if (targetSocket == null) {
       return [];
     }
 
-    const connectedNodeIds = targetSocket.connectedNodeIds;
-    const connectedNodes: Node[] = [];
-    for (const nodeId of connectedNodeIds) {
-      connectedNodes.push(Node.__nodes[nodeId]);
-    }
+    const connectedNodes = targetSocket.connectedNodes;
     return connectedNodes;
   }
 
-  _getInputSocket(socketName: string): IInputSocket | undefined {
+  _getInputSocket(socketName: string) {
     const resultSocket = this.__inputSockets.find(
       inputSockets => inputSockets.name === socketName
     );
@@ -195,7 +192,7 @@ export default class Node {
     return resultSocket;
   }
 
-  _getOutputSocket(socketName: string): IOutputSocket | undefined {
+  _getOutputSocket(socketName: string) {
     const resultSocket = this.__outputSockets.find(
       outputSockets => outputSockets.name === socketName
     );
