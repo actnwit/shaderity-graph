@@ -5,7 +5,6 @@ import OutputSocket from '../sockets/OutputSocket';
 import {IOutputSocket} from '../sockets/IOutputSocket';
 import {IInputSocket} from '../sockets/IInputSocket';
 import AbstractSocket from '../sockets/AbstractSocket';
-import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
 import {INode} from './INode';
 
 export type NodeClassNames =
@@ -90,13 +89,7 @@ export default class Node implements INode {
   }
 
   get shaderCode() {
-    const shaderCode =
-      ShaderFunctionDataRepository.getShaderFunctionDataById(
-        this.__nodeData.shaderFunctionDataId
-      )?.shaderFunctionCode ??
-      `// no shader code in the node with id=${this.__nodeData.shaderFunctionDataId}`;
-
-    return shaderCode;
+    return this.__nodeData.shaderFunctionCode;
   }
 
   get shaderStage() {
@@ -104,12 +97,7 @@ export default class Node implements INode {
   }
 
   get extensions() {
-    const extensions =
-      ShaderFunctionDataRepository.getShaderFunctionDataById(
-        this.__nodeData.shaderFunctionDataId
-      )?.extensions ?? [];
-
-    return extensions;
+    return this.__nodeData.extensions ?? [];
   }
 
   get id() {
