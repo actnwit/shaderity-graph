@@ -116,7 +116,8 @@ export default class Node implements INode {
   addInputSocket(
     socketName: string,
     SocketType: SocketTypeEnum,
-    argumentId: number
+    argumentId: number,
+    defaultValue: number[]
   ) {
     const existSocketName = this.__inputSockets.some(
       socket => socket.name === socketName
@@ -130,7 +131,8 @@ export default class Node implements INode {
       SocketType,
       this,
       socketName,
-      argumentId
+      argumentId,
+      defaultValue
     );
     this.__inputSockets.push(inputSocket);
   }

@@ -7,6 +7,7 @@ export interface IInputSocket extends ISocket {
 
   _connectSocketWith(socket: IOutputSocket): void;
 
+  get defaultValue(): number[];
   get connectedNode(): INode | undefined;
   get connectedSocket(): IOutputSocket | undefined;
 }

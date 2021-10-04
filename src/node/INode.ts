@@ -21,7 +21,8 @@ export interface INode {
   addInputSocket(
     socketName: string,
     SocketType: SocketTypeEnum,
-    argumentId: number
+    argumentId: number,
+    defaultValue: number[]
   ): void;
   addOutputSocket(
     socketName: string,

@@ -38,6 +38,7 @@ export const SocketType = {
     return void 0;
   },
   getGlslTypeStr,
+  getGlslComponentNumber,
 } as const;
 
 function getGlslTypeStr(socketType: SocketTypeEnum): GlslTypeStr {
@@ -72,6 +73,31 @@ function getGlslTypeStr(socketType: SocketTypeEnum): GlslTypeStr {
       return 'samplerCube';
     default:
       return 'unknown';
+  }
+}
+
+function getGlslComponentNumber(socketType: SocketTypeEnum): number {
+  switch (socketType) {
+    case SocketType.Bool:
+    case SocketType.Int:
+    case SocketType.Float:
+      return 1;
+    case SocketType.Vec2:
+    case SocketType.IVec2:
+      return 2;
+    case SocketType.Vec3:
+    case SocketType.IVec3:
+      return 3;
+    case SocketType.Vec4:
+    case SocketType.IVec4:
+    case SocketType.Mat22:
+      return 4;
+    case SocketType.Mat33:
+      return 9;
+    case SocketType.Mat44:
+      return 16;
+    default:
+      return 0;
   }
 }
 
