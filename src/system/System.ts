@@ -37,28 +37,30 @@ export default class System {
       );
     }
 
-    if (Node.pixelNodes.length === 0) {
+    if (Node.fragmentNodes.length === 0) {
       console.warn(
-        'System.createShaderCodesFromJsonObject: no pixel node is found'
+        'System.createShaderCodesFromJsonObject: no fragment node is found'
       );
     }
 
-    const sortedShaderityGraphNodes = {
-      vertexNodes: NodeSorter.sortTopologically(Node.vertexNodes),
-      pixelNodes: NodeSorter.sortTopologically(Node.pixelNodes),
-    };
+    const sortedVertexNode = NodeSorter.sortTopologically(Node.vertexNodes);
+    const sortedFragmentNode = NodeSorter.sortTopologically(Node.fragmentNodes);
 
-    const vertexShaderCode = ShaderGraphResolver.createVertexShaderCode(
-      sortedShaderityGraphNodes.vertexNodes
+    const vertexShaderCode = ShaderGraphResolver.createShaderCode(
+      sortedVertexNode,
+      'vertex',
+      json.vertexShaderGlobalData
     );
 
-    const pixelShaderCode = ShaderGraphResolver.createPixelShaderCode(
-      sortedShaderityGraphNodes.pixelNodes
+    const fragmentShaderCode = ShaderGraphResolver.createShaderCode(
+      sortedFragmentNode,
+      'fragment',
+      json.fragmentShaderGlobalData
     );
 
     return {
-      vertexShaderCode,
-      pixelShaderCode,
+      vertexShader: vertexShaderCode,
+      fragmentShader: fragmentShaderCode,
     };
   }
 }

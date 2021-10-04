@@ -43,14 +43,14 @@ export default class Node implements INode {
     return vertexNodes;
   }
 
-  static get pixelNodes(): Node[] {
-    const pixelNodes: Node[] = [];
+  static get fragmentNodes(): Node[] {
+    const fragmentNodes: Node[] = [];
     for (const node of this.__nodes) {
-      if (node.shaderStage === ShaderStage.Pixel) {
-        pixelNodes.push(node);
+      if (node.shaderStage === ShaderStage.Fragment) {
+        fragmentNodes.push(node);
       }
     }
-    return pixelNodes;
+    return fragmentNodes;
   }
 
   static resetNodes() {

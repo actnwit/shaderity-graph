@@ -41,8 +41,8 @@ export type GlslTypeStr =
   | 'unknown';
 
 export interface ShaderCodes {
-  vertexShaderCode: string;
-  pixelShaderCode: string;
+  vertexShader: string;
+  fragmentShader: string;
 }
 
 export interface ShaderityGraphJson {
@@ -66,7 +66,7 @@ export interface ShaderityGraphNode {
 export interface NodeData {
   shaderFunctionName: string;
   shaderFunctionCode: string;
-  shaderStage: 'vertex' | 'pixel' | 'noUse';
+  shaderStage: 'vertex' | 'fragment' | 'noUse';
   extensions?: string[];
   extras?: {[key: string]: unknown};
 }

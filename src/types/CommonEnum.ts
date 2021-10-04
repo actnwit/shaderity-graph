@@ -2,8 +2,8 @@ import {GlslTypeStr} from './CommonType';
 
 export const ShaderStage = {
   Vertex: 'vertex',
-  Fragment: 'pixel',
-  Pixel: 'pixel',
+  Fragment: 'fragment',
+  Pixel: 'fragment',
   NoUse: 'noUse',
 } as const;
 export type ShaderStageEnum = typeof ShaderStage[keyof typeof ShaderStage];
