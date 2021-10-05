@@ -38,14 +38,14 @@ export default class Node implements INode {
     for (let i = 0; i < socketData.length; i++) {
       const socketDatum = socketData[i];
       if (socketDatum.direction === 'input') {
-        this.addInputSocket(
+        this.__addInputSocket(
           socketDatum.name,
           socketDatum.type,
           socketDatum.argumentId,
           (socketDatum as InputSocketData).defaultValue
         );
       } else {
-        this.addOutputSocket(
+        this.__addOutputSocket(
           socketDatum.name,
           socketDatum.type,
           socketDatum.argumentId
@@ -127,10 +127,12 @@ export default class Node implements INode {
     outputNode: Node,
     inputSocketNameOfOutputNode: string
   ) {
-    const outputSocket = inputNode._getOutputSocket(
+    const outputSocket = inputNode.__getOutputSocket(
       outputSocketNameOfInputNode
     );
-    const inputSocket = outputNode._getInputSocket(inputSocketNameOfOutputNode);
+    const inputSocket = outputNode.__getInputSocket(
+      inputSocketNameOfOutputNode
+    );
 
     if (inputSocket == null || outputSocket == null) {
       console.error('Node.connectNodes: socket is not found');
@@ -210,6 +212,71 @@ export default class Node implements INode {
   }
 
   /**
+   * Get connected input node by input socket name
+   * */
+  getInputNode(socketName: string) {
+    const targetSocket = this.__getInputSocket(socketName);
+    if (targetSocket == null) {
+      return undefined;
+    }
+
+    const connectedNode = targetSocket.connectedNode;
+    return connectedNode;
+  }
+
+  /**
+   * Get connected output node by output socket name
+   * */
+  getOutputNodes(socketName: string) {
+    const targetSocket = this.__getOutputSocket(socketName);
+    if (targetSocket == null) {
+      return [];
+    }
+
+    const connectedNodes = targetSocket.connectedNodes;
+    return connectedNodes;
+  }
+
+  /**
+   * @private
+   * Get input socket by socket name
+   * */
+  private __getInputSocket(socketName: string) {
+    const resultSocket = this.__inputSockets.find(
+      inputSockets => inputSockets.name === socketName
+    );
+
+    if (resultSocket == null) {
+      console.error(
+        `Node.__getInputSocket: socket name ${socketName} is not exist`
+      );
+      return undefined;
+    }
+
+    return resultSocket;
+  }
+
+  /**
+   * @private
+   * Get output socket by socket name
+   * */
+  private __getOutputSocket(socketName: string) {
+    const resultSocket = this.__outputSockets.find(
+      outputSockets => outputSockets.name === socketName
+    );
+
+    if (resultSocket == null) {
+      console.error(
+        `Node.__getOutputSocket: socket name ${socketName} is not exist`
+      );
+      return undefined;
+    }
+
+    return resultSocket;
+  }
+
+  /**
+   * @private
    * Add input socket of this node to connect another node
    * @param socketName name(key) of adding input socket
    * @param socketType glsl type of data to be passed by this socket.
@@ -218,7 +285,7 @@ export default class Node implements INode {
    *                   (e.g. argumentId=1 means that this socket corresponds to the second argument of the node's function)
    * @param defaultValue use this value as input if this socket does not connect with any socket
    */
-  addInputSocket(
+  private __addInputSocket(
     socketName: string,
     socketType: SocketTypeEnum,
     argumentId: number,
@@ -243,6 +310,7 @@ export default class Node implements INode {
   }
 
   /**
+   * @private
    * Add output socket of this node to connect another node
    * @param socketName name(key) of adding output socket
    * @param socketType glsl type of adding output socket
@@ -252,7 +320,7 @@ export default class Node implements INode {
    * @param defaultValue use this value as output if this socket does not connect with any socket
    */
 
-  addOutputSocket(
+  private __addOutputSocket(
     socketName: string,
     socketType: SocketTypeEnum,
     argumentId: number
@@ -272,69 +340,5 @@ export default class Node implements INode {
       argumentId
     );
     this.__outputSockets.push(outputSocket);
-  }
-
-  /**
-   * Get connected input node by input socket name
-   * */
-  getInputNode(socketName: string) {
-    const targetSocket = this._getInputSocket(socketName);
-    if (targetSocket == null) {
-      return undefined;
-    }
-
-    const connectedNode = targetSocket.connectedNode;
-    return connectedNode;
-  }
-
-  /**
-   * Get connected output node by output socket name
-   * */
-  getOutputNodes(socketName: string) {
-    const targetSocket = this._getOutputSocket(socketName);
-    if (targetSocket == null) {
-      return [];
-    }
-
-    const connectedNodes = targetSocket.connectedNodes;
-    return connectedNodes;
-  }
-
-  /**
-   * @private
-   * Get input socket by socket name
-   * */
-  _getInputSocket(socketName: string) {
-    const resultSocket = this.__inputSockets.find(
-      inputSockets => inputSockets.name === socketName
-    );
-
-    if (resultSocket == null) {
-      console.error(
-        `Node.getInputSocket: socket name ${socketName} is not exist`
-      );
-      return undefined;
-    }
-
-    return resultSocket;
-  }
-
-  /**
-   * @private
-   * Get output socket by socket name
-   * */
-  _getOutputSocket(socketName: string) {
-    const resultSocket = this.__outputSockets.find(
-      outputSockets => outputSockets.name === socketName
-    );
-
-    if (resultSocket == null) {
-      console.error(
-        `Node.getOutputSocket: socket name ${socketName} is not exist`
-      );
-      return undefined;
-    }
-
-    return resultSocket;
   }
 }
