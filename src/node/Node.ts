@@ -3,7 +3,7 @@ import {
   ShaderStageEnum,
   SocketTypeEnum,
 } from '../types/CommonEnum';
-import {NodeData} from '../types/CommonType';
+import {InputSocketData, NodeData, OutputSocketData} from '../types/CommonType';
 import InputSocket from '../sockets/InputSocket';
 import OutputSocket from '../sockets/OutputSocket';
 import {IOutputSocket} from '../sockets/IOutputSocket';
@@ -28,9 +28,30 @@ export default class Node implements INode {
   protected __inputSockets: IInputSocket[] = [];
   protected __outputSockets: IOutputSocket[] = [];
 
-  constructor(nodeData: NodeData) {
+  constructor(
+    nodeData: NodeData,
+    socketData: (InputSocketData | OutputSocketData)[]
+  ) {
     this.__shaderFunctionName = nodeData.shaderFunctionName;
     this.__shaderStage = nodeData.shaderStage;
+
+    for (let i = 0; i < socketData.length; i++) {
+      const socketDatum = socketData[i];
+      if (socketDatum.direction === 'input') {
+        this.addInputSocket(
+          socketDatum.name,
+          socketDatum.type,
+          socketDatum.argumentId,
+          (socketDatum as InputSocketData).defaultValue
+        );
+      } else {
+        this.addOutputSocket(
+          socketDatum.name,
+          socketDatum.type,
+          socketDatum.argumentId
+        );
+      }
+    }
 
     const existShaderFunctionData =
       ShaderFunctionDataRepository.existShaderFunctionData(
