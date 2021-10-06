@@ -4,10 +4,10 @@ import {
   SocketTypeEnum,
 } from '../types/CommonEnum';
 import {InputSocketData, NodeData, OutputSocketData} from '../types/CommonType';
-import InputSocket from '../sockets/InputSocket';
-import OutputSocket from '../sockets/OutputSocket';
-import {IOutputSocket} from '../sockets/IOutputSocket';
-import {IInputSocket} from '../sockets/IInputSocket';
+import InputSocket from '../sockets/input/InputSocket';
+import OutputSocket from '../sockets/output/OutputSocket';
+import {IOutputSocket} from '../sockets/output/IOutputSocket';
+import {IInputSocket} from '../sockets/input/IInputSocket';
 import AbstractSocket from '../sockets/AbstractSocket';
 import {INode, NodeClassNames} from './INode';
 import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';

@@ -1,9 +1,9 @@
-import AbstractSocket from './AbstractSocket';
-import {SocketTypeEnum} from '../types/CommonEnum';
-import {SocketClassName} from './ISocket';
+import AbstractSocket from '../AbstractSocket';
+import {SocketTypeEnum} from '../../types/CommonEnum';
+import {SocketClassName} from '../ISocket';
 import {IInputSocket} from './IInputSocket';
-import {IOutputSocket} from './IOutputSocket';
-import {INode} from '../node/INode';
+import {IOutputSocket} from '../output/IOutputSocket';
+import {INode} from '../../node/INode';
 
 // An InputSocket can connect only one OutputSocket
 export default class InputSocket

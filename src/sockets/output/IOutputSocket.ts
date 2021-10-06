@@ -1,6 +1,6 @@
-import {INode} from '../node/INode';
-import {IInputSocket} from './IInputSocket';
-import {ISocket} from './ISocket';
+import {INode} from '../../node/INode';
+import {IInputSocket} from '../input/IInputSocket';
+import {ISocket} from '../ISocket';
 
 export interface IOutputSocket extends ISocket {
   _connectedSockets: IInputSocket[];

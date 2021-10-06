@@ -1,7 +1,7 @@
 import {INode} from '../node/INode';
 import {SocketTypeEnum} from '../types/CommonEnum';
-import {IInputSocket} from './IInputSocket';
-import {IOutputSocket} from './IOutputSocket';
+import {IInputSocket} from './input/IInputSocket';
+import {IOutputSocket} from './output/IOutputSocket';
 import {ISocket, SocketClassName} from './ISocket';
 
 /**
