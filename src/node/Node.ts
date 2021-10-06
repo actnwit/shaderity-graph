@@ -4,13 +4,13 @@ import {
   SocketTypeEnum,
 } from '../types/CommonEnum';
 import {InputSocketData, NodeData, OutputSocketData} from '../types/CommonType';
-import InputSocket from '../sockets/input/InputSocket';
-import OutputSocket from '../sockets/output/OutputSocket';
-import {IOutputSocket} from '../sockets/output/IOutputSocket';
-import {IInputSocket} from '../sockets/input/IInputSocket';
-import AbstractSocket from '../sockets/AbstractSocket';
+import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
+import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
+import {IConnectableOutputSocket} from '../sockets/output/IConnectableOutputSocket';
+import {IConnectableInputSocket} from '../sockets/input/IConnectableInputSocket';
 import {INode, NodeClassNames} from './INode';
 import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
+import AbstractConnectableSocket from '../sockets/AbstractConnectableSocket';
 
 /**
  * The node is a object that has a function.
@@ -25,8 +25,8 @@ export default class Node implements INode {
   protected __shaderStage: ShaderStageEnum;
 
   protected __id: number;
-  protected __inputSockets: IInputSocket[] = [];
-  protected __outputSockets: IOutputSocket[] = [];
+  protected __inputSockets: IConnectableInputSocket[] = [];
+  protected __outputSockets: IConnectableOutputSocket[] = [];
 
   constructor(
     nodeData: NodeData,
@@ -139,7 +139,7 @@ export default class Node implements INode {
       return;
     }
 
-    AbstractSocket.connectSockets(inputSocket, outputSocket);
+    AbstractConnectableSocket.connectSockets(inputSocket, outputSocket);
   }
 
   /**
@@ -299,7 +299,7 @@ export default class Node implements INode {
       console.warn('Node.addInputSocket: duplicate socketName');
     }
 
-    const inputSocket = new InputSocket(
+    const inputSocket = new ConnectableInputSocket(
       socketType,
       this,
       socketName,
@@ -333,7 +333,7 @@ export default class Node implements INode {
       console.warn('Node.addOutputSocket: duplicate socketName');
     }
 
-    const outputSocket = new OutputSocket(
+    const outputSocket = new ConnectableOutputSocket(
       socketType,
       this,
       socketName,

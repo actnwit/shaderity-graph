@@ -1,16 +1,16 @@
-import AbstractSocket from '../AbstractSocket';
 import {SocketTypeEnum} from '../../types/CommonEnum';
 import {SocketClassName} from '../ISocket';
-import {IInputSocket} from './IInputSocket';
-import {IOutputSocket} from '../output/IOutputSocket';
+import {IConnectableInputSocket} from './IConnectableInputSocket';
+import {IConnectableOutputSocket} from '../output/IConnectableOutputSocket';
 import {INode} from '../../node/INode';
+import AbstractConnectableSocket from '../AbstractConnectableSocket';
 
 // An InputSocket can connect only one OutputSocket
-export default class InputSocket
-  extends AbstractSocket
-  implements IInputSocket
+export default class ConnectableInputSocket
+  extends AbstractConnectableSocket
+  implements IConnectableInputSocket
 {
-  _connectedSocket: IOutputSocket | undefined = undefined;
+  _connectedSocket: IConnectableOutputSocket | undefined = undefined;
 
   private __defaultValue: number[];
 
@@ -30,7 +30,7 @@ export default class InputSocket
   }
 
   get className(): SocketClassName {
-    return 'InputSocket';
+    return 'ConnectableInputSocket';
   }
 
   get connectedNode() {
@@ -41,7 +41,7 @@ export default class InputSocket
     return this._connectedSocket;
   }
 
-  _connectSocketWith(socket: IOutputSocket) {
+  _connectSocketWith(socket: IConnectableOutputSocket) {
     this._connectedSocket = socket;
   }
 }

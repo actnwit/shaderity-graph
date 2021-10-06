@@ -1,15 +1,15 @@
-import AbstractSocket from '../AbstractSocket';
 import {SocketTypeEnum} from '../../types/CommonEnum';
 import {SocketClassName} from '../ISocket';
-import {IOutputSocket} from './IOutputSocket';
-import {IInputSocket} from '../input/IInputSocket';
+import {IConnectableOutputSocket} from './IConnectableOutputSocket';
+import {IConnectableInputSocket} from '../input/IConnectableInputSocket';
 import {INode} from '../../node/INode';
+import AbstractConnectableSocket from '../AbstractConnectableSocket';
 
-export default class OutputSocket
-  extends AbstractSocket
-  implements IOutputSocket
+export default class ConnectableOutputSocket
+  extends AbstractConnectableSocket
+  implements IConnectableOutputSocket
 {
-  _connectedSockets: IInputSocket[] = [];
+  _connectedSockets: IConnectableInputSocket[] = [];
 
   constructor(
     SocketType: SocketTypeEnum,
@@ -21,7 +21,7 @@ export default class OutputSocket
   }
 
   get className(): SocketClassName {
-    return 'OutputSocket';
+    return 'ConnectableOutputSocket';
   }
 
   get connectedNodes() {
@@ -37,7 +37,7 @@ export default class OutputSocket
     return this._connectedSockets;
   }
 
-  _connectSocketWith(socket: IInputSocket) {
+  _connectSocketWith(socket: IConnectableInputSocket) {
     this._connectedSockets.push(socket);
   }
 }
