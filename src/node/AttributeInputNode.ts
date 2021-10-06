@@ -2,6 +2,11 @@ import {AttributeInputNodeData} from '../types/CommonType';
 import {NodeClassNames} from './INode';
 import Node from './Node';
 
+/**
+ * The attribute input node is a node that gets a single attribute value
+ * as input without going through the socket.
+ *
+ */
 export default class AttributeInputNode extends Node {
   protected __nodeData: AttributeInputNodeData;
 
