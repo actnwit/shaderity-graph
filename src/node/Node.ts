@@ -9,15 +9,12 @@ import {
 } from '../types/CommonType';
 import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
 import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
-import {IConnectableOutputSocket} from '../sockets/output/IConnectableOutputSocket';
-import {IConnectableInputSocket} from '../sockets/input/IConnectableInputSocket';
 import {INode} from './INode';
 import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
 import AbstractConnectableSocket from '../sockets/AbstractConnectableSocket';
 import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
-import {INonConnectableInputSocket} from '../sockets/input/INonConnectableInputSocket';
 import {ISocket} from '../sockets/ISocket';
 
 /**
@@ -34,11 +31,6 @@ export default class Node implements INode {
 
   protected __id: number;
   protected __sockets: ISocket[] = [];
-  protected __inputSockets: (
-    | IConnectableInputSocket
-    | INonConnectableInputSocket
-  )[] = [];
-  protected __outputSockets: IConnectableOutputSocket[] = [];
 
   constructor(
     nodeData: NodeData,
@@ -58,10 +50,10 @@ export default class Node implements INode {
       if (socketData.direction === 'input') {
         this.__addInputSocket(
           socketData as
-            | ConnectableInputSocketData
-            | AttributeInputSocketData
-            | VaryingInputSocketData
-            | UniformInputSocketData
+          | ConnectableInputSocketData
+          | AttributeInputSocketData
+          | VaryingInputSocketData
+          | UniformInputSocketData
         );
       } else {
         this.__addOutputSocket(socketData);
@@ -223,22 +215,6 @@ export default class Node implements INode {
   }
 
   /**
-   * @private
-   * Get the inputSockets of this node
-   */
-  get _inputSockets() {
-    return this.__inputSockets;
-  }
-
-  /**
-   * @private
-   * Get the outputSockets of this node
-   */
-  get _outputSockets() {
-    return this.__outputSockets;
-  }
-
-  /**
    * Get connected input node by input socket name
    * */
   getInputNode(socketName: string) {
@@ -248,6 +224,7 @@ export default class Node implements INode {
     }
 
     if (targetSocket.className !== 'ConnectableInputSocket') {
+      // non-connectable socket cannot connect another node
       return undefined;
     }
 
@@ -274,9 +251,13 @@ export default class Node implements INode {
    * Get input socket by socket name
    * */
   private __getInputSocket(socketName: string) {
-    const resultSocket = this.__inputSockets.find(
-      inputSockets => inputSockets.name === socketName
-    );
+    const resultSocket = this.__sockets.find(
+      socket => socket.isInputSocket() && socket.name === socketName
+    ) as
+      | ConnectableInputSocket
+      | AttributeInputSocket
+      | VaryingInputSocket
+      | UniformInputSocket;
 
     if (resultSocket == null) {
       console.error(
@@ -293,9 +274,9 @@ export default class Node implements INode {
    * Get output socket by socket name
    * */
   private __getOutputSocket(socketName: string) {
-    const resultSocket = this.__outputSockets.find(
-      outputSockets => outputSockets.name === socketName
-    );
+    const resultSocket = this.__sockets.find(
+      socket => !socket.isInputSocket() && socket.name === socketName
+    ) as ConnectableOutputSocket;
 
     if (resultSocket == null) {
       console.error(
@@ -372,12 +353,12 @@ export default class Node implements INode {
       );
     }
 
-    this.__inputSockets.push(inputSocket);
+    this.__sockets.push(inputSocket);
   }
 
   private __checkDuplicationOfInputSocket(socketName: string) {
-    const existSocketName = this.__inputSockets.some(
-      socket => socket.name === socketName
+    const existSocketName = this.__sockets.some(
+      socket => socket.isInputSocket() && socket.name === socketName
     );
 
     if (existSocketName) {
@@ -411,12 +392,12 @@ export default class Node implements INode {
       socketName,
       socketData.argumentId
     );
-    this.__outputSockets.push(outputSocket);
+    this.__sockets.push(outputSocket);
   }
 
   private __checkDuplicationOfOutputSocket(socketName: string) {
-    const existSocketName = this.__outputSockets.some(
-      socket => socket.name === socketName
+    const existSocketName = this.__sockets.some(
+      socket => !socket.isInputSocket() && socket.name === socketName
     );
 
     if (existSocketName) {

@@ -9,6 +9,7 @@ import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
 import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
+import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
 
 export default class ShaderGraphResolver {
   static createShaderCode(
@@ -86,12 +87,12 @@ export default class ShaderGraphResolver {
       shaderityObjectCreator.addExtension(extension);
     }
 
-    const inputSockets = node._inputSockets;
-    for (let i = 0; i < inputSockets.length; i++) {
-      const inputSocket = inputSockets[i];
+    const sockets = node._sockets;
+    for (let i = 0; i < sockets.length; i++) {
+      const socket = sockets[i];
 
-      if (inputSocket.className === 'AttributeInputSocket') {
-        const aInputSocket = inputSocket as AttributeInputSocket;
+      if (socket.className === 'AttributeInputSocket') {
+        const aInputSocket = socket as AttributeInputSocket;
 
         shaderityObjectCreator.addAttributeDeclaration(
           `${aInputSocket.variableName}_${node.id}`,
@@ -101,8 +102,8 @@ export default class ShaderGraphResolver {
             location: aInputSocket.location,
           }
         );
-      } else if (inputSocket.className === 'VaryingInputSocket') {
-        const vInputSocket = inputSocket as VaryingInputSocket;
+      } else if (socket.className === 'VaryingInputSocket') {
+        const vInputSocket = socket as VaryingInputSocket;
 
         shaderityObjectCreator.addVaryingDeclaration(
           `${vInputSocket.variableName}_${node.id}`,
@@ -112,8 +113,8 @@ export default class ShaderGraphResolver {
             interpolationType: vInputSocket.interpolationType,
           }
         );
-      } else if (inputSocket.className === 'UniformInputSocket') {
-        const uInputSocket = inputSocket as UniformInputSocket;
+      } else if (socket.className === 'UniformInputSocket') {
+        const uInputSocket = socket as UniformInputSocket;
 
         shaderityObjectCreator.addUniformDeclaration(
           `${uInputSocket.variableName}_${node.id}`,
@@ -180,11 +181,8 @@ ${functionCalls}
     const variableNames: Array<Array<string>> = new Array(nodes.length);
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
-
-      const argumentCount =
-        node._inputSockets.length + node._outputSockets.length;
-
-      variableNames[node.id] = new Array(argumentCount);
+      const argumentCountOfNodeFunction = node._sockets.length;
+      variableNames[node.id] = new Array(argumentCountOfNodeFunction);
     }
 
     return variableNames;
@@ -195,7 +193,7 @@ ${functionCalls}
     variableNames: string[][]
   ): string {
     let returnStr = '';
-    for (const inputSocket of node._inputSockets) {
+    for (const inputSocket of node._sockets) {
       if (inputSocket.className !== 'ConnectableInputSocket') {
         continue;
       }
@@ -237,7 +235,11 @@ ${functionCalls}
     variableNames: string[][]
   ): string {
     let returnStr = '';
-    for (const outputSocket of node._outputSockets) {
+    for (const socket of node._sockets) {
+      if (socket.isInputSocket()) {
+        continue;
+      }
+      const outputSocket = socket as ConnectableOutputSocket;
       const connectedNodes = outputSocket.connectedNodes;
       const connectedSockets = outputSocket.connectedSockets;
 
@@ -273,9 +275,9 @@ ${functionCalls}
   ): void {
     const nodeId = node.id;
 
-    const inputSockets = node._inputSockets;
-    for (let i = 0; i < inputSockets.length; i++) {
-      const inputSocket = inputSockets[i];
+    const sockets = node._sockets;
+    for (let i = 0; i < sockets.length; i++) {
+      const inputSocket = sockets[i];
 
       if (inputSocket.className === 'AttributeInputSocket') {
         const aInputSocket = inputSocket as AttributeInputSocket;
