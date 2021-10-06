@@ -51,5 +51,18 @@ export default abstract class AbstractSocket implements ISocket {
     return this.__argumentId;
   }
 
+  isInputSocket() {
+    if (
+      this.className === 'ConnectableInputSocket' ||
+      this.className === 'AttributeInputSocket' ||
+      this.className === 'VaryingInputSocket' ||
+      this.className === 'UniformInputSocket'
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   abstract get className(): SocketClassName;
 }
