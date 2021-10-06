@@ -1,4 +1,5 @@
 import {IConnectableInputSocket} from '../sockets/input/IConnectableInputSocket';
+import {INonConnectableInputSocket} from '../sockets/input/INonConnectableInputSocket';
 import {IConnectableOutputSocket} from '../sockets/output/IConnectableOutputSocket';
 import {ShaderStageEnum} from '../types/CommonEnum';
 
@@ -15,7 +16,7 @@ export interface INode {
   get shaderStage(): ShaderStageEnum;
   get extensions(): string[];
   get id(): number;
-  get _inputSockets(): IConnectableInputSocket[];
+  get _inputSockets(): (IConnectableInputSocket | INonConnectableInputSocket)[];
   get _outputSockets(): IConnectableOutputSocket[];
 
   getInputNode(socketName: string): INode | undefined;

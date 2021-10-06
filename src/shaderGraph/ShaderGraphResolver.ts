@@ -8,6 +8,7 @@ import Shaderity, {
 import AttributeInputNode from '../node/AttributeInputNode';
 import VaryingInputNode from '../node/VaryingInputNode';
 import UniformInputNode from '../node/UniformInputNode';
+import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
 
 export default class ShaderGraphResolver {
   static createShaderCode(
@@ -194,11 +195,12 @@ ${functionCalls}
   ): string {
     let returnStr = '';
     for (const inputSocket of node._inputSockets) {
-      if (inputSocket.connectedSocket != null) {
+      if (inputSocket.className !== 'ConnectableInputSocket') {
         continue;
       }
+      const cInputSocket = inputSocket as ConnectableInputSocket;
 
-      const socketType = inputSocket.socketType;
+      const socketType = cInputSocket.socketType;
       const glslComponentNumber = SocketType.getGlslComponentNumber(socketType);
 
       if (glslComponentNumber === 0) {
@@ -206,7 +208,7 @@ ${functionCalls}
         console.error(message);
 
         return `  // ${message}\n`;
-      } else if (inputSocket.defaultValue.length !== glslComponentNumber) {
+      } else if (cInputSocket.defaultValue.length !== glslComponentNumber) {
         console.warn(
           'ShaderGraphResolver.__getInputVariableDefinitions: defaultValue.length is invalid'
         );
@@ -216,14 +218,14 @@ ${functionCalls}
 
       let defaultValue = glslTypeStr + '(';
       for (let i = 0; i < glslComponentNumber; i++) {
-        defaultValue += inputSocket.defaultValue[i] + ', ';
+        defaultValue += cInputSocket.defaultValue[i] + ', ';
       }
       defaultValue = defaultValue.replace(/,\s$/, ')');
 
-      const variableName = `${inputSocket.name}_${node.id}`;
+      const variableName = `${cInputSocket.name}_${node.id}`;
       returnStr += `  ${glslTypeStr} ${variableName} = ${defaultValue};\n`;
 
-      variableNames[node.id][inputSocket.argumentId] = variableName;
+      variableNames[node.id][cInputSocket.argumentId] = variableName;
     }
 
     return returnStr;

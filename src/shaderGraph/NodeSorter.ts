@@ -1,4 +1,5 @@
 import Node from '../node/Node';
+import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
 
 export default class NodeSorter {
   static sortTopologically(unsortedNodes: Node[]): Node[] {
@@ -46,7 +47,11 @@ export default class NodeSorter {
     for (let i = 0; i < unsortedNodes.length; i++) {
       const node = unsortedNodes[i];
       for (const inputSocket of node._inputSockets) {
-        const inputNode = inputSocket.connectedNode;
+        if (inputSocket.className !== 'ConnectableInputSocket') {
+          continue;
+        }
+
+        const inputNode = (inputSocket as ConnectableInputSocket).connectedNode;
         if (inputNode == null) {
           // non-connected socket
           continue;

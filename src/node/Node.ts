@@ -3,6 +3,9 @@ import {
   NodeData,
   ConnectableInputSocketData,
   ConnectableOutputSocketData,
+  UniformInputSocketData,
+  VaryingInputSocketData,
+  AttributeInputSocketData,
 } from '../types/CommonType';
 import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
 import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
@@ -11,6 +14,10 @@ import {IConnectableInputSocket} from '../sockets/input/IConnectableInputSocket'
 import {INode, NodeClassName} from './INode';
 import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
 import AbstractConnectableSocket from '../sockets/AbstractConnectableSocket';
+import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
+import UniformInputSocket from '../sockets/input/UniformInputSocket';
+import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
+import {INonConnectableInputSocket} from '../sockets/input/INonConnectableInputSocket';
 
 /**
  * The node is a object that has a function.
@@ -25,7 +32,10 @@ export default class Node implements INode {
   protected __shaderStage: ShaderStageEnum;
 
   protected __id: number;
-  protected __inputSockets: IConnectableInputSocket[] = [];
+  protected __inputSockets: (
+    | IConnectableInputSocket
+    | INonConnectableInputSocket
+  )[] = [];
   protected __outputSockets: IConnectableOutputSocket[] = [];
 
   constructor(
@@ -33,6 +43,9 @@ export default class Node implements INode {
     socketDataArray: (
       | ConnectableInputSocketData
       | ConnectableOutputSocketData
+      | AttributeInputSocketData
+      | VaryingInputSocketData
+      | UniformInputSocketData
     )[]
   ) {
     this.__shaderFunctionName = nodeData.shaderFunctionName;
@@ -41,7 +54,13 @@ export default class Node implements INode {
     for (let i = 0; i < socketDataArray.length; i++) {
       const socketData = socketDataArray[i];
       if (socketData.direction === 'input') {
-        this.__addInputSocket(socketData as ConnectableInputSocketData);
+        this.__addInputSocket(
+          socketData as
+            | ConnectableInputSocketData
+            | AttributeInputSocketData
+            | VaryingInputSocketData
+            | UniformInputSocketData
+        );
       } else {
         this.__addOutputSocket(socketData);
       }
@@ -133,7 +152,17 @@ export default class Node implements INode {
       return;
     }
 
-    AbstractConnectableSocket.connectSockets(inputSocket, outputSocket);
+    if (inputSocket.className !== 'ConnectableInputSocket') {
+      console.error(
+        'Node.connectNodes: the input socket is non-connectable socket'
+      );
+      return;
+    }
+
+    AbstractConnectableSocket.connectSockets(
+      inputSocket as ConnectableInputSocket,
+      outputSocket
+    );
   }
 
   /**
@@ -214,7 +243,12 @@ export default class Node implements INode {
       return undefined;
     }
 
-    const connectedNode = targetSocket.connectedNode;
+    if (targetSocket.className !== 'ConnectableInputSocket') {
+      return undefined;
+    }
+
+    const cInputSocket = targetSocket as ConnectableInputSocket;
+    const connectedNode = cInputSocket.connectedNode;
     return connectedNode;
   }
 
@@ -273,7 +307,13 @@ export default class Node implements INode {
    * @private
    * Add input socket of this node to connect another node
    */
-  private __addInputSocket(socketData: ConnectableInputSocketData) {
+  private __addInputSocket(
+    socketData:
+      | ConnectableInputSocketData
+      | AttributeInputSocketData
+      | VaryingInputSocketData
+      | UniformInputSocketData
+  ) {
     const socketName = socketData.name;
 
     const duplicateInputSocket =
@@ -286,13 +326,48 @@ export default class Node implements INode {
       return;
     }
 
-    const inputSocket = new ConnectableInputSocket(
-      socketData.type,
-      this,
-      socketName,
-      socketData.argumentId,
-      socketData.defaultValue
-    );
+    const type = socketData.type;
+    const argumentId = socketData.argumentId;
+
+    let inputSocket;
+    if ((socketData as AttributeInputSocketData).attribute != null) {
+      const aSocketData = socketData as AttributeInputSocketData;
+      inputSocket = new AttributeInputSocket(
+        type,
+        this,
+        socketName,
+        argumentId,
+        aSocketData.attribute
+      );
+    } else if ((socketData as VaryingInputSocketData).varying != null) {
+      const vSocketData = socketData as VaryingInputSocketData;
+      inputSocket = new VaryingInputSocket(
+        type,
+        this,
+        socketName,
+        argumentId,
+        vSocketData.varying
+      );
+    } else if ((socketData as UniformInputSocketData).uniform != null) {
+      const uSocketData = socketData as UniformInputSocketData;
+      inputSocket = new UniformInputSocket(
+        type,
+        this,
+        socketName,
+        argumentId,
+        uSocketData.uniform
+      );
+    } else {
+      const cSocketData = socketData as ConnectableInputSocketData;
+      inputSocket = new ConnectableInputSocket(
+        socketData.type,
+        this,
+        socketName,
+        socketData.argumentId,
+        cSocketData.defaultValue
+      );
+    }
+
     this.__inputSockets.push(inputSocket);
   }
 

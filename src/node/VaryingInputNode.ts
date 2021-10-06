@@ -1,7 +1,10 @@
 import {
+  AttributeInputSocketData,
   ConnectableInputSocketData,
   ConnectableOutputSocketData,
+  UniformInputSocketData,
   VaryingInputNodeData,
+  VaryingInputSocketData,
 } from '../types/CommonType';
 import {NodeClassName} from './INode';
 import Node from './Node';
@@ -11,9 +14,15 @@ export default class VaryingInputNode extends Node {
 
   constructor(
     nodeData: VaryingInputNodeData,
-    socketData: (ConnectableInputSocketData | ConnectableOutputSocketData)[]
+    socketDataArray: (
+      | ConnectableInputSocketData
+      | ConnectableOutputSocketData
+      | AttributeInputSocketData
+      | VaryingInputSocketData
+      | UniformInputSocketData
+    )[]
   ) {
-    super(nodeData, socketData);
+    super(nodeData, socketDataArray);
     this.__nodeData = nodeData;
   }
 
