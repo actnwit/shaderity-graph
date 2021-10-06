@@ -3,7 +3,7 @@ import {
   OutputSocketData,
   UniformInputNodeData,
 } from '../types/CommonType';
-import {NodeClassNames} from './INode';
+import {NodeClassName} from './INode';
 import Node from './Node';
 
 export default class UniformInputNode extends Node {
@@ -17,7 +17,7 @@ export default class UniformInputNode extends Node {
     this.__nodeData = nodeData;
   }
 
-  get className(): NodeClassNames {
+  get className(): NodeClassName {
     return 'UniformInputNode';
   }
 

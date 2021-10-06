@@ -8,7 +8,7 @@ import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
 import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
 import {IConnectableOutputSocket} from '../sockets/output/IConnectableOutputSocket';
 import {IConnectableInputSocket} from '../sockets/input/IConnectableInputSocket';
-import {INode, NodeClassNames} from './INode';
+import {INode, NodeClassName} from './INode';
 import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
 import AbstractConnectableSocket from '../sockets/AbstractConnectableSocket';
 
@@ -145,7 +145,7 @@ export default class Node implements INode {
   /**
    * Get the className
    */
-  get className(): NodeClassNames {
+  get className(): NodeClassName {
     return 'Node';
   }
 

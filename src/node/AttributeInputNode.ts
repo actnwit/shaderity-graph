@@ -3,7 +3,7 @@ import {
   InputSocketData,
   OutputSocketData,
 } from '../types/CommonType';
-import {NodeClassNames} from './INode';
+import {NodeClassName} from './INode';
 import Node from './Node';
 
 /**
@@ -22,7 +22,7 @@ export default class AttributeInputNode extends Node {
     this.__nodeData = nodeData;
   }
 
-  get className(): NodeClassNames {
+  get className(): NodeClassName {
     return 'AttributeInputNode';
   }
 
