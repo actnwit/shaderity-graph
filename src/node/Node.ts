@@ -50,10 +50,10 @@ export default class Node implements INode {
       if (socketData.direction === 'input') {
         this.__addInputSocket(
           socketData as
-          | ConnectableInputSocketData
-          | AttributeInputSocketData
-          | VaryingInputSocketData
-          | UniformInputSocketData
+            | ConnectableInputSocketData
+            | AttributeInputSocketData
+            | VaryingInputSocketData
+            | UniformInputSocketData
         );
       } else {
         this.__addOutputSocket(socketData);
@@ -312,7 +312,6 @@ export default class Node implements INode {
     }
 
     const type = socketData.type;
-    const argumentId = socketData.argumentId;
 
     let inputSocket;
     if ((socketData as AttributeInputSocketData).attribute != null) {
@@ -321,7 +320,6 @@ export default class Node implements INode {
         type,
         this,
         socketName,
-        argumentId,
         aSocketData.attribute
       );
     } else if ((socketData as VaryingInputSocketData).varying != null) {
@@ -330,7 +328,6 @@ export default class Node implements INode {
         type,
         this,
         socketName,
-        argumentId,
         vSocketData.varying
       );
     } else if ((socketData as UniformInputSocketData).uniform != null) {
@@ -339,7 +336,6 @@ export default class Node implements INode {
         type,
         this,
         socketName,
-        argumentId,
         uSocketData.uniform
       );
     } else {
@@ -348,7 +344,6 @@ export default class Node implements INode {
         socketData.type,
         this,
         socketName,
-        socketData.argumentId,
         cSocketData.defaultValue
       );
     }
@@ -389,8 +384,7 @@ export default class Node implements INode {
     const outputSocket = new ConnectableOutputSocket(
       socketData.type,
       this,
-      socketName,
-      socketData.argumentId
+      socketName
     );
     this.__sockets.push(outputSocket);
   }

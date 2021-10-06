@@ -21,10 +21,9 @@ export default class UniformInputSocket
     SocketType: SocketTypeEnum,
     node: INode,
     socketName: string,
-    argumentId: number,
     uniform: ShaderUniformObject
   ) {
-    super(SocketType, node, socketName, argumentId);
+    super(SocketType, node, socketName);
 
     this.__variableName = uniform.variableName;
     this.__type = uniform.type;

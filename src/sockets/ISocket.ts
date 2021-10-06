@@ -13,6 +13,5 @@ export interface ISocket {
   get name(): string;
   get socketType(): SocketTypeEnum;
   get node(): INode;
-  get argumentId(): number;
   isInputSocket(): boolean;
 }

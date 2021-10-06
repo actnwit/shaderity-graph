@@ -96,7 +96,6 @@ export interface SocketConnectionDatum {
 // if the direction is input/output, the socket is InputSocket/OutputSocket
 export interface SocketData {
   name: string;
-  argumentId: number;
   type: SocketTypeEnum;
   direction: 'input' | 'output';
 }
