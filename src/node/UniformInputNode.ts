@@ -1,6 +1,6 @@
 import {
-  InputSocketData,
-  OutputSocketData,
+  ConnectableInputSocketData,
+  ConnectableOutputSocketData,
   UniformInputNodeData,
 } from '../types/CommonType';
 import {NodeClassName} from './INode';
@@ -11,7 +11,7 @@ export default class UniformInputNode extends Node {
 
   constructor(
     nodeData: UniformInputNodeData,
-    socketData: (InputSocketData | OutputSocketData)[]
+    socketData: (ConnectableInputSocketData | ConnectableOutputSocketData)[]
   ) {
     super(nodeData, socketData);
     this.__nodeData = nodeData;

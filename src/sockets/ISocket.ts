@@ -3,7 +3,10 @@ import {INode} from '../node/INode';
 
 export type SocketClassName =
   | 'ConnectableInputSocket'
-  | 'ConnectableOutputSocket';
+  | 'ConnectableOutputSocket'
+  | 'AttributeInputSocket'
+  | 'VaryingInputSocket'
+  | 'UniformInputSocket';
 
 export interface ISocket {
   get className(): SocketClassName;

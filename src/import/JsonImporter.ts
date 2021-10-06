@@ -5,12 +5,12 @@ import UniformInputNode from '../node/UniformInputNode';
 import VaryingInputNode from '../node/VaryingInputNode';
 import {
   AttributeInputNodeData,
-  InputSocketData,
   ShaderityGraphNode,
   UniformInputNodeData,
   VaryingInputNodeData,
   ShaderityGraphJson,
   ShaderFunctionData,
+  ConnectableInputSocketData,
 } from '../types/CommonType';
 
 export default class JsonImporter {
@@ -37,7 +37,7 @@ export default class JsonImporter {
     for (let i = 0; i < nodesJson.length; i++) {
       const nodeJson = nodesJson[i];
       const nodeData = nodeJson.nodeData;
-      const socketData = nodeJson.socketData;
+      const socketData = nodeJson.socketDataArray;
 
       if ((nodeData as AttributeInputNodeData).attribute != null) {
         const attributeInputNode = nodeData as AttributeInputNodeData;
@@ -59,12 +59,12 @@ export default class JsonImporter {
       const outputNodeId = i;
       const outputNodeJson = nodesJson[outputNodeId];
 
-      for (const socketData of outputNodeJson.socketData) {
+      for (const socketData of outputNodeJson.socketDataArray) {
         if (socketData.direction === 'output') {
           continue;
         }
 
-        const inputSocketData = socketData as InputSocketData;
+        const inputSocketData = socketData as ConnectableInputSocketData;
         const socketConnectionData = inputSocketData.socketConnectionDatum;
         if (socketConnectionData == null) {
           continue;

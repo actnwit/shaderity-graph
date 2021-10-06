@@ -1,6 +1,6 @@
 import {
-  InputSocketData,
-  OutputSocketData,
+  ConnectableInputSocketData,
+  ConnectableOutputSocketData,
   VaryingInputNodeData,
 } from '../types/CommonType';
 import {NodeClassName} from './INode';
@@ -11,7 +11,7 @@ export default class VaryingInputNode extends Node {
 
   constructor(
     nodeData: VaryingInputNodeData,
-    socketData: (InputSocketData | OutputSocketData)[]
+    socketData: (ConnectableInputSocketData | ConnectableOutputSocketData)[]
   ) {
     super(nodeData, socketData);
     this.__nodeData = nodeData;

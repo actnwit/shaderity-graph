@@ -3,7 +3,11 @@ import {
   ShaderStageEnum,
   SocketTypeEnum,
 } from '../types/CommonEnum';
-import {InputSocketData, NodeData, OutputSocketData} from '../types/CommonType';
+import {
+  NodeData,
+  ConnectableInputSocketData,
+  ConnectableOutputSocketData,
+} from '../types/CommonType';
 import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
 import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
 import {IConnectableOutputSocket} from '../sockets/output/IConnectableOutputSocket';
@@ -30,25 +34,28 @@ export default class Node implements INode {
 
   constructor(
     nodeData: NodeData,
-    socketData: (InputSocketData | OutputSocketData)[]
+    socketDataArray: (
+      | ConnectableInputSocketData
+      | ConnectableOutputSocketData
+    )[]
   ) {
     this.__shaderFunctionName = nodeData.shaderFunctionName;
     this.__shaderStage = nodeData.shaderStage;
 
-    for (let i = 0; i < socketData.length; i++) {
-      const socketDatum = socketData[i];
-      if (socketDatum.direction === 'input') {
+    for (let i = 0; i < socketDataArray.length; i++) {
+      const socketData = socketDataArray[i];
+      if (socketData.direction === 'input') {
         this.__addInputSocket(
-          socketDatum.name,
-          socketDatum.type,
-          socketDatum.argumentId,
-          (socketDatum as InputSocketData).defaultValue
+          socketData.name,
+          socketData.type,
+          socketData.argumentId,
+          (socketData as ConnectableInputSocketData).defaultValue
         );
       } else {
         this.__addOutputSocket(
-          socketDatum.name,
-          socketDatum.type,
-          socketDatum.argumentId
+          socketData.name,
+          socketData.type,
+          socketData.argumentId
         );
       }
     }
