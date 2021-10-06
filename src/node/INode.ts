@@ -7,8 +7,8 @@ export interface INode {
   get functionName(): string;
   get shaderCode(): string;
   get shaderStage(): ShaderStageEnum;
-  get extensions(): string[];
   get id(): number;
+  get _extensions(): string[];
   get _inputSockets(): (IConnectableInputSocket | INonConnectableInputSocket)[];
   get _outputSockets(): IConnectableOutputSocket[];
 

@@ -193,22 +193,23 @@ export default class Node implements INode {
   }
 
   /**
+   * Get the id of this node
+   */
+  get id() {
+    return this.__id;
+  }
+
+  /**
+   * @private
    * Get the webgl extension used by the functions of this node
    */
-  get extensions() {
+  get _extensions() {
     const extensions =
       ShaderFunctionDataRepository.getShaderFunctionData(
         this.__shaderFunctionName
       )?.extensions ?? [];
 
     return extensions;
-  }
-
-  /**
-   * Get the id of this node
-   */
-  get id() {
-    return this.__id;
   }
 
   /**

@@ -82,7 +82,7 @@ export default class ShaderGraphResolver {
     node: Node,
     nodeNames: string[]
   ) {
-    for (const extension of node.extensions) {
+    for (const extension of node._extensions) {
       shaderityObjectCreator.addExtension(extension);
     }
 
