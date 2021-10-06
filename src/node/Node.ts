@@ -1,8 +1,4 @@
-import {
-  ShaderStage,
-  ShaderStageEnum,
-  SocketTypeEnum,
-} from '../types/CommonEnum';
+import {ShaderStage, ShaderStageEnum} from '../types/CommonEnum';
 import {
   NodeData,
   ConnectableInputSocketData,
@@ -45,18 +41,9 @@ export default class Node implements INode {
     for (let i = 0; i < socketDataArray.length; i++) {
       const socketData = socketDataArray[i];
       if (socketData.direction === 'input') {
-        this.__addInputSocket(
-          socketData.name,
-          socketData.type,
-          socketData.argumentId,
-          (socketData as ConnectableInputSocketData).defaultValue
-        );
+        this.__addInputSocket(socketData as ConnectableInputSocketData);
       } else {
-        this.__addOutputSocket(
-          socketData.name,
-          socketData.type,
-          socketData.argumentId
-        );
+        this.__addOutputSocket(socketData);
       }
     }
 
@@ -285,19 +272,10 @@ export default class Node implements INode {
   /**
    * @private
    * Add input socket of this node to connect another node
-   * @param socketName name(key) of adding input socket
-   * @param socketType glsl type of data to be passed by this socket.
-   * @param argumentId The location of the argument of the node function corresponding to this input socket.
-   *                   (e.g. argumentId=0 means that this socket corresponds to the first argument of the node's function)
-   *                   (e.g. argumentId=1 means that this socket corresponds to the second argument of the node's function)
-   * @param defaultValue use this value as input if this socket does not connect with any socket
    */
-  private __addInputSocket(
-    socketName: string,
-    socketType: SocketTypeEnum,
-    argumentId: number,
-    defaultValue: number[]
-  ) {
+  private __addInputSocket(socketData: ConnectableInputSocketData) {
+    const socketName = socketData.name;
+
     const duplicateInputSocket =
       this.__checkDuplicationOfInputSocket(socketName);
 
@@ -309,11 +287,11 @@ export default class Node implements INode {
     }
 
     const inputSocket = new ConnectableInputSocket(
-      socketType,
+      socketData.type,
       this,
       socketName,
-      argumentId,
-      defaultValue
+      socketData.argumentId,
+      socketData.defaultValue
     );
     this.__inputSockets.push(inputSocket);
   }
@@ -333,19 +311,11 @@ export default class Node implements INode {
   /**
    * @private
    * Add output socket of this node to connect another node
-   * @param socketName name(key) of adding output socket
-   * @param socketType glsl type of adding output socket
-   * @param argumentId The location of the argument of the node function corresponding to this output socket.
-   *                   (e.g. argumentId=0 means that this socket corresponds to the first argument of the node's function)
-   *                   (e.g. argumentId=1 means that this socket corresponds to the second argument of the node's function)
-   * @param defaultValue use this value as output if this socket does not connect with any socket
    */
 
-  private __addOutputSocket(
-    socketName: string,
-    socketType: SocketTypeEnum,
-    argumentId: number
-  ) {
+  private __addOutputSocket(socketData: ConnectableOutputSocketData) {
+    const socketName = socketData.name;
+
     const duplicateOutputSocket =
       this.__checkDuplicationOfOutputSocket(socketName);
 
@@ -357,10 +327,10 @@ export default class Node implements INode {
     }
 
     const outputSocket = new ConnectableOutputSocket(
-      socketType,
+      socketData.type,
       this,
       socketName,
-      argumentId
+      socketData.argumentId
     );
     this.__outputSockets.push(outputSocket);
   }
