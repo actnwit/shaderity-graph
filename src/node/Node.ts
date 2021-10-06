@@ -298,12 +298,14 @@ export default class Node implements INode {
     argumentId: number,
     defaultValue: number[]
   ) {
-    const existSocketName = this.__inputSockets.some(
-      socket => socket.name === socketName
-    );
+    const duplicateInputSocket =
+      this.__checkDuplicationOfInputSocket(socketName);
 
-    if (existSocketName) {
-      console.warn('Node.addInputSocket: duplicate socketName');
+    if (duplicateInputSocket) {
+      console.error(
+        `Node.__checkDuplicationOfInputSocket: duplicate socketName ${socketName}`
+      );
+      return;
     }
 
     const inputSocket = new ConnectableInputSocket(
@@ -314,6 +316,18 @@ export default class Node implements INode {
       defaultValue
     );
     this.__inputSockets.push(inputSocket);
+  }
+
+  private __checkDuplicationOfInputSocket(socketName: string) {
+    const existSocketName = this.__inputSockets.some(
+      socket => socket.name === socketName
+    );
+
+    if (existSocketName) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -332,12 +346,14 @@ export default class Node implements INode {
     socketType: SocketTypeEnum,
     argumentId: number
   ) {
-    const existSocketName = this.__outputSockets.some(
-      socket => socket.name === socketName
-    );
+    const duplicateOutputSocket =
+      this.__checkDuplicationOfOutputSocket(socketName);
 
-    if (existSocketName) {
-      console.warn('Node.addOutputSocket: duplicate socketName');
+    if (duplicateOutputSocket) {
+      console.error(
+        `Node.__checkDuplicationOfOutputSocket: duplicate socketName ${socketName}`
+      );
+      return;
     }
 
     const outputSocket = new ConnectableOutputSocket(
@@ -347,5 +363,17 @@ export default class Node implements INode {
       argumentId
     );
     this.__outputSockets.push(outputSocket);
+  }
+
+  private __checkDuplicationOfOutputSocket(socketName: string) {
+    const existSocketName = this.__outputSockets.some(
+      socket => socket.name === socketName
+    );
+
+    if (existSocketName) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
