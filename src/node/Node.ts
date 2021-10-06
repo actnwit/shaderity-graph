@@ -18,6 +18,7 @@ import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import {INonConnectableInputSocket} from '../sockets/input/INonConnectableInputSocket';
+import {ISocket} from '../sockets/ISocket';
 
 /**
  * The node is a object that has a function.
@@ -32,6 +33,7 @@ export default class Node implements INode {
   protected __shaderStage: ShaderStageEnum;
 
   protected __id: number;
+  protected __sockets: ISocket[] = [];
   protected __inputSockets: (
     | IConnectableInputSocket
     | INonConnectableInputSocket
@@ -210,6 +212,14 @@ export default class Node implements INode {
       )?.extensions ?? [];
 
     return extensions;
+  }
+
+  /**
+   * @private
+   * Get all the sockets of this node
+   */
+  get _sockets() {
+    return this.__sockets;
   }
 
   /**
