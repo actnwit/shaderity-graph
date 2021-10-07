@@ -37,7 +37,7 @@
     "gts-lint": "gts lint ./src ./samples/**/*.ts",
     "gts-clean": "gts clean ./src ./samples/**/*.ts",
     "gts-fix": "gts fix ./src ./samples/**/*.ts",
-    "doc": "npx typedoc --entryPointStrategy expand ./src/"
+    "doc": "npx typedoc --entryPointStrategy expand --exclude '**/*index.ts' --exclude '**/*I[A-Z]*.ts' ./src/"
   },
   "files": [
     "./dist"
