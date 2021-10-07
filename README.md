@@ -34,3 +34,11 @@ declare const ShaderityGraph: typeof _ShaderityGraph;
 
 
 ```
+
+## Documents
+
+You can create a document under the doc folder with the following command:
+
+``` bash
+yarn doc
+```
