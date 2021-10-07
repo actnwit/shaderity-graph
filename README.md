@@ -16,6 +16,21 @@ Note:
 
 2. Currently, dynamically changing node graphs are not supported. You cannot break the connection between nodes.
 
+## Build
+
+### Setup Project
+
+```bash
+$ yarn install
+```
+
+### Build project
+
+```bash
+$ yarn build
+```
+The built files will be created under the dist folder.
+
 ## How to use
 
 You can convert the specified json format into vertex and fragment shader codes using the NodeConverter.createShaderCodesFromJsonFile method or NodeConverter.createShaderCodesFromJsonObject method.
@@ -33,4 +48,12 @@ declare const ShaderityGraph: typeof _ShaderityGraph;
 })();
 
 
+```
+
+## Documents
+
+You can create a document under the doc folder with the following command:
+
+``` bash
+yarn doc
 ```

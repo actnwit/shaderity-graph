@@ -3,3 +3,4 @@ dist/
 package-lock.json
 samples/**/main.js*
 samples/**/*.js.map
+docs/

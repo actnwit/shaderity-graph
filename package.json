@@ -18,6 +18,7 @@
     "shaderity-loader": "^0.0.15",
     "ts-loader": "^9.2.4",
     "tsc-watch": "^4.4.0",
+    "typedoc": "^0.22.5",
     "typescript": "^4.3.5",
     "webpack": "^5.47.0",
     "webpack-cli": "^4.7.2",
@@ -35,7 +36,8 @@
     "watch-samples": "tsc-watch -p ./samples/ --onSuccess \"node server.js\"",
     "gts-lint": "gts lint ./src ./samples/**/*.ts",
     "gts-clean": "gts clean ./src ./samples/**/*.ts",
-    "gts-fix": "gts fix ./src ./samples/**/*.ts"
+    "gts-fix": "gts fix ./src ./samples/**/*.ts",
+    "doc": "npx typedoc --entryPointStrategy expand --exclude '**/*index.ts' --exclude '**/*I[A-Z]*.ts' ./src/"
   },
   "files": [
     "./dist"
