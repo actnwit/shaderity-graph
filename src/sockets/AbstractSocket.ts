@@ -1,12 +1,9 @@
 import {INode} from '../node/INode';
 import {SocketTypeEnum} from '../types/CommonEnum';
-import {IInputSocket} from './IInputSocket';
-import {IOutputSocket} from './IOutputSocket';
 import {ISocket, SocketClassName} from './ISocket';
 
 /**
- * The roll of sockets are connecting nodes.
- * Users are expected to use this class through Node class.
+ * The roll of the socket is to manage the input and output of each node.
  */
 export default abstract class AbstractSocket implements ISocket {
   private __name: string;
@@ -24,23 +21,6 @@ export default abstract class AbstractSocket implements ISocket {
     this.__socketType = socketType;
     this.__node = node;
     this.__argumentId = argumentId;
-  }
-
-  /**
-   * Connecting input/output sockets
-   * @param inputSocket input socket contained in the output node
-   * @param outputSocket output socket contained in the input node
-   */
-  static connectSockets(
-    inputSocket: IInputSocket,
-    outputSocket: IOutputSocket
-  ) {
-    if (inputSocket.socketType === outputSocket.socketType) {
-      inputSocket._connectSocketWith(outputSocket);
-      outputSocket._connectSocketWith(inputSocket);
-    } else {
-      console.error('AbstractSocket.connectSockets: socketType is different');
-    }
   }
 
   /**
@@ -72,5 +52,4 @@ export default abstract class AbstractSocket implements ISocket {
   }
 
   abstract get className(): SocketClassName;
-  abstract _connectSocketWith(socket: ISocket): void;
 }

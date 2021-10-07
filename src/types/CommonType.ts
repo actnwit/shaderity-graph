@@ -4,6 +4,7 @@ import {
   ShaderConstantValueVarTypeES3 as _ShaderConstantValueVarTypeES3,
   ShaderVaryingVarType as _ShaderVaryingVarType,
   ShaderVaryingInterpolationType as _ShaderVaryingInterpolationType,
+  ShaderUniformVarTypeES3 as _ShaderUniformVarTypeES3,
   ShaderPrecisionObject as _ShaderPrecisionObject,
   ShaderAttributeObject as _ShaderAttributeObject,
   ShaderConstantValueObject as _ShaderConstantValueObject,
@@ -17,6 +18,7 @@ export type ShaderAttributeVarType = _ShaderAttributeVarType;
 export type ShaderConstantValueVarTypeES3 = _ShaderConstantValueVarTypeES3;
 export type ShaderVaryingVarType = _ShaderVaryingVarType; // equals to _ShaderAttributeVarType
 export type ShaderVaryingInterpolationType = _ShaderVaryingInterpolationType;
+export type ShaderUniformVarTypeES3 = _ShaderUniformVarTypeES3;
 export type ShaderPrecisionObject = _ShaderPrecisionObject;
 export type ShaderAttributeObject = _ShaderAttributeObject;
 export type ShaderConstantValueObject = _ShaderConstantValueObject;
@@ -48,7 +50,13 @@ export interface ShaderityGraphNode {
     | AttributeInputNodeData
     | VaryingInputNodeData
     | UniformInputNodeData;
-  socketData: (InputSocketData | OutputSocketData)[]; // the order must be the order of the function arguments for this node
+  socketDataArray: (
+    | ConnectableInputSocketData
+    | ConnectableOutputSocketData
+    | AttributeInputSocketData
+    | VaryingInputSocketData
+    | UniformInputSocketData
+  )[]; // the order must be the order of the function arguments for this node
   extras?: {[key: string]: unknown};
 }
 
@@ -93,10 +101,26 @@ export interface SocketData {
   direction: 'input' | 'output';
 }
 
-export interface InputSocketData extends SocketData {
+export interface ConnectableInputSocketData extends SocketData {
   defaultValue: number[];
   socketConnectionDatum?: SocketConnectionDatum;
 }
-export interface OutputSocketData extends SocketData {
+
+export interface ConnectableOutputSocketData extends SocketData {
   socketConnectionData?: SocketConnectionDatum[];
+}
+
+export interface AttributeInputSocketData extends SocketData {
+  attribute: ShaderAttributeObject;
+  direction: 'input';
+}
+
+export interface VaryingInputSocketData extends SocketData {
+  varying: ShaderVaryingObject;
+  direction: 'input';
+}
+
+export interface UniformInputSocketData extends SocketData {
+  uniform: ShaderUniformObject;
+  direction: 'input';
 }

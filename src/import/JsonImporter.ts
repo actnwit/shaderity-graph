@@ -1,16 +1,10 @@
-import AttributeInputNode from '../node/AttributeInputNode';
 import Node from '../node/Node';
 import shaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
-import UniformInputNode from '../node/UniformInputNode';
-import VaryingInputNode from '../node/VaryingInputNode';
 import {
-  AttributeInputNodeData,
-  InputSocketData,
   ShaderityGraphNode,
-  UniformInputNodeData,
-  VaryingInputNodeData,
   ShaderityGraphJson,
   ShaderFunctionData,
+  ConnectableInputSocketData,
 } from '../types/CommonType';
 
 export default class JsonImporter {
@@ -36,21 +30,7 @@ export default class JsonImporter {
   private static __createNodes(nodesJson: ShaderityGraphNode[]) {
     for (let i = 0; i < nodesJson.length; i++) {
       const nodeJson = nodesJson[i];
-      const nodeData = nodeJson.nodeData;
-      const socketData = nodeJson.socketData;
-
-      if ((nodeData as AttributeInputNodeData).attribute != null) {
-        const attributeInputNode = nodeData as AttributeInputNodeData;
-        new AttributeInputNode(attributeInputNode, socketData);
-      } else if ((nodeData as VaryingInputNodeData).varying != null) {
-        const varyingInputNodeData = nodeData as VaryingInputNodeData;
-        new VaryingInputNode(varyingInputNodeData, socketData);
-      } else if ((nodeData as UniformInputNodeData).uniform != null) {
-        const uniformInputNodeData = nodeData as UniformInputNodeData;
-        new UniformInputNode(uniformInputNodeData, socketData);
-      } else {
-        new Node(nodeData, socketData);
-      }
+      new Node(nodeJson.nodeData, nodeJson.socketDataArray);
     }
   }
 
@@ -59,12 +39,12 @@ export default class JsonImporter {
       const outputNodeId = i;
       const outputNodeJson = nodesJson[outputNodeId];
 
-      for (const socketData of outputNodeJson.socketData) {
+      for (const socketData of outputNodeJson.socketDataArray) {
         if (socketData.direction === 'output') {
           continue;
         }
 
-        const inputSocketData = socketData as InputSocketData;
+        const inputSocketData = socketData as ConnectableInputSocketData;
         const socketConnectionData = inputSocketData.socketConnectionDatum;
         if (socketConnectionData == null) {
           continue;

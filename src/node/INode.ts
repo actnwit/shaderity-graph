@@ -1,22 +1,16 @@
-import {IInputSocket} from '../sockets/IInputSocket';
-import {IOutputSocket} from '../sockets/IOutputSocket';
+import {IConnectableInputSocket} from '../sockets/input/IConnectableInputSocket';
+import {INonConnectableInputSocket} from '../sockets/input/INonConnectableInputSocket';
+import {IConnectableOutputSocket} from '../sockets/output/IConnectableOutputSocket';
 import {ShaderStageEnum} from '../types/CommonEnum';
 
-export type NodeClassNames =
-  | 'Node'
-  | 'AttributeInputNode'
-  | 'VaryingInputNode'
-  | 'UniformInputNode';
-
 export interface INode {
-  get className(): NodeClassNames;
   get functionName(): string;
   get shaderCode(): string;
   get shaderStage(): ShaderStageEnum;
-  get extensions(): string[];
   get id(): number;
-  get _inputSockets(): IInputSocket[];
-  get _outputSockets(): IOutputSocket[];
+  get _extensions(): string[];
+  get _inputSockets(): (IConnectableInputSocket | INonConnectableInputSocket)[];
+  get _outputSockets(): IConnectableOutputSocket[];
 
   getInputNode(socketName: string): INode | undefined;
   getOutputNodes(socketName: string): INode[];

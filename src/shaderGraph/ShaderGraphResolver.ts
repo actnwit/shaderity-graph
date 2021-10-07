@@ -5,9 +5,10 @@ import Shaderity, {
   ShaderStageStr,
   ShaderityObjectCreator,
 } from 'shaderity/dist/esm';
-import AttributeInputNode from '../node/AttributeInputNode';
-import VaryingInputNode from '../node/VaryingInputNode';
-import UniformInputNode from '../node/UniformInputNode';
+import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
+import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
+import UniformInputSocket from '../sockets/input/UniformInputSocket';
+import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 
 export default class ShaderGraphResolver {
   static createShaderCode(
@@ -81,43 +82,47 @@ export default class ShaderGraphResolver {
     node: Node,
     nodeNames: string[]
   ) {
-    for (const extension of node.extensions) {
+    for (const extension of node._extensions) {
       shaderityObjectCreator.addExtension(extension);
     }
 
-    if (node.className === 'AttributeInputNode') {
-      const attributeInputNode = node as AttributeInputNode;
-      shaderityObjectCreator.addAttributeDeclaration(
-        `${attributeInputNode.variableName}_${attributeInputNode.id}`,
-        attributeInputNode.type,
-        {
-          precision: attributeInputNode.precision,
-          location: attributeInputNode.location,
-        }
-      );
-    }
+    const inputSockets = node._inputSockets;
+    for (let i = 0; i < inputSockets.length; i++) {
+      const inputSocket = inputSockets[i];
 
-    if (node.className === 'VaryingInputNode') {
-      const varyingInputNode = node as VaryingInputNode;
-      shaderityObjectCreator.addVaryingDeclaration(
-        `${varyingInputNode.variableName}_${varyingInputNode.id}`,
-        varyingInputNode.type,
-        {
-          precision: varyingInputNode.precision,
-          interpolationType: varyingInputNode.interpolationType,
-        }
-      );
-    }
+      if (inputSocket.className === 'AttributeInputSocket') {
+        const aInputSocket = inputSocket as AttributeInputSocket;
 
-    if (node.className === 'UniformInputNode') {
-      const uniformInputNode = node as UniformInputNode;
-      shaderityObjectCreator.addUniformDeclaration(
-        `${uniformInputNode.variableName}_${uniformInputNode.id}`,
-        uniformInputNode.type,
-        {
-          precision: uniformInputNode.precision,
-        }
-      );
+        shaderityObjectCreator.addAttributeDeclaration(
+          `${aInputSocket.variableName}_${node.id}`,
+          aInputSocket.type,
+          {
+            precision: aInputSocket.precision,
+            location: aInputSocket.location,
+          }
+        );
+      } else if (inputSocket.className === 'VaryingInputSocket') {
+        const vInputSocket = inputSocket as VaryingInputSocket;
+
+        shaderityObjectCreator.addVaryingDeclaration(
+          `${vInputSocket.variableName}_${node.id}`,
+          vInputSocket.type,
+          {
+            precision: vInputSocket.precision,
+            interpolationType: vInputSocket.interpolationType,
+          }
+        );
+      } else if (inputSocket.className === 'UniformInputSocket') {
+        const uInputSocket = inputSocket as UniformInputSocket;
+
+        shaderityObjectCreator.addUniformDeclaration(
+          `${uInputSocket.variableName}_${node.id}`,
+          uInputSocket.type,
+          {
+            precision: uInputSocket.precision,
+          }
+        );
+      }
     }
 
     const existSameNameNode = nodeNames.includes(node.functionName);
@@ -176,11 +181,8 @@ ${functionCalls}
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
 
-      const storageQualifierInputCount = node.className === 'Node' ? 0 : 1;
       const argumentCount =
-        node._inputSockets.length +
-        node._outputSockets.length +
-        storageQualifierInputCount;
+        node._inputSockets.length + node._outputSockets.length;
 
       variableNames[node.id] = new Array(argumentCount);
     }
@@ -194,11 +196,12 @@ ${functionCalls}
   ): string {
     let returnStr = '';
     for (const inputSocket of node._inputSockets) {
-      if (inputSocket.connectedSocket != null) {
+      if (inputSocket.className !== 'ConnectableInputSocket') {
         continue;
       }
+      const cInputSocket = inputSocket as ConnectableInputSocket;
 
-      const socketType = inputSocket.socketType;
+      const socketType = cInputSocket.socketType;
       const glslComponentNumber = SocketType.getGlslComponentNumber(socketType);
 
       if (glslComponentNumber === 0) {
@@ -206,7 +209,7 @@ ${functionCalls}
         console.error(message);
 
         return `  // ${message}\n`;
-      } else if (inputSocket.defaultValue.length !== glslComponentNumber) {
+      } else if (cInputSocket.defaultValue.length !== glslComponentNumber) {
         console.warn(
           'ShaderGraphResolver.__getInputVariableDefinitions: defaultValue.length is invalid'
         );
@@ -216,14 +219,14 @@ ${functionCalls}
 
       let defaultValue = glslTypeStr + '(';
       for (let i = 0; i < glslComponentNumber; i++) {
-        defaultValue += inputSocket.defaultValue[i] + ', ';
+        defaultValue += cInputSocket.defaultValue[i] + ', ';
       }
       defaultValue = defaultValue.replace(/,\s$/, ')');
 
-      const variableName = `${inputSocket.name}_${node.id}`;
+      const variableName = `${cInputSocket.name}_${node.id}`;
       returnStr += `  ${glslTypeStr} ${variableName} = ${defaultValue};\n`;
 
-      variableNames[node.id][inputSocket.argumentId] = variableName;
+      variableNames[node.id][cInputSocket.argumentId] = variableName;
     }
 
     return returnStr;
@@ -270,15 +273,29 @@ ${functionCalls}
   ): void {
     const nodeId = node.id;
 
-    if (node.className === 'AttributeInputNode') {
-      const attributeInputNode = node as AttributeInputNode;
-      variableNames[nodeId][0] = `${attributeInputNode.variableName}_${nodeId}`;
-    } else if (node.className === 'VaryingInputNode') {
-      const varyingInputNode = node as VaryingInputNode;
-      variableNames[nodeId][0] = `${varyingInputNode.variableName}_${nodeId}`;
-    } else if (node.className === 'UniformInputNode') {
-      const uniformInputNode = node as UniformInputNode;
-      variableNames[nodeId][0] = `${uniformInputNode.variableName}_${nodeId}`;
+    const inputSockets = node._inputSockets;
+    for (let i = 0; i < inputSockets.length; i++) {
+      const inputSocket = inputSockets[i];
+
+      if (inputSocket.className === 'AttributeInputSocket') {
+        const aInputSocket = inputSocket as AttributeInputSocket;
+        const argumentId = inputSocket.argumentId;
+        const variableName = aInputSocket.variableName;
+
+        variableNames[nodeId][argumentId] = `${variableName}_${nodeId}`;
+      } else if (inputSocket.className === 'VaryingInputSocket') {
+        const vInputSocket = inputSocket as VaryingInputSocket;
+        const argumentId = inputSocket.argumentId;
+        const variableName = vInputSocket.variableName;
+
+        variableNames[nodeId][argumentId] = `${variableName}_${nodeId}`;
+      } else if (inputSocket.className === 'UniformInputSocket') {
+        const uInputSocket = inputSocket as UniformInputSocket;
+        const argumentId = inputSocket.argumentId;
+        const variableName = uInputSocket.variableName;
+
+        variableNames[nodeId][argumentId] = `${variableName}_${nodeId}`;
+      }
     }
   }
 
