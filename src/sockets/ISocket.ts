@@ -1,4 +1,4 @@
-import {SocketTypeEnum} from '..';
+import {SocketTypeEnum} from '../types/CommonEnum';
 import {INode} from '../node/INode';
 
 export type SocketClassName =
