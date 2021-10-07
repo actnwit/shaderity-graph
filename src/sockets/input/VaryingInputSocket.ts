@@ -23,10 +23,9 @@ export default class VaryingInputSocket
     SocketType: SocketTypeEnum,
     node: INode,
     socketName: string,
-    argumentId: number,
     varying: ShaderVaryingObject
   ) {
-    super(SocketType, node, socketName, argumentId);
+    super(SocketType, node, socketName);
 
     this.__variableName = varying.variableName;
     this.__type = varying.type;

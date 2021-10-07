@@ -46,7 +46,7 @@ export default class NodeSorter {
 
     for (let i = 0; i < unsortedNodes.length; i++) {
       const node = unsortedNodes[i];
-      for (const inputSocket of node._inputSockets) {
+      for (const inputSocket of node._sockets) {
         if (inputSocket.className !== 'ConnectableInputSocket') {
           continue;
         }

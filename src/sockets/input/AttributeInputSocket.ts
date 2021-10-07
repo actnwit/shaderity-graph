@@ -22,10 +22,9 @@ export default class AttributeInputSocket
     SocketType: SocketTypeEnum,
     node: INode,
     socketName: string,
-    argumentId: number,
     attribute: ShaderAttributeObject
   ) {
-    super(SocketType, node, socketName, argumentId);
+    super(SocketType, node, socketName);
 
     this.__variableName = attribute.variableName;
     this.__type = attribute.type;

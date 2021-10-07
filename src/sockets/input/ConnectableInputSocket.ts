@@ -18,10 +18,9 @@ export default class ConnectableInputSocket
     SocketType: SocketTypeEnum,
     node: INode,
     socketName: string,
-    argumentId: number,
     defaultValue: number[]
   ) {
-    super(SocketType, node, socketName, argumentId);
+    super(SocketType, node, socketName);
     this.__defaultValue = defaultValue;
   }
 

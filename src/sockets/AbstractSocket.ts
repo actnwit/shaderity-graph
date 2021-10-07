@@ -9,18 +9,11 @@ export default abstract class AbstractSocket implements ISocket {
   private __name: string;
   private __socketType: SocketTypeEnum;
   private __node: INode;
-  private __argumentId: number;
 
-  constructor(
-    socketType: SocketTypeEnum,
-    node: INode,
-    socketName: string,
-    argumentId: number
-  ) {
+  constructor(socketType: SocketTypeEnum, node: INode, socketName: string) {
     this.__name = socketName;
     this.__socketType = socketType;
     this.__node = node;
-    this.__argumentId = argumentId;
   }
 
   /**
@@ -44,11 +37,17 @@ export default abstract class AbstractSocket implements ISocket {
     return this.__node;
   }
 
-  /**
-   * Get the location of the argument of the node function corresponding to this socket
-   */
-  get argumentId() {
-    return this.__argumentId;
+  isInputSocket() {
+    if (
+      this.className === 'ConnectableInputSocket' ||
+      this.className === 'AttributeInputSocket' ||
+      this.className === 'VaryingInputSocket' ||
+      this.className === 'UniformInputSocket'
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   abstract get className(): SocketClassName;

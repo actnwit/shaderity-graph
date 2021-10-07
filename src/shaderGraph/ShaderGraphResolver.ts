@@ -9,6 +9,7 @@ import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
 import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
+import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
 
 export default class ShaderGraphResolver {
   static createShaderCode(
@@ -86,12 +87,12 @@ export default class ShaderGraphResolver {
       shaderityObjectCreator.addExtension(extension);
     }
 
-    const inputSockets = node._inputSockets;
-    for (let i = 0; i < inputSockets.length; i++) {
-      const inputSocket = inputSockets[i];
+    const sockets = node._sockets;
+    for (let i = 0; i < sockets.length; i++) {
+      const socket = sockets[i];
 
-      if (inputSocket.className === 'AttributeInputSocket') {
-        const aInputSocket = inputSocket as AttributeInputSocket;
+      if (socket.className === 'AttributeInputSocket') {
+        const aInputSocket = socket as AttributeInputSocket;
 
         shaderityObjectCreator.addAttributeDeclaration(
           `${aInputSocket.variableName}_${node.id}`,
@@ -101,8 +102,8 @@ export default class ShaderGraphResolver {
             location: aInputSocket.location,
           }
         );
-      } else if (inputSocket.className === 'VaryingInputSocket') {
-        const vInputSocket = inputSocket as VaryingInputSocket;
+      } else if (socket.className === 'VaryingInputSocket') {
+        const vInputSocket = socket as VaryingInputSocket;
 
         shaderityObjectCreator.addVaryingDeclaration(
           `${vInputSocket.variableName}_${node.id}`,
@@ -112,8 +113,8 @@ export default class ShaderGraphResolver {
             interpolationType: vInputSocket.interpolationType,
           }
         );
-      } else if (inputSocket.className === 'UniformInputSocket') {
-        const uInputSocket = inputSocket as UniformInputSocket;
+      } else if (socket.className === 'UniformInputSocket') {
+        const uInputSocket = socket as UniformInputSocket;
 
         shaderityObjectCreator.addUniformDeclaration(
           `${uInputSocket.variableName}_${node.id}`,
@@ -133,7 +134,7 @@ export default class ShaderGraphResolver {
   }
 
   private static __createMainFunctionCode(sortedNodes: Node[]) {
-    // usage: variableNames[node.id][socket.argumentId] = variableName;
+    // usage: variableNames[node.id][index of socket] = variableName;
     const variableNames: Array<Array<string>> =
       this.__initializeVariableNames(sortedNodes);
 
@@ -180,11 +181,8 @@ ${functionCalls}
     const variableNames: Array<Array<string>> = new Array(nodes.length);
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
-
-      const argumentCount =
-        node._inputSockets.length + node._outputSockets.length;
-
-      variableNames[node.id] = new Array(argumentCount);
+      const argumentCountOfNodeFunction = node._sockets.length;
+      variableNames[node.id] = new Array(argumentCountOfNodeFunction);
     }
 
     return variableNames;
@@ -195,11 +193,14 @@ ${functionCalls}
     variableNames: string[][]
   ): string {
     let returnStr = '';
-    for (const inputSocket of node._inputSockets) {
-      if (inputSocket.className !== 'ConnectableInputSocket') {
+
+    const sockets = node._sockets;
+    for (let i = 0; i < sockets.length; i++) {
+      const socket = sockets[i];
+      if (socket.className !== 'ConnectableInputSocket') {
         continue;
       }
-      const cInputSocket = inputSocket as ConnectableInputSocket;
+      const cInputSocket = socket as ConnectableInputSocket;
 
       const socketType = cInputSocket.socketType;
       const glslComponentNumber = SocketType.getGlslComponentNumber(socketType);
@@ -218,15 +219,15 @@ ${functionCalls}
       const glslTypeStr = SocketType.getGlslTypeStr(socketType);
 
       let defaultValue = glslTypeStr + '(';
-      for (let i = 0; i < glslComponentNumber; i++) {
-        defaultValue += cInputSocket.defaultValue[i] + ', ';
+      for (let j = 0; j < glslComponentNumber; j++) {
+        defaultValue += cInputSocket.defaultValue[j] + ', ';
       }
       defaultValue = defaultValue.replace(/,\s$/, ')');
 
       const variableName = `${cInputSocket.name}_${node.id}`;
       returnStr += `  ${glslTypeStr} ${variableName} = ${defaultValue};\n`;
 
-      variableNames[node.id][cInputSocket.argumentId] = variableName;
+      variableNames[node.id][i] = variableName;
     }
 
     return returnStr;
@@ -237,30 +238,37 @@ ${functionCalls}
     variableNames: string[][]
   ): string {
     let returnStr = '';
-    for (const outputSocket of node._outputSockets) {
-      const connectedNodes = outputSocket.connectedNodes;
-      const connectedSockets = outputSocket.connectedSockets;
+
+    const sockets = node._sockets;
+    for (let i = 0; i < sockets.length; i++) {
+      const socket = sockets[i];
+      if (socket.isInputSocket()) {
+        continue;
+      }
+
+      const outputSocket = socket as ConnectableOutputSocket;
+      const outputNodes = outputSocket.connectedNodes;
+
+      // for debugging
+      // const inputSockets = outputSocket.connectedSockets;
 
       let variableName = `node${node.id}_${outputSocket.name}_to`;
-      for (let i = 0; i < connectedNodes.length; i++) {
-        const connectedNode = connectedNodes[i];
+      for (let j = 0; j < outputNodes.length; j++) {
+        const connectedNode = outputNodes[j];
         variableName += `_node${connectedNode.id}`;
 
         // for debugging
-        // const connectedSocketName = connectedSockets[i].name;
-        // returnStr += `_node${connectedNode.id}_${connectedSocketName}`;
+        // const inputSocketName = inputSockets[j].name;
+        // returnStr += `_node${connectedNode.id}_${inputSocketName}`;
       }
 
       const glslTypeStr = SocketType.getGlslTypeStr(outputSocket.socketType);
       returnStr += `  ${glslTypeStr} ${variableName};\n`;
 
-      variableNames[node.id][outputSocket.argumentId] = variableName;
-      for (let i = 0; i < connectedNodes.length; i++) {
-        const connectedNodeId = connectedNodes[i].id;
-        const connectedSocket = connectedSockets[i];
-
-        variableNames[connectedNodeId][connectedSocket.argumentId] =
-          variableName;
+      variableNames[node.id][i] = variableName; // set variable name corresponding to output socket
+      for (let j = 0; j < outputNodes.length; j++) {
+        const connectedNodeId = outputNodes[j].id;
+        variableNames[connectedNodeId][j] = variableName; // set variable name corresponding to input sockets
       }
     }
 
@@ -273,28 +281,25 @@ ${functionCalls}
   ): void {
     const nodeId = node.id;
 
-    const inputSockets = node._inputSockets;
-    for (let i = 0; i < inputSockets.length; i++) {
-      const inputSocket = inputSockets[i];
+    const sockets = node._sockets;
+    for (let i = 0; i < sockets.length; i++) {
+      const inputSocket = sockets[i];
 
       if (inputSocket.className === 'AttributeInputSocket') {
         const aInputSocket = inputSocket as AttributeInputSocket;
-        const argumentId = inputSocket.argumentId;
         const variableName = aInputSocket.variableName;
 
-        variableNames[nodeId][argumentId] = `${variableName}_${nodeId}`;
+        variableNames[nodeId][i] = `${variableName}_${nodeId}`;
       } else if (inputSocket.className === 'VaryingInputSocket') {
         const vInputSocket = inputSocket as VaryingInputSocket;
-        const argumentId = inputSocket.argumentId;
         const variableName = vInputSocket.variableName;
 
-        variableNames[nodeId][argumentId] = `${variableName}_${nodeId}`;
+        variableNames[nodeId][i] = `${variableName}_${nodeId}`;
       } else if (inputSocket.className === 'UniformInputSocket') {
         const uInputSocket = inputSocket as UniformInputSocket;
-        const argumentId = inputSocket.argumentId;
         const variableName = uInputSocket.variableName;
 
-        variableNames[nodeId][argumentId] = `${variableName}_${nodeId}`;
+        variableNames[nodeId][i] = `${variableName}_${nodeId}`;
       }
     }
   }

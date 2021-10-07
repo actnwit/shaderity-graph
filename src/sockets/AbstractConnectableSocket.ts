@@ -10,13 +10,8 @@ import {IConnectableOutputSocket} from './output/IConnectableOutputSocket';
  * Users are expected to use this class through Node class.
  */
 export default abstract class AbstractConnectableSocket extends AbstractSocket {
-  constructor(
-    socketType: SocketTypeEnum,
-    node: INode,
-    socketName: string,
-    argumentId: number
-  ) {
-    super(socketType, node, socketName, argumentId);
+  constructor(socketType: SocketTypeEnum, node: INode, socketName: string) {
+    super(socketType, node, socketName);
   }
 
   /**
