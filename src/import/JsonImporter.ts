@@ -37,37 +37,19 @@ export default class JsonImporter {
     for (let i = 0; i < nodesJson.length; i++) {
       const nodeJson = nodesJson[i];
       const nodeData = nodeJson.nodeData;
+      const socketData = nodeJson.socketData;
 
-      // Node.__nodeId equals to index of the nodesJson array
-      let node: Node;
       if ((nodeData as AttributeInputNodeData).attribute != null) {
-        node = new AttributeInputNode(nodeData as AttributeInputNodeData);
+        const attributeInputNode = nodeData as AttributeInputNodeData;
+        new AttributeInputNode(attributeInputNode, socketData);
       } else if ((nodeData as VaryingInputNodeData).varying != null) {
-        node = new VaryingInputNode(nodeData as VaryingInputNodeData);
+        const varyingInputNodeData = nodeData as VaryingInputNodeData;
+        new VaryingInputNode(varyingInputNodeData, socketData);
       } else if ((nodeData as UniformInputNodeData).uniform != null) {
-        node = new UniformInputNode(nodeData as UniformInputNodeData);
+        const uniformInputNodeData = nodeData as UniformInputNodeData;
+        new UniformInputNode(uniformInputNodeData, socketData);
       } else {
-        node = new Node(nodeData);
-      }
-
-      for (let i = 0; i < nodeJson.socketData.length; i++) {
-        const socketData = nodeJson.socketData[i];
-        const socketType = socketData.type;
-
-        if (socketData.direction === 'input') {
-          node.addInputSocket(
-            socketData.name,
-            socketType,
-            socketData.argumentId,
-            (socketData as InputSocketData).defaultValue
-          );
-        } else {
-          node.addOutputSocket(
-            socketData.name,
-            socketType,
-            socketData.argumentId
-          );
-        }
+        new Node(nodeData, socketData);
       }
     }
   }

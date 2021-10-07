@@ -1,4 +1,8 @@
-import {AttributeInputNodeData} from '../types/CommonType';
+import {
+  AttributeInputNodeData,
+  InputSocketData,
+  OutputSocketData,
+} from '../types/CommonType';
 import {NodeClassNames} from './INode';
 import Node from './Node';
 
@@ -10,8 +14,11 @@ import Node from './Node';
 export default class AttributeInputNode extends Node {
   protected __nodeData: AttributeInputNodeData;
 
-  constructor(nodeData: AttributeInputNodeData) {
-    super(nodeData);
+  constructor(
+    nodeData: AttributeInputNodeData,
+    socketData: (InputSocketData | OutputSocketData)[]
+  ) {
+    super(nodeData, socketData);
     this.__nodeData = nodeData;
   }
 
