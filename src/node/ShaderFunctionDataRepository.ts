@@ -3,6 +3,10 @@ import {ShaderFunctionData} from '../types/CommonType';
 /**
  * ShaderFunctionDataRepository is a class that manages the function that Nodes have.
  * The Data is managed by an object whose key is the function name.
+ *
+ * Note: All the return type of functions in the shaderFunctionData.shaderFunctionCode
+ *       should be 'void'. This is because we do not use the return value of the function.
+ *       You need to use 'out' qualifier to output value.
  */
 export default class ShaderFunctionDataRepository {
   private static __shaderFunctionData: {
