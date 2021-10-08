@@ -18,6 +18,7 @@
     "loader-utils": "^2.0.0",
     "requirejs": "^2.3.6",
     "shaderity-loader": "^0.0.15",
+    "ts-jest": "^27.0.5",
     "ts-loader": "^9.2.4",
     "tsc-watch": "^4.4.0",
     "typedoc": "^0.22.5",
@@ -40,7 +41,7 @@
     "gts-clean": "gts clean ./src ./samples/**/*.ts",
     "gts-fix": "gts fix ./src ./samples/**/*.ts",
     "doc": "npx typedoc --entryPointStrategy expand --exclude '**/*index.ts' --exclude '**/*I[A-Z]*.ts' ./src/",
-    "test": "jest --config ./config/jest/jest.config.js ./test"
+    "test": "jest --config ./config/jest/jest.config.js"
   },
   "files": [
     "./dist"
