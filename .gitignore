@@ -4,3 +4,4 @@ package-lock.json
 samples/**/main.js*
 samples/**/*.js.map
 docs/
+.DS_Store
