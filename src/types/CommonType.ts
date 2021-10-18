@@ -11,7 +11,11 @@ import {
   ShaderUniformObject as _ShaderUniformObject,
   ShaderVaryingObject as _ShaderVaryingObject,
 } from 'shaderity/dist/esm';
-import {SocketTypeEnum} from './CommonEnum';
+import {
+  ShaderStageEnum,
+  SocketDirectionEnum,
+  SocketTypeEnum,
+} from './CommonEnum';
 
 export type ShaderPrecisionType = _ShaderPrecisionType;
 export type ShaderAttributeVarType = _ShaderAttributeVarType;
@@ -58,7 +62,7 @@ export interface ShaderityGraphNode {
 
 export interface NodeData {
   shaderFunctionName: string;
-  shaderStage: 'vertex' | 'fragment' | 'noUse';
+  shaderStage: ShaderStageEnum;
   extras?: {[key: string]: unknown};
 }
 
@@ -77,34 +81,35 @@ export interface SocketConnectionData {
   connectedNodeId: number;
 }
 
-// if the direction is input/output, the socket is InputSocket/OutputSocket
 export interface SocketData {
   name: string;
-  direction: 'input' | 'output';
+  direction: SocketDirectionEnum;
 }
 
 export interface ConnectableInputSocketData extends SocketData {
+  direction: 'input';
   type: SocketTypeEnum;
   defaultValue: number[];
   socketConnectionData?: SocketConnectionData;
 }
 
 export interface ConnectableOutputSocketData extends SocketData {
+  direction: 'output';
   type: SocketTypeEnum;
   socketConnectionData?: SocketConnectionData[];
 }
 
 export interface AttributeInputSocketData extends SocketData {
-  attributeData: ShaderAttributeObject;
   direction: 'input';
+  attributeData: ShaderAttributeObject;
 }
 
 export interface VaryingInputSocketData extends SocketData {
-  varyingData: ShaderVaryingObject;
   direction: 'input';
+  varyingData: ShaderVaryingObject;
 }
 
 export interface UniformInputSocketData extends SocketData {
-  uniformData: ShaderUniformObject;
   direction: 'input';
+  uniformData: ShaderUniformObject;
 }

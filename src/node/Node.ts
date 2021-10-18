@@ -1,4 +1,8 @@
-import {ShaderStage, ShaderStageEnum} from '../types/CommonEnum';
+import {
+  ShaderStage,
+  ShaderStageEnum,
+  SocketDirection,
+} from '../types/CommonEnum';
 import {
   NodeData,
   ConnectableInputSocketData,
@@ -47,7 +51,7 @@ export default class Node implements INode {
 
     for (let i = 0; i < socketDataArray.length; i++) {
       const socketData = socketDataArray[i];
-      if (socketData.direction === 'input') {
+      if (socketData.direction === SocketDirection.Input) {
         this.__addInputSocket(
           socketData as
             | ConnectableInputSocketData
