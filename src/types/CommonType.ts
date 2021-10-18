@@ -45,11 +45,7 @@ export interface ShaderityGraphJson {
 }
 
 export interface ShaderityGraphNode {
-  nodeData:
-    | NodeData
-    | AttributeInputNodeData
-    | VaryingInputNodeData
-    | UniformInputNodeData;
+  nodeData: NodeData;
   socketDataArray: (
     | ConnectableInputSocketData
     | ConnectableOutputSocketData
@@ -64,18 +60,6 @@ export interface NodeData {
   shaderFunctionName: string;
   shaderStage: 'vertex' | 'fragment' | 'noUse';
   extras?: {[key: string]: unknown};
-}
-
-export interface AttributeInputNodeData extends NodeData {
-  attribute: ShaderAttributeObject;
-}
-
-export interface VaryingInputNodeData extends NodeData {
-  varying: ShaderVaryingObject;
-}
-
-export interface UniformInputNodeData extends NodeData {
-  uniform: ShaderUniformObject;
 }
 
 export interface ShaderGlobalData {
