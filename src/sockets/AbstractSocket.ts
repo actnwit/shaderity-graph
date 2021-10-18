@@ -14,7 +14,7 @@ export default abstract class AbstractSocket implements ISocket {
   private __name: string;
   private __node: INode;
 
-  constructor(socketType: SocketTypeEnum, node: INode, socketName: string) {
+  constructor(node: INode, socketName: string) {
     this.__name = socketName;
     this.__node = node;
   }

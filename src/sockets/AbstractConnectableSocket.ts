@@ -13,7 +13,7 @@ export default abstract class AbstractConnectableSocket extends AbstractSocket {
   private __socketType: SocketTypeEnum;
 
   constructor(socketType: SocketTypeEnum, node: INode, socketName: string) {
-    super(socketType, node, socketName);
+    super(node, socketName);
     this.__socketType = socketType;
   }
 

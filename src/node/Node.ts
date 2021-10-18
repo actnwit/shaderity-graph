@@ -311,13 +311,10 @@ export default class Node implements INode {
       return;
     }
 
-    const type = socketData.type;
-
     let inputSocket;
     if ((socketData as AttributeInputSocketData).attributeData != null) {
       const aSocketData = socketData as AttributeInputSocketData;
       inputSocket = new AttributeInputSocket(
-        type,
         this,
         socketName,
         aSocketData.attributeData
@@ -325,7 +322,6 @@ export default class Node implements INode {
     } else if ((socketData as VaryingInputSocketData).varyingData != null) {
       const vSocketData = socketData as VaryingInputSocketData;
       inputSocket = new VaryingInputSocket(
-        type,
         this,
         socketName,
         vSocketData.varyingData
@@ -333,7 +329,6 @@ export default class Node implements INode {
     } else if ((socketData as UniformInputSocketData).uniformData != null) {
       const uSocketData = socketData as UniformInputSocketData;
       inputSocket = new UniformInputSocket(
-        type,
         this,
         socketName,
         uSocketData.uniformData
@@ -341,7 +336,7 @@ export default class Node implements INode {
     } else {
       const cSocketData = socketData as ConnectableInputSocketData;
       inputSocket = new ConnectableInputSocket(
-        socketData.type,
+        cSocketData.type,
         this,
         socketName,
         cSocketData.defaultValue

@@ -1,5 +1,4 @@
 import AbstractSocket from '../AbstractSocket';
-import {SocketTypeEnum} from '../../types/CommonEnum';
 import {SocketClassName} from '../ISocket';
 import {INode} from '../../node/INode';
 import {
@@ -19,12 +18,11 @@ export default class AttributeInputSocket
   private __location: number | undefined;
 
   constructor(
-    SocketType: SocketTypeEnum,
     node: INode,
     socketName: string,
     attribute: ShaderAttributeObject
   ) {
-    super(SocketType, node, socketName);
+    super(node, socketName);
 
     this.__variableName = attribute.variableName;
     this.__type = attribute.type;
