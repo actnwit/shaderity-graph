@@ -23,6 +23,7 @@ const _SocketType = {
   Texture2D: 'sampler2D',
   // Texture3D: 'sampler3D',
   TextureCube: 'samplerCube',
+  Unsupported: 'unsupported',
 } as const;
 
 export const SocketType = {
@@ -33,7 +34,7 @@ export const SocketType = {
         return type as SocketTypeEnum;
       }
     }
-    return void 0;
+    return 'unsupported';
   },
   getGlslTypeStr,
   getGlslComponentNumber,
@@ -54,7 +55,7 @@ export type GlslTypeStr =
   | 'mat2'
   | 'mat3'
   | 'mat4'
-  | 'unknown';
+  | 'unsupported';
 
 function getGlslTypeStr(socketType: SocketTypeEnum): GlslTypeStr {
   switch (socketType) {
@@ -87,7 +88,7 @@ function getGlslTypeStr(socketType: SocketTypeEnum): GlslTypeStr {
     case SocketType.TextureCube:
       return 'samplerCube';
     default:
-      return 'unknown';
+      return 'unsupported';
   }
 }
 
