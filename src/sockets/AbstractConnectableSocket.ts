@@ -10,8 +10,11 @@ import {IConnectableOutputSocket} from './output/IConnectableOutputSocket';
  * Users are expected to use this class through Node class.
  */
 export default abstract class AbstractConnectableSocket extends AbstractSocket {
+  private __socketType: SocketTypeEnum;
+
   constructor(socketType: SocketTypeEnum, node: INode, socketName: string) {
     super(socketType, node, socketName);
+    this.__socketType = socketType;
   }
 
   /**
@@ -29,6 +32,10 @@ export default abstract class AbstractConnectableSocket extends AbstractSocket {
     } else {
       console.error('AbstractSocket.connectSockets: socketType is different');
     }
+  }
+
+  get socketType() {
+    return this.__socketType;
   }
 
   abstract get className(): SocketClassName;

@@ -40,7 +40,7 @@ export default class AttributeInputSocket
     return this.__variableName;
   }
 
-  get type() {
+  get socketType() {
     return this.__type;
   }
 

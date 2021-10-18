@@ -41,7 +41,7 @@ export default class VaryingInputSocket
     return this.__variableName;
   }
 
-  get type() {
+  get socketType() {
     return this.__type;
   }
 

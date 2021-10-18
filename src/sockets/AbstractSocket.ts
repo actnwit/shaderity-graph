@@ -1,5 +1,10 @@
 import {INode} from '../node/INode';
 import {SocketTypeEnum} from '../types/CommonEnum';
+import {
+  ShaderAttributeVarType,
+  ShaderUniformVarTypeES3,
+  ShaderVaryingVarType,
+} from '../types/CommonType';
 import {ISocket, SocketClassName} from './ISocket';
 
 /**
@@ -7,12 +12,10 @@ import {ISocket, SocketClassName} from './ISocket';
  */
 export default abstract class AbstractSocket implements ISocket {
   private __name: string;
-  private __socketType: SocketTypeEnum;
   private __node: INode;
 
   constructor(socketType: SocketTypeEnum, node: INode, socketName: string) {
     this.__name = socketName;
-    this.__socketType = socketType;
     this.__node = node;
   }
 
@@ -21,13 +24,6 @@ export default abstract class AbstractSocket implements ISocket {
    */
   get name() {
     return this.__name;
-  }
-
-  /**
-   * Get the glsl type of data to be passed between sockets
-   */
-  get socketType() {
-    return this.__socketType;
   }
 
   /**
@@ -51,4 +47,13 @@ export default abstract class AbstractSocket implements ISocket {
   }
 
   abstract get className(): SocketClassName;
+
+  /**
+   * Get the glsl type of data to be passed between sockets
+   */
+  abstract get socketType():
+    | SocketTypeEnum
+    | ShaderAttributeVarType
+    | ShaderVaryingVarType
+    | ShaderUniformVarTypeES3;
 }
