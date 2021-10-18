@@ -9,13 +9,13 @@ import {
 
 export default class JsonImporter {
   static importShaderityGraphJson(json: ShaderityGraphJson) {
-    this.shaderFunctionData(json.shaderFunctionDataObject);
+    this.__shaderFunctionData(json.shaderFunctionDataObject);
 
     this.__createNodes(json.nodes);
     this.__connectSockets(json.nodes);
   }
 
-  private static shaderFunctionData(shaderFunctionDataObject: {
+  private static __shaderFunctionData(shaderFunctionDataObject: {
     [shaderFunctionName: string]: ShaderFunctionData;
   }) {
     for (const nodeFunctionName in shaderFunctionDataObject) {
