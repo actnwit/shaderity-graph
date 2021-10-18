@@ -33,7 +33,7 @@ The built files will be created under the dist folder.
 
 ## How to use
 
-You can convert the specified json format into vertex and fragment shader codes using the NodeConverter.createShaderCodesFromJsonFile method or NodeConverter.createShaderCodesFromJsonObject method.
+You can convert the specified json format into vertex and fragment shader codes using the ShaderityGraphConverter.createShaderCodesFromJsonFile method or ShaderityGraphConverter.createShaderCodesFromJsonObject method.
 
 ```typescript
 
@@ -42,7 +42,7 @@ import _ShaderityGraph from '../../dist/esm/index';
 declare const ShaderityGraph: typeof _ShaderityGraph;
 
 (async () => {
-  const shaderCodes = await ShaderityGraph.NodeConverter.createShaderCodesFromJsonFile('./shaderNodeGraph.json');
+  const shaderCodes = await ShaderityGraph.ShaderityGraphConverter.createShaderCodesFromJsonFile('./shaderNodeGraph.json');
   console.log(shaderCodes.vertexShader);
   console.log(shaderCodes.fragmentShader);
 })();

@@ -4,7 +4,7 @@ import JsonImporter from '../import/JsonImporter';
 import ShaderGraphResolver from '../shaderGraph/ShaderGraphResolver';
 import ShaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
 
-export default class NodeConverter {
+export default class ShaderityGraphConverter {
   //TODO: need to set version
   static readonly shaderityGraphVersion = '';
 
