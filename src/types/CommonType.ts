@@ -80,16 +80,17 @@ export interface SocketConnectionData {
 // if the direction is input/output, the socket is InputSocket/OutputSocket
 export interface SocketData {
   name: string;
-  type: SocketTypeEnum;
   direction: 'input' | 'output';
 }
 
 export interface ConnectableInputSocketData extends SocketData {
+  type: SocketTypeEnum;
   defaultValue: number[];
   socketConnectionData?: SocketConnectionData;
 }
 
 export interface ConnectableOutputSocketData extends SocketData {
+  type: SocketTypeEnum;
   socketConnectionData?: SocketConnectionData[];
 }
 
