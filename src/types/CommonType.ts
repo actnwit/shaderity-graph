@@ -72,7 +72,7 @@ export interface FragmentShaderGlobalData extends ShaderGlobalData {
   outputVariableName: string;
 }
 
-export interface SocketConnectionDatum {
+export interface SocketConnectionData {
   connectedSocketName: string;
   connectedNodeId: number;
 }
@@ -86,24 +86,24 @@ export interface SocketData {
 
 export interface ConnectableInputSocketData extends SocketData {
   defaultValue: number[];
-  socketConnectionDatum?: SocketConnectionDatum;
+  socketConnectionData?: SocketConnectionData;
 }
 
 export interface ConnectableOutputSocketData extends SocketData {
-  socketConnectionData?: SocketConnectionDatum[];
+  socketConnectionData?: SocketConnectionData[];
 }
 
 export interface AttributeInputSocketData extends SocketData {
-  attribute: ShaderAttributeObject;
+  attributeData: ShaderAttributeObject;
   direction: 'input';
 }
 
 export interface VaryingInputSocketData extends SocketData {
-  varying: ShaderVaryingObject;
+  varyingData: ShaderVaryingObject;
   direction: 'input';
 }
 
 export interface UniformInputSocketData extends SocketData {
-  uniform: ShaderUniformObject;
+  uniformData: ShaderUniformObject;
   direction: 'input';
 }

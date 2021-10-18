@@ -45,7 +45,7 @@ export default class JsonImporter {
         }
 
         const inputSocketData = socketData as ConnectableInputSocketData;
-        const socketConnectionData = inputSocketData.socketConnectionDatum;
+        const socketConnectionData = inputSocketData.socketConnectionData;
         if (socketConnectionData == null) {
           continue;
         }
