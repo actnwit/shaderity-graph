@@ -7,7 +7,15 @@ import {
   ConnectableInputSocketData,
 } from '../types/CommonType';
 
+/**
+ * This class parses the ShaderityGraphJson and imports it
+ * into a format that can be used by this library.
+ */
 export default class JsonImporter {
+  /**
+   * Creates nodes and sockets from ShaderityGraphJson, and connects the sockets
+   * @param json json to create node graph
+   */
   static importShaderityGraphJson(json: ShaderityGraphJson) {
     this.__setShaderFunctions(json.shaderFunctionDataObject);
 
@@ -15,6 +23,10 @@ export default class JsonImporter {
     this.__connectSockets(json.nodes);
   }
 
+  /**
+   * @private
+   * Register the functions corresponding to each nodes in the shaderFunctionDataRepository
+   */
   private static __setShaderFunctions(shaderFunctionDataObject: {
     [shaderFunctionName: string]: ShaderFunctionData;
   }) {
@@ -27,6 +39,11 @@ export default class JsonImporter {
     }
   }
 
+  /**
+   * @private
+   * Create nodes and the sockets that each node has. At this point,
+   * the sockets are not connected to each other. All nodes are independent.
+   */
   private static __createNodes(nodesJson: ShaderityGraphNode[]) {
     for (let i = 0; i < nodesJson.length; i++) {
       const nodeJson = nodesJson[i];
@@ -34,6 +51,10 @@ export default class JsonImporter {
     }
   }
 
+  /**
+   * @private
+   * Connect the socket of each node created by __createNodes method.
+   */
   private static __connectSockets(nodesJson: ShaderityGraphNode[]) {
     for (let i = 0; i < nodesJson.length; i++) {
       const outputNodeId = i;
