@@ -57,3 +57,11 @@ You can create a document under the doc folder with the following command:
 ``` bash
 yarn doc
 ```
+
+## Tests
+
+You can run tests with the following command:
+
+``` bash
+yarn test
+```
