@@ -56,13 +56,13 @@ export default class ShaderGraphResolver {
       );
     }
 
-    const nodeNames: string[] = [];
+    const functionNames: string[] = [];
     for (let i = 0; i < sortedNodes.length; i++) {
       const node = sortedNodes[i];
       this.__addNodeDataToShaderityObjectCreator(
         shaderityObjectCreator,
         node,
-        nodeNames
+        functionNames
       );
     }
 
@@ -110,7 +110,7 @@ export default class ShaderGraphResolver {
   private static __addNodeDataToShaderityObjectCreator(
     shaderityObjectCreator: ShaderityObjectCreator,
     node: Node,
-    nodeNames: string[]
+    functionNames: string[]
   ) {
     for (const extension of node._extensions) {
       shaderityObjectCreator.addExtension(extension);
