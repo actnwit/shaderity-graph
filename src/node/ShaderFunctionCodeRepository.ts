@@ -8,7 +8,7 @@ import {ShaderFunctionData} from '../types/CommonType';
  *       should be 'void'. This is because we do not use the return value of the function.
  *       You need to use 'out' qualifier to output value.
  */
-export default class ShaderFunctionDataRepository {
+export default class ShaderFunctionCodeRepository {
   private static __shaderFunctionData: {
     [functionName: string]: ShaderFunctionData;
   } = {};
@@ -50,7 +50,7 @@ export default class ShaderFunctionDataRepository {
     const shaderFunctionData = this.__shaderFunctionData[functionName];
     if (shaderFunctionData == null) {
       console.error(
-        `ShaderFunctionDataRepository.getShaderFunctionDataById: the data of ${functionName} is not found`
+        `ShaderFunctionCodeRepository.getShaderFunctionDataById: the data of ${functionName} is not found`
       );
     }
     return shaderFunctionData;

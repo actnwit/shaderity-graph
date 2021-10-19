@@ -1,5 +1,5 @@
 import {ShaderFunctionData} from '../types/CommonType';
-import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
+import ShaderFunctionCodeRepository from './ShaderFunctionCodeRepository';
 
 const shaderFunctionData0: ShaderFunctionData = {
   shaderFunctionCode:
@@ -11,42 +11,42 @@ const shaderFunctionData1: ShaderFunctionData = {
   extensions: ['GL_OES_standard_derivatives'],
 };
 
-ShaderFunctionDataRepository.setShaderFunctionData(
+ShaderFunctionCodeRepository.setShaderFunctionData(
   'identityFunc',
   shaderFunctionData0
 );
 
-ShaderFunctionDataRepository.setShaderFunctionData(
+ShaderFunctionCodeRepository.setShaderFunctionData(
   'derivativePosX',
   shaderFunctionData1
 );
 
-test('ShaderFunctionDataRepository.existShaderFunctionData', () => {
+test('ShaderFunctionCodeRepository.existShaderFunctionData', () => {
   const result0 =
-    ShaderFunctionDataRepository.existShaderFunctionData('derivativePosX');
+    ShaderFunctionCodeRepository.existShaderFunctionData('derivativePosX');
   expect(result0).toBe(true);
 
   const result1 =
-    ShaderFunctionDataRepository.existShaderFunctionData('derivativePosY');
+    ShaderFunctionCodeRepository.existShaderFunctionData('derivativePosY');
   expect(result1).toBe(false);
 });
 
-test('ShaderFunctionDataRepository.getShaderFunctionData', () => {
+test('ShaderFunctionCodeRepository.getShaderFunctionData', () => {
   const result0 =
-    ShaderFunctionDataRepository.getShaderFunctionData('identityFunc');
+    ShaderFunctionCodeRepository.getShaderFunctionData('identityFunc');
   expect(result0).toBe(shaderFunctionData0);
 
   const result1 =
-    ShaderFunctionDataRepository.getShaderFunctionData('identity');
+    ShaderFunctionCodeRepository.getShaderFunctionData('identity');
   expect(result1).toBe(undefined);
   console.log('Please ignore the console.error above if the test passes.');
 });
 
-test('ShaderFunctionDataRepository.resetShaderFunctionData', () => {
-  ShaderFunctionDataRepository.resetShaderFunctionData();
+test('ShaderFunctionCodeRepository.resetShaderFunctionData', () => {
+  ShaderFunctionCodeRepository.resetShaderFunctionData();
 
   const result =
-    ShaderFunctionDataRepository.getShaderFunctionData('identityFunc');
+    ShaderFunctionCodeRepository.getShaderFunctionData('identityFunc');
   expect(result).toBe(undefined);
   console.log('Please ignore the console.error above if the test passes.');
 });
