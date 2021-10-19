@@ -39,12 +39,16 @@ export interface ShaderFunctionCode {
   extensions?: string[];
 }
 
+export interface ShaderFunctionCodeObject {
+  [shaderFunctionName: string]: ShaderFunctionCode;
+}
+
 export interface ShaderityGraphJson {
   version: string;
   nodes: ShaderityGraphNode[];
   vertexShaderGlobalData?: VertexShaderGlobalData;
   fragmentShaderGlobalData?: FragmentShaderGlobalData;
-  shaderFunctionCodeObject: {[shaderFunctionName: string]: ShaderFunctionCode};
+  shaderFunctionCodeObject: ShaderFunctionCodeObject;
 }
 
 export interface ShaderityGraphNode {

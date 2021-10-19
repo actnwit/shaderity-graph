@@ -1,4 +1,7 @@
-import {ShaderFunctionCode} from '../types/CommonType';
+import {
+  ShaderFunctionCode,
+  ShaderFunctionCodeObject,
+} from '../types/CommonType';
 
 /**
  * ShaderFunctionCodeRepository is a class that manages the functions that nodes have.
@@ -24,9 +27,7 @@ import {ShaderFunctionCode} from '../types/CommonType';
  */
 
 export default class ShaderFunctionCodeRepository {
-  private static __shaderFunctionCode: {
-    [functionName: string]: ShaderFunctionCode;
-  } = {};
+  private static __shaderFunctionCode: ShaderFunctionCodeObject = {};
 
   /**
    * Remove all set shaderFunctionCode

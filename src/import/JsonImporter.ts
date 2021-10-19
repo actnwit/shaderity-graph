@@ -3,8 +3,8 @@ import ShaderFunctionCodeRepository from '../node/ShaderFunctionCodeRepository';
 import {
   ShaderityGraphNode,
   ShaderityGraphJson,
-  ShaderFunctionCode,
   ConnectableInputSocketData,
+  ShaderFunctionCodeObject,
 } from '../types/CommonType';
 
 /**
@@ -27,9 +27,9 @@ export default class JsonImporter {
    * @private
    * Register the functions corresponding to each nodes in the ShaderFunctionCodeRepository
    */
-  private static __setShaderFunctions(shaderFunctionCodeObject: {
-    [shaderFunctionName: string]: ShaderFunctionCode;
-  }) {
+  private static __setShaderFunctions(
+    shaderFunctionCodeObject: ShaderFunctionCodeObject
+  ) {
     for (const nodeFunctionName in shaderFunctionCodeObject) {
       const shaderFunctionCode = shaderFunctionCodeObject[nodeFunctionName];
       ShaderFunctionCodeRepository.setShaderFunctionCode(
