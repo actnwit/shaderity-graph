@@ -1,7 +1,6 @@
 import Node from '../node/Node';
 import {ShaderCodes, ShaderityGraphJson} from '../types/CommonType';
 import JsonImporter from '../import/JsonImporter';
-import NodeSorter from '../shaderGraph/NodeSorter';
 import ShaderGraphResolver from '../shaderGraph/ShaderGraphResolver';
 import ShaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
 
@@ -45,24 +44,11 @@ export default class NodeConverter {
       );
     }
 
-    const sortedVertexNode = NodeSorter.sortTopologically(Node.vertexNodes);
-    const sortedFragmentNode = NodeSorter.sortTopologically(Node.fragmentNodes);
-
-    const vertexShaderCode = ShaderGraphResolver.createShaderCode(
-      sortedVertexNode,
-      'vertex',
+    const shaderCodes = ShaderGraphResolver.createShaderCodes(
+      json.fragmentShaderGlobalData,
       json.vertexShaderGlobalData
     );
 
-    const fragmentShaderCode = ShaderGraphResolver.createShaderCode(
-      sortedFragmentNode,
-      'fragment',
-      json.fragmentShaderGlobalData
-    );
-
-    return {
-      vertexShader: vertexShaderCode,
-      fragmentShader: fragmentShaderCode,
-    };
+    return shaderCodes;
   }
 }

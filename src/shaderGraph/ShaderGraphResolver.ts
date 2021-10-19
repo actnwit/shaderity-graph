@@ -10,9 +10,35 @@ import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
+import NodeSorter from './NodeSorter';
 
 export default class ShaderGraphResolver {
-  static createShaderCode(
+  static createShaderCodes(
+    fragmentShaderGlobalData: FragmentShaderGlobalData,
+    vertexShaderGlobalData?: ShaderGlobalData
+  ) {
+    const sortedVertexNode = NodeSorter.sortTopologically(Node.vertexNodes);
+    const sortedFragmentNode = NodeSorter.sortTopologically(Node.fragmentNodes);
+
+    const vertexShaderCode = ShaderGraphResolver.__createShaderCode(
+      sortedVertexNode,
+      'vertex',
+      vertexShaderGlobalData
+    );
+
+    const fragmentShaderCode = ShaderGraphResolver.__createShaderCode(
+      sortedFragmentNode,
+      'fragment',
+      fragmentShaderGlobalData
+    );
+
+    return {
+      vertexShader: vertexShaderCode,
+      fragmentShader: fragmentShaderCode,
+    };
+  }
+
+  private static __createShaderCode(
     sortedNodes: Node[],
     shaderStage: ShaderStageStr,
     globalData?: ShaderGlobalData
