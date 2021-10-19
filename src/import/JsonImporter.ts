@@ -19,8 +19,8 @@ export default class JsonImporter {
   static importShaderityGraphJson(json: ShaderityGraphJson) {
     this.__setShaderFunctions(json.shaderFunctionCodeObject);
 
-    this.__createNodes(json.nodes);
-    this.__connectSockets(json.nodes);
+    this.__createNodes(json.shaderityGraphNodes);
+    this.__connectSockets(json.shaderityGraphNodes);
   }
 
   /**

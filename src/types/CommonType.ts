@@ -46,7 +46,7 @@ export interface ShaderFunctionCodeObject {
 
 export interface ShaderityGraphJson {
   version: string;
-  nodes: ShaderityGraphNode[];
+  shaderityGraphNodes: ShaderityGraphNode[];
   vertexShaderGlobalData?: VertexShaderGlobalData;
   fragmentShaderGlobalData?: FragmentShaderGlobalData;
   shaderFunctionCodeObject: ShaderFunctionCodeObject;
