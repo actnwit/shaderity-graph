@@ -64,11 +64,11 @@ export default class Node implements INode {
       }
     }
 
-    const existShaderFunctionData =
-      ShaderFunctionCodeRepository.existShaderFunctionData(
+    const existShaderFunctionCode =
+      ShaderFunctionCodeRepository.existShaderFunctionCode(
         this.__shaderFunctionName
       );
-    if (!existShaderFunctionData) {
+    if (!existShaderFunctionCode) {
       console.warn(
         `Node: function ${this.__shaderFunctionName} is not found in ShaderFunctionCodeRepository`
       );
@@ -175,7 +175,7 @@ export default class Node implements INode {
    */
   get shaderCode() {
     const shaderCode =
-      ShaderFunctionCodeRepository.getShaderFunctionData(
+      ShaderFunctionCodeRepository.getShaderFunctionCode(
         this.__shaderFunctionName
       )?.shaderFunctionCode ??
       `// function name ${this.__shaderFunctionName} is not found`;
@@ -203,7 +203,7 @@ export default class Node implements INode {
    */
   get _extensions() {
     const extensions =
-      ShaderFunctionCodeRepository.getShaderFunctionData(
+      ShaderFunctionCodeRepository.getShaderFunctionCode(
         this.__shaderFunctionName
       )?.extensions ?? [];
 
