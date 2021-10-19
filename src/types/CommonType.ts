@@ -37,6 +37,7 @@ export interface ShaderCodes {
 export interface ShaderFunctionCode {
   shaderFunctionCode: string;
   extensions?: string[];
+  extras?: {[key: string]: unknown};
 }
 
 export interface ShaderFunctionCodeObject {
@@ -49,6 +50,7 @@ export interface ShaderityGraphJson {
   vertexShaderGlobalData?: VertexShaderGlobalData;
   fragmentShaderGlobalData?: FragmentShaderGlobalData;
   shaderFunctionCodeObject: ShaderFunctionCodeObject;
+  extras?: {[key: string]: unknown};
 }
 
 export interface ShaderityGraphNode {
@@ -73,6 +75,7 @@ export interface VertexShaderGlobalData {
   defineDirectives?: string[];
   precision?: ShaderPrecisionObject;
   constantValues?: ShaderConstantValueObject[];
+  extras?: {[key: string]: unknown};
 }
 
 export interface FragmentShaderGlobalData extends VertexShaderGlobalData {
@@ -82,11 +85,13 @@ export interface FragmentShaderGlobalData extends VertexShaderGlobalData {
 export interface SocketConnectionData {
   connectedSocketName: string;
   connectedNodeId: number;
+  extras?: {[key: string]: unknown};
 }
 
 export interface SocketData {
   name: string;
   direction: SocketDirectionEnum;
+  extras?: {[key: string]: unknown};
 }
 
 export interface ConnectableInputSocketData extends SocketData {
