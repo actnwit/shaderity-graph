@@ -30,12 +30,6 @@ const connectableOutputSocketData: ConnectableOutputSocketData = {
   name: 'outputSocket',
   type: SocketType.Vec2,
   direction: SocketDirection.Output,
-  socketConnectionData: [
-    {
-      connectedSocketName: 'inputSocket1',
-      connectedNodeId: 1,
-    },
-  ],
 };
 
 const attributeInputSocketData: AttributeInputSocketData = {

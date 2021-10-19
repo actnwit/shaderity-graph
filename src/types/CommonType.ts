@@ -41,7 +41,6 @@ export interface ShaderFunctionCode {
 
 export interface ShaderityGraphJson {
   version: string;
-  shaderName: string;
   nodes: ShaderityGraphNode[];
   vertexShaderGlobalData?: VertexShaderGlobalData;
   fragmentShaderGlobalData?: FragmentShaderGlobalData;
@@ -96,7 +95,6 @@ export interface ConnectableInputSocketData extends SocketData {
 export interface ConnectableOutputSocketData extends SocketData {
   direction: 'output';
   type: SocketTypeEnum;
-  socketConnectionData?: SocketConnectionData[];
 }
 
 export interface AttributeInputSocketData extends SocketData {
