@@ -22,10 +22,18 @@ import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import {ISocket} from '../sockets/ISocket';
 
 /**
- * The node is a object that has a function.
- * Nodes can be connected to each other via input/output sockets.
- * The function corresponding to a node is managed in the ShaderFunctionCodeRepository.
- * Nodes with inputs other than sockets are defined as child classes of this node.
+ * A node is an object that contains functions to be used in the shader.
+ * Each node has its sockets for input and output.
+ * The sockets corresponds to a function argument of a node.
+ *
+ * The node graph which is the collection of connected nodes is transformed into a shader by
+ * calling the node functions sequentially. Nodes are connected to each other via connectable
+ * sockets, and data can be passed between them.
+ *
+ * Note: Data of attribute/varying/uniform variable must be passed to a node through a
+ *       non-connectable socket such as AttributeInputSocket/VaryingInputSocket/UniformInputSocket.
+ *       Do not write these variables directly into the function of each node.
+ *       They must be specified in the function arguments.
  */
 export default class Node implements INode {
   protected static __nodes: Node[] = [];
@@ -36,6 +44,12 @@ export default class Node implements INode {
   protected __id: number;
   protected __sockets: ISocket[] = [];
 
+  /**
+   * Create a new node
+   * @param nodeData define shader function name and shader stage
+   * @param socketDataArray define sockets. The order of the socketData must match the order of
+   *                        the arguments of the node's shader function.
+   */
   constructor(
     nodeData: NodeData,
     socketDataArray: (
@@ -171,7 +185,7 @@ export default class Node implements INode {
   }
 
   /**
-   * Get the corresponding node function from ShaderFunctionCodeRepository
+   * Get the corresponding function of this node from ShaderFunctionCodeRepository
    */
   get shaderCode() {
     const shaderCode =
@@ -219,7 +233,7 @@ export default class Node implements INode {
   }
 
   /**
-   * Get connected input node by input socket name
+   * Get connected previous node by input socket name
    * */
   getInputNode(socketName: string) {
     const targetSocket = this.__getInputSocket(socketName);
@@ -238,7 +252,7 @@ export default class Node implements INode {
   }
 
   /**
-   * Get connected output node by output socket name
+   * Get connected following node by output socket name
    * */
   getOutputNodes(socketName: string) {
     const targetSocket = this.__getOutputSocket(socketName);
