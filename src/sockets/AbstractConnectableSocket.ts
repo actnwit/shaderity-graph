@@ -7,7 +7,7 @@ import {IConnectableOutputSocket} from './output/IConnectableOutputSocket';
 
 /**
  * The roll of connectable sockets are connecting nodes.
- * Users are expected to use this class through Node class.
+ * The user can connect sockets by Node.connectNodes method.
  */
 export default abstract class AbstractConnectableSocket extends AbstractSocket {
   private __socketType: SocketTypeEnum;
@@ -18,7 +18,7 @@ export default abstract class AbstractConnectableSocket extends AbstractSocket {
   }
 
   /**
-   * Connecting input/output sockets
+   * Connecting input and output sockets
    * @param inputSocket input socket contained in the output node
    * @param outputSocket output socket contained in the input node
    */
@@ -34,10 +34,21 @@ export default abstract class AbstractConnectableSocket extends AbstractSocket {
     }
   }
 
+  /**
+   * Get the glsl type of data to be passed between sockets
+   */
   get socketType() {
     return this.__socketType;
   }
 
+  /**
+   * Get the class name of this socket
+   */
   abstract get className(): SocketClassName;
+
+  /**
+   * Connect this socket and the argument socket
+   * @param socket The socket to connect to
+   */
   abstract _connectSocketWith(socket: ISocket): void;
 }

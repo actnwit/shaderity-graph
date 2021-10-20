@@ -15,7 +15,18 @@ import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
 import NodeSorter from './NodeSorter';
 
+/**
+ * This class resolves the created node graph and creates vertex and fragment shaders.
+ */
 export default class ShaderGraphResolver {
+  /**
+   * Create vertex and fragment shaders from nodes
+   * @param vertexShaderGlobalData Defining define directives and constant values and
+   *                               specifying precision for use in vertex shader
+   * @param fragmentShaderGlobalData Defining define directives and constant values and
+   *                                 specifying precision for use in fragment shader
+   * @returns shader codes of vertex and fragment shader
+   */
   static createShaderCodes(
     vertexShaderGlobalData?: VertexShaderGlobalData,
     fragmentShaderGlobalData?: FragmentShaderGlobalData
@@ -41,6 +52,14 @@ export default class ShaderGraphResolver {
     };
   }
 
+  /**
+   * @private
+   * Create vertex or fragment shader from nodes
+   * @param sortedNodes Topologically sorted nodes used in the shader to be created.
+   * @param shaderStage Specify vertex of fragment shader
+   * @param globalData Defining define directives and constant values and
+   *                   specifying precision for use in the shader
+   */
   private static __createShaderCode(
     sortedNodes: Node[],
     shaderStage: ShaderStageStr,
@@ -56,13 +75,13 @@ export default class ShaderGraphResolver {
       );
     }
 
-    const nodeNames: string[] = [];
+    const functionNames: string[] = [];
     for (let i = 0; i < sortedNodes.length; i++) {
       const node = sortedNodes[i];
       this.__addNodeDataToShaderityObjectCreator(
         shaderityObjectCreator,
         node,
-        nodeNames
+        functionNames
       );
     }
 
@@ -74,6 +93,13 @@ export default class ShaderGraphResolver {
     return shaderityObject.code;
   }
 
+  /**
+   * @private
+   * Set globalData to shaderityObjectCreator
+   * @param shaderityObjectCreator shaderityObjectCreator object of shaderity
+   * @param globalData Defining define directives and constant values and
+   *                   specifying precision for use in the shader
+   */
   private static __addGlobalDataToShaderityObjectCreator(
     shaderityObjectCreator: ShaderityObjectCreator,
     globalData: VertexShaderGlobalData | FragmentShaderGlobalData
@@ -107,10 +133,17 @@ export default class ShaderGraphResolver {
     }
   }
 
+  /**
+   * @private
+   * Set data of a node to shaderityObjectCreator
+   * @param shaderityObjectCreator shaderityObjectCreator object of shaderity
+   * @param node target node
+   * @param functionNames array to prevent duplicate function definitions in shader
+   */
   private static __addNodeDataToShaderityObjectCreator(
     shaderityObjectCreator: ShaderityObjectCreator,
     node: Node,
-    nodeNames: string[]
+    functionNames: string[]
   ) {
     for (const extension of node._extensions) {
       shaderityObjectCreator.addExtension(extension);
@@ -155,13 +188,19 @@ export default class ShaderGraphResolver {
       }
     }
 
-    const existSameNameNode = nodeNames.includes(node.functionName);
+    const existSameNameNode = functionNames.includes(node.functionName);
     if (!existSameNameNode) {
-      nodeNames.push(node.functionName);
+      functionNames.push(node.functionName);
       shaderityObjectCreator.addFunctionDefinition(node.shaderCode);
     }
   }
 
+  /**
+   * @private
+   * Create the main function by arranging the function calls in the order of index in the array
+   * @param sortedNodes topologically sorted array of nodes
+   * @returns shader code of main function
+   */
   private static __createMainFunctionCode(sortedNodes: Node[]) {
     // usage: variableNames[node.id][index of socket] = variableName;
     const variableNames: Array<Array<string>> =
@@ -206,6 +245,12 @@ ${functionCalls}
     return mainFunctionCode;
   }
 
+  /**
+   * @private
+   * Initialize an array to store the variable names to be used in each function call of the main function
+   * @param nodes array of nodes
+   * @returns array to store the variable names
+   */
   private static __initializeVariableNames(nodes: Node[]) {
     const variableNames: Array<Array<string>> = new Array(nodes.length);
     for (let i = 0; i < nodes.length; i++) {
@@ -217,6 +262,18 @@ ${functionCalls}
     return variableNames;
   }
 
+  /**
+   * @private
+   * Create a string of variable definitions corresponding to the connectable input socket
+   * that is not connected to the output socket.
+   * The created variable is initialized with the default value of the socket.
+   *
+   * The names of created variables are stored in the variableNames at the position of the corresponding
+   * input socket.
+   * @param node target node
+   * @param variableNames array to store the variable names used in each function call of the main function
+   * @returns string of variable definitions
+   */
   private static __createInputVariableDefinitions(
     node: Node,
     variableNames: string[][]
@@ -262,6 +319,16 @@ ${functionCalls}
     return returnStr;
   }
 
+  /**
+   * @private
+   * Create string of variable declarations for each output socket.
+   *
+   * The name of the created variable is stored in the variableNames at the position of the corresponding
+   * output socket and the connected input sockets.
+   * @param node target node
+   * @param variableNames array to store the variable names used in each function call of the main function
+   * @returns string of variable declarations
+   */
   private static __createOutVariableDeclarations(
     node: Node,
     variableNames: string[][]
@@ -304,6 +371,12 @@ ${functionCalls}
     return returnStr;
   }
 
+  /**
+   * @private
+   * Set the attribute/varying/uniform variable name to variableNames to the corresponding position in the socket
+   * @param node target node
+   * @param variableNames array to store the variable names used in each function call of the main function
+   */
   private static __addStorageQualifierVariableName(
     node: Node,
     variableNames: string[][]
@@ -333,6 +406,13 @@ ${functionCalls}
     }
   }
 
+  /**
+   * @private
+   * Create a function call string based on the variableNames and the functionName of target node
+   * @param node target node
+   * @param variableNames array to store the variable names used in each function call of the main function
+   * @returns function call string
+   */
   private static __createShaderGraphFunctionCalls(
     node: Node,
     argumentNames: string[]

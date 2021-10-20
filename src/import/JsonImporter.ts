@@ -1,32 +1,49 @@
 import Node from '../node/Node';
-import shaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
+import ShaderFunctionCodeRepository from '../node/ShaderFunctionCodeRepository';
 import {
   ShaderityGraphNode,
   ShaderityGraphJson,
-  ShaderFunctionData,
+  ShaderFunctionCode,
   ConnectableInputSocketData,
 } from '../types/CommonType';
 
+/**
+ * This class parses the ShaderityGraphJson and imports it
+ * into a format that can be used by this library.
+ */
 export default class JsonImporter {
+  /**
+   * Creates nodes and sockets from ShaderityGraphJson, and connects the sockets
+   * @param json json to create node graph
+   */
   static importShaderityGraphJson(json: ShaderityGraphJson) {
-    this.shaderFunctionData(json.shaderFunctionDataObject);
+    this.__setShaderFunctions(json.shaderFunctionCodeObject);
 
     this.__createNodes(json.nodes);
     this.__connectSockets(json.nodes);
   }
 
-  private static shaderFunctionData(shaderFunctionDataObject: {
-    [shaderFunctionName: string]: ShaderFunctionData;
+  /**
+   * @private
+   * Register the functions corresponding to each nodes in the ShaderFunctionCodeRepository
+   */
+  private static __setShaderFunctions(shaderFunctionCodeObject: {
+    [shaderFunctionName: string]: ShaderFunctionCode;
   }) {
-    for (const nodeFunctionName in shaderFunctionDataObject) {
-      const shaderFunctionData = shaderFunctionDataObject[nodeFunctionName];
-      shaderFunctionDataRepository.setShaderFunctionData(
+    for (const nodeFunctionName in shaderFunctionCodeObject) {
+      const shaderFunctionCode = shaderFunctionCodeObject[nodeFunctionName];
+      ShaderFunctionCodeRepository.setShaderFunctionCode(
         nodeFunctionName,
-        shaderFunctionData
+        shaderFunctionCode
       );
     }
   }
 
+  /**
+   * @private
+   * Create nodes and the sockets that each node has. At this point,
+   * the sockets are not connected to each other. All nodes are independent.
+   */
   private static __createNodes(nodesJson: ShaderityGraphNode[]) {
     for (let i = 0; i < nodesJson.length; i++) {
       const nodeJson = nodesJson[i];
@@ -34,6 +51,10 @@ export default class JsonImporter {
     }
   }
 
+  /**
+   * @private
+   * Connect the socket of each node created by __createNodes method.
+   */
   private static __connectSockets(nodesJson: ShaderityGraphNode[]) {
     for (let i = 0; i < nodesJson.length; i++) {
       const outputNodeId = i;

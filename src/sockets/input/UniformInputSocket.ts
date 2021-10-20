@@ -8,6 +8,11 @@ import {
 } from '../../types/CommonType';
 import {INonConnectableInputSocket} from './INonConnectableInputSocket';
 
+/**
+ * The UniformInputSocket is an input socket that receives an uniform variable.
+ * If the function corresponding to a node uses an uniform variable,
+ * the function must use this socket to receive the variable as an argument.
+ */
 export default class UniformInputSocket
   extends AbstractSocket
   implements INonConnectableInputSocket
@@ -24,18 +29,30 @@ export default class UniformInputSocket
     this.__precision = uniform.precision ?? 'highp';
   }
 
+  /**
+   * Get the class name of this socket
+   */
   get className(): SocketClassName {
     return 'UniformInputSocket';
   }
 
+  /**
+   * Get the uniform variable name
+   */
   get variableName() {
     return this.__variableName;
   }
 
+  /**
+   * Get the glsl type of uniform variable
+   */
   get socketType() {
     return this.__type;
   }
 
+  /**
+   * Get the precision of uniform variable
+   */
   get precision() {
     return this.__precision;
   }

@@ -9,6 +9,23 @@ import {ISocket, SocketClassName} from './ISocket';
 
 /**
  * The roll of the socket is to manage the input and output of each node.
+ * The user does not need to use the socket directly.
+ * The state of the socket object can be changed via the methods of the node class.
+ *
+ * Currently, there are 5 concrete socket classes.
+ * The parent-child relationship for each class is as follows.
+ *
+ * AbstractSocket
+ *  - AbstractConnectableSocket
+ *     - ConnectableInputSocket
+ *     - ConnectableOutputSocket
+ *  - AttributeInputSocket
+ *  - VaryingInputSocket
+ *  - UniformInputSocket
+ *
+ * ConnectableInputSocket can be connected to ConnectableOutputSocket and vice versa.
+ * Attribute/Varying/UniformInputSocket is a socket that cannot be connected to other sockets.
+ * These non-connectable nodes are usually not visible in the GUI.
  */
 export default abstract class AbstractSocket implements ISocket {
   private __name: string;
@@ -33,6 +50,9 @@ export default abstract class AbstractSocket implements ISocket {
     return this.__node;
   }
 
+  /**
+   * Get this socket is input socket or not
+   */
   isInputSocket() {
     if (
       this.className === 'ConnectableInputSocket' ||
@@ -46,6 +66,9 @@ export default abstract class AbstractSocket implements ISocket {
     return false;
   }
 
+  /**
+   * Get the class name of this socket
+   */
   abstract get className(): SocketClassName;
 
   /**

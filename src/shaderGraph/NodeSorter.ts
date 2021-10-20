@@ -1,7 +1,13 @@
 import Node from '../node/Node';
 import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
 
+/**
+ * This class sorts nodes.
+ */
 export default class NodeSorter {
+  /**
+   * Sort the nodes topologically based on Kahn's algorithm
+   */
   static sortTopologically(unsortedNodes: Node[]): Node[] {
     // this sort is based on https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/
 
@@ -37,6 +43,11 @@ export default class NodeSorter {
     return sortedNodes;
   }
 
+  /**
+   * @private
+   * Calculate how many nodes are in the input of each node.
+   * In addition, store the specific edge information in the "edges" array.
+   */
   private static __countInputNodesAndSetEdges(
     unsortedNodes: Node[],
     edges: number[][]
@@ -65,6 +76,10 @@ export default class NodeSorter {
     return inputNodeCounts;
   }
 
+  /**
+   * @private
+   * Find nodes that have no input nodes.
+   */
   private static __getNoInputNodes(
     unsortedNodes: Node[],
     inputNodeCounts: number[]
@@ -80,6 +95,10 @@ export default class NodeSorter {
     return noUnsortedInputNodes;
   }
 
+  /**
+   * @private
+   * Sorting nodes
+   */
   private static __sortTopologically(
     unsortedNodes: Node[],
     inputNodeCounts: number[],

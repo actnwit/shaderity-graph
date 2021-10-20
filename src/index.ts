@@ -1,4 +1,4 @@
-import NodeConverter from './main/NodeConverter';
+import ShaderityGraphConverter from './main/ShaderityGraphConverter';
 import {
   ShaderStage,
   ShaderStageEnum,
@@ -17,9 +17,9 @@ import {
 export default {
   ShaderStage,
   SocketDirection,
-  NodeConverter,
+  ShaderityGraphConverter,
   SocketType,
-  Version: NodeConverter.shaderityGraphVersion,
+  Version: ShaderityGraphConverter.shaderityGraphVersion,
 };
 
 export type {
