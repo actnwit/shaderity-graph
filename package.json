@@ -9,13 +9,16 @@
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
+    "@types/jest": "^27.0.2",
     "@types/node": "^14.11.2",
     "express": "^4.17.1",
     "gts": "^3.1.0",
     "husky": "^7.0.1",
+    "jest": "^27.2.4",
     "loader-utils": "^2.0.0",
     "requirejs": "^2.3.6",
     "shaderity-loader": "^0.0.15",
+    "ts-jest": "^27.0.5",
     "ts-loader": "^9.2.4",
     "tsc-watch": "^4.4.0",
     "typedoc": "^0.22.5",
@@ -37,7 +40,8 @@
     "gts-lint": "gts lint ./src ./samples/**/*.ts",
     "gts-clean": "gts clean ./src ./samples/**/*.ts",
     "gts-fix": "gts fix ./src ./samples/**/*.ts",
-    "doc": "npx typedoc --entryPointStrategy expand --exclude '**/*index.ts' --exclude '**/*I[A-Z]*.ts' ./src/"
+    "doc": "npx typedoc --entryPointStrategy expand --exclude '**/*index.ts' --exclude '**/*I[A-Z]*.ts' ./src/",
+    "test": "jest --config ./config/jest/jest.config.js"
   },
   "files": [
     "./dist"
