@@ -8,7 +8,6 @@ import {
   SocketDirectionEnum,
 } from './types/CommonEnum';
 import {
-  SocketData,
   ShaderCodes,
   ShaderityGraphJson,
   ShaderityGraphNode,
@@ -27,7 +26,6 @@ export type {
   ShaderCodes,
   ShaderityGraphJson,
   ShaderityGraphNode,
-  SocketData,
   SocketTypeEnum,
   SocketDirectionEnum,
 };

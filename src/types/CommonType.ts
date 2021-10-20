@@ -37,15 +37,20 @@ export interface ShaderCodes {
 export interface ShaderFunctionCode {
   shaderFunctionCode: string;
   extensions?: string[];
+  extras?: {[key: string]: unknown};
+}
+
+export interface ShaderFunctionCodeObject {
+  [shaderFunctionName: string]: ShaderFunctionCode;
 }
 
 export interface ShaderityGraphJson {
   version: string;
-  shaderName: string;
-  nodes: ShaderityGraphNode[];
+  shaderityGraphNodes: ShaderityGraphNode[];
   vertexShaderGlobalData?: VertexShaderGlobalData;
   fragmentShaderGlobalData?: FragmentShaderGlobalData;
-  shaderFunctionCodeObject: {[shaderFunctionName: string]: ShaderFunctionCode};
+  shaderFunctionCodeObject: ShaderFunctionCodeObject;
+  extras?: {[key: string]: unknown};
 }
 
 export interface ShaderityGraphNode {
@@ -70,6 +75,7 @@ export interface VertexShaderGlobalData {
   defineDirectives?: string[];
   precision?: ShaderPrecisionObject;
   constantValues?: ShaderConstantValueObject[];
+  extras?: {[key: string]: unknown};
 }
 
 export interface FragmentShaderGlobalData extends VertexShaderGlobalData {
@@ -79,37 +85,38 @@ export interface FragmentShaderGlobalData extends VertexShaderGlobalData {
 export interface SocketConnectionData {
   connectedSocketName: string;
   connectedNodeId: number;
+  extras?: {[key: string]: unknown};
 }
 
-export interface SocketData {
+export interface AbstractSocketData {
   name: string;
   direction: SocketDirectionEnum;
+  extras?: {[key: string]: unknown};
 }
 
-export interface ConnectableInputSocketData extends SocketData {
+export interface ConnectableInputSocketData extends AbstractSocketData {
   direction: 'input';
   type: SocketTypeEnum;
   defaultValue: number[];
   socketConnectionData?: SocketConnectionData;
 }
 
-export interface ConnectableOutputSocketData extends SocketData {
+export interface ConnectableOutputSocketData extends AbstractSocketData {
   direction: 'output';
   type: SocketTypeEnum;
-  socketConnectionData?: SocketConnectionData[];
 }
 
-export interface AttributeInputSocketData extends SocketData {
+export interface AttributeInputSocketData extends AbstractSocketData {
   direction: 'input';
   attributeData: ShaderAttributeObject;
 }
 
-export interface VaryingInputSocketData extends SocketData {
+export interface VaryingInputSocketData extends AbstractSocketData {
   direction: 'input';
   varyingData: ShaderVaryingObject;
 }
 
-export interface UniformInputSocketData extends SocketData {
+export interface UniformInputSocketData extends AbstractSocketData {
   direction: 'input';
   uniformData: ShaderUniformObject;
 }

@@ -6,6 +6,7 @@ export const ShaderStage = {
 } as const;
 export type ShaderStageEnum = typeof ShaderStage[keyof typeof ShaderStage];
 
+// TODO: Support for more types
 const _SocketType = {
   // (socket type name): (glsl type name)
   Bool: 'bool',
