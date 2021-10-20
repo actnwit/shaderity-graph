@@ -88,35 +88,35 @@ export interface SocketConnectionData {
   extras?: {[key: string]: unknown};
 }
 
-export interface SocketData {
+export interface AbstractSocketData {
   name: string;
   direction: SocketDirectionEnum;
   extras?: {[key: string]: unknown};
 }
 
-export interface ConnectableInputSocketData extends SocketData {
+export interface ConnectableInputSocketData extends AbstractSocketData {
   direction: 'input';
   type: SocketTypeEnum;
   defaultValue: number[];
   socketConnectionData?: SocketConnectionData;
 }
 
-export interface ConnectableOutputSocketData extends SocketData {
+export interface ConnectableOutputSocketData extends AbstractSocketData {
   direction: 'output';
   type: SocketTypeEnum;
 }
 
-export interface AttributeInputSocketData extends SocketData {
+export interface AttributeInputSocketData extends AbstractSocketData {
   direction: 'input';
   attributeData: ShaderAttributeObject;
 }
 
-export interface VaryingInputSocketData extends SocketData {
+export interface VaryingInputSocketData extends AbstractSocketData {
   direction: 'input';
   varyingData: ShaderVaryingObject;
 }
 
-export interface UniformInputSocketData extends SocketData {
+export interface UniformInputSocketData extends AbstractSocketData {
   direction: 'input';
   uniformData: ShaderUniformObject;
 }
