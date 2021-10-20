@@ -43,7 +43,7 @@ export interface ShaderityGraphJson {
   version: string;
   shaderName: string;
   nodes: ShaderityGraphNode[];
-  vertexShaderGlobalData?: ShaderGlobalData;
+  vertexShaderGlobalData?: VertexShaderGlobalData;
   fragmentShaderGlobalData: FragmentShaderGlobalData;
   shaderFunctionDataObject: {[shaderFunctionName: string]: ShaderFunctionData};
 }
@@ -66,13 +66,13 @@ export interface NodeData {
   extras?: {[key: string]: unknown};
 }
 
-export interface ShaderGlobalData {
+export interface VertexShaderGlobalData {
   defineDirectives?: string[];
   precision?: ShaderPrecisionObject;
   constantValues?: ShaderConstantValueObject[];
 }
 
-export interface FragmentShaderGlobalData extends ShaderGlobalData {
+export interface FragmentShaderGlobalData extends VertexShaderGlobalData {
   outputVariableName: string;
 }
 

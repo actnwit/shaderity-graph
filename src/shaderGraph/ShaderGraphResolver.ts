@@ -1,5 +1,8 @@
 import Node from '../node/Node';
-import {FragmentShaderGlobalData, ShaderGlobalData} from '../types/CommonType';
+import {
+  VertexShaderGlobalData,
+  FragmentShaderGlobalData,
+} from '../types/CommonType';
 import {SocketType} from '../types/CommonEnum';
 import Shaderity, {
   ShaderStageStr,
@@ -15,7 +18,7 @@ import NodeSorter from './NodeSorter';
 export default class ShaderGraphResolver {
   static createShaderCodes(
     fragmentShaderGlobalData: FragmentShaderGlobalData,
-    vertexShaderGlobalData?: ShaderGlobalData
+    vertexShaderGlobalData?: VertexShaderGlobalData
   ) {
     const sortedVertexNode = NodeSorter.sortTopologically(Node.vertexNodes);
     const sortedFragmentNode = NodeSorter.sortTopologically(Node.fragmentNodes);
@@ -41,7 +44,7 @@ export default class ShaderGraphResolver {
   private static __createShaderCode(
     sortedNodes: Node[],
     shaderStage: ShaderStageStr,
-    globalData?: ShaderGlobalData
+    globalData?: VertexShaderGlobalData
   ): string {
     const shaderityObjectCreator =
       Shaderity.createShaderityObjectCreator(shaderStage);
@@ -73,7 +76,7 @@ export default class ShaderGraphResolver {
 
   private static __addGlobalDataToShaderityObjectCreator(
     shaderityObjectCreator: ShaderityObjectCreator,
-    globalData: ShaderGlobalData
+    globalData: VertexShaderGlobalData
   ) {
     if (globalData.defineDirectives != null) {
       for (let i = 0; i < globalData.defineDirectives.length; i++) {
