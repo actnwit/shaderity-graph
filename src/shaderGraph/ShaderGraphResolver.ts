@@ -1,5 +1,8 @@
 import Node from '../node/Node';
-import {FragmentShaderGlobalData, ShaderGlobalData} from '../types/CommonType';
+import {
+  VertexShaderGlobalData,
+  FragmentShaderGlobalData,
+} from '../types/CommonType';
 import {SocketType} from '../types/CommonEnum';
 import Shaderity, {
   ShaderStageStr,
@@ -10,12 +13,38 @@ import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
+import NodeSorter from './NodeSorter';
 
 export default class ShaderGraphResolver {
-  static createShaderCode(
+  static createShaderCodes(
+    vertexShaderGlobalData?: VertexShaderGlobalData,
+    fragmentShaderGlobalData?: FragmentShaderGlobalData
+  ) {
+    const sortedVertexNode = NodeSorter.sortTopologically(Node.vertexNodes);
+    const sortedFragmentNode = NodeSorter.sortTopologically(Node.fragmentNodes);
+
+    const vertexShaderCode = ShaderGraphResolver.__createShaderCode(
+      sortedVertexNode,
+      'vertex',
+      vertexShaderGlobalData
+    );
+
+    const fragmentShaderCode = ShaderGraphResolver.__createShaderCode(
+      sortedFragmentNode,
+      'fragment',
+      fragmentShaderGlobalData
+    );
+
+    return {
+      vertexShader: vertexShaderCode,
+      fragmentShader: fragmentShaderCode,
+    };
+  }
+
+  private static __createShaderCode(
     sortedNodes: Node[],
     shaderStage: ShaderStageStr,
-    globalData?: ShaderGlobalData
+    globalData?: VertexShaderGlobalData
   ): string {
     const shaderityObjectCreator =
       Shaderity.createShaderityObjectCreator(shaderStage);
@@ -47,7 +76,7 @@ export default class ShaderGraphResolver {
 
   private static __addGlobalDataToShaderityObjectCreator(
     shaderityObjectCreator: ShaderityObjectCreator,
-    globalData: ShaderGlobalData
+    globalData: VertexShaderGlobalData | FragmentShaderGlobalData
   ) {
     if (globalData.defineDirectives != null) {
       for (let i = 0; i < globalData.defineDirectives.length; i++) {
@@ -71,10 +100,10 @@ export default class ShaderGraphResolver {
       }
     }
 
-    if ((globalData as FragmentShaderGlobalData).outputVariableName != null) {
-      shaderityObjectCreator.updateOutputColorVariableName(
-        (globalData as FragmentShaderGlobalData).outputVariableName
-      );
+    const outputVariableName = (globalData as FragmentShaderGlobalData)
+      .outputVariableName;
+    if (outputVariableName != null) {
+      shaderityObjectCreator.updateOutputColorVariableName(outputVariableName);
     }
   }
 
