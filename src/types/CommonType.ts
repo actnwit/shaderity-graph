@@ -44,7 +44,7 @@ export interface ShaderityGraphJson {
   shaderName: string;
   nodes: ShaderityGraphNode[];
   vertexShaderGlobalData?: VertexShaderGlobalData;
-  fragmentShaderGlobalData: FragmentShaderGlobalData;
+  fragmentShaderGlobalData?: FragmentShaderGlobalData;
   shaderFunctionDataObject: {[shaderFunctionName: string]: ShaderFunctionData};
 }
 
@@ -73,7 +73,7 @@ export interface VertexShaderGlobalData {
 }
 
 export interface FragmentShaderGlobalData extends VertexShaderGlobalData {
-  outputVariableName: string;
+  outputVariableName?: string;
 }
 
 export interface SocketConnectionData {

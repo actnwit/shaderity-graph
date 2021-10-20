@@ -17,8 +17,8 @@ import NodeSorter from './NodeSorter';
 
 export default class ShaderGraphResolver {
   static createShaderCodes(
-    fragmentShaderGlobalData: FragmentShaderGlobalData,
-    vertexShaderGlobalData?: VertexShaderGlobalData
+    vertexShaderGlobalData?: VertexShaderGlobalData,
+    fragmentShaderGlobalData?: FragmentShaderGlobalData
   ) {
     const sortedVertexNode = NodeSorter.sortTopologically(Node.vertexNodes);
     const sortedFragmentNode = NodeSorter.sortTopologically(Node.fragmentNodes);
@@ -76,7 +76,7 @@ export default class ShaderGraphResolver {
 
   private static __addGlobalDataToShaderityObjectCreator(
     shaderityObjectCreator: ShaderityObjectCreator,
-    globalData: VertexShaderGlobalData
+    globalData: VertexShaderGlobalData | FragmentShaderGlobalData
   ) {
     if (globalData.defineDirectives != null) {
       for (let i = 0; i < globalData.defineDirectives.length; i++) {
@@ -100,10 +100,10 @@ export default class ShaderGraphResolver {
       }
     }
 
-    if ((globalData as FragmentShaderGlobalData).outputVariableName != null) {
-      shaderityObjectCreator.updateOutputColorVariableName(
-        (globalData as FragmentShaderGlobalData).outputVariableName
-      );
+    const outputVariableName = (globalData as FragmentShaderGlobalData)
+      .outputVariableName;
+    if (outputVariableName != null) {
+      shaderityObjectCreator.updateOutputColorVariableName(outputVariableName);
     }
   }
 

@@ -45,8 +45,8 @@ export default class NodeConverter {
     }
 
     const shaderCodes = ShaderGraphResolver.createShaderCodes(
-      json.fragmentShaderGlobalData,
-      json.vertexShaderGlobalData
+      json.vertexShaderGlobalData,
+      json.fragmentShaderGlobalData
     );
 
     return shaderCodes;
