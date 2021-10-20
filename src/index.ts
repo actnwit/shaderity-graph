@@ -1,5 +1,12 @@
 import NodeConverter from './main/NodeConverter';
-import {SocketType, SocketTypeEnum} from './types/CommonEnum';
+import {
+  ShaderStage,
+  ShaderStageEnum,
+  SocketType,
+  SocketTypeEnum,
+  SocketDirection,
+  SocketDirectionEnum,
+} from './types/CommonEnum';
 import {
   SocketData,
   ShaderCodes,
@@ -8,15 +15,19 @@ import {
 } from './types/CommonType';
 
 export default {
+  ShaderStage,
+  SocketDirection,
   NodeConverter,
   SocketType,
   Version: NodeConverter.shaderityGraphVersion,
 };
 
 export type {
+  ShaderStageEnum,
   ShaderCodes,
   ShaderityGraphJson,
   ShaderityGraphNode,
   SocketData,
   SocketTypeEnum,
+  SocketDirectionEnum,
 };

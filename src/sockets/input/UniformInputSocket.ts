@@ -1,5 +1,4 @@
 import AbstractSocket from '../AbstractSocket';
-import {SocketTypeEnum} from '../../types/CommonEnum';
 import {SocketClassName} from '../ISocket';
 import {INode} from '../../node/INode';
 import {
@@ -17,13 +16,8 @@ export default class UniformInputSocket
   private __type: ShaderUniformVarTypeES3;
   private __precision: ShaderPrecisionType;
 
-  constructor(
-    SocketType: SocketTypeEnum,
-    node: INode,
-    socketName: string,
-    uniform: ShaderUniformObject
-  ) {
-    super(SocketType, node, socketName);
+  constructor(node: INode, socketName: string, uniform: ShaderUniformObject) {
+    super(node, socketName);
 
     this.__variableName = uniform.variableName;
     this.__type = uniform.type;
@@ -38,7 +32,7 @@ export default class UniformInputSocket
     return this.__variableName;
   }
 
-  get type() {
+  get socketType() {
     return this.__type;
   }
 

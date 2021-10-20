@@ -1,5 +1,4 @@
 import AbstractSocket from '../AbstractSocket';
-import {SocketTypeEnum} from '../../types/CommonEnum';
 import {SocketClassName} from '../ISocket';
 import {INode} from '../../node/INode';
 import {
@@ -19,13 +18,8 @@ export default class VaryingInputSocket
   private __precision: ShaderPrecisionType;
   private __interpolationType: ShaderVaryingInterpolationType | undefined;
 
-  constructor(
-    SocketType: SocketTypeEnum,
-    node: INode,
-    socketName: string,
-    varying: ShaderVaryingObject
-  ) {
-    super(SocketType, node, socketName);
+  constructor(node: INode, socketName: string, varying: ShaderVaryingObject) {
+    super(node, socketName);
 
     this.__variableName = varying.variableName;
     this.__type = varying.type;
@@ -41,7 +35,7 @@ export default class VaryingInputSocket
     return this.__variableName;
   }
 
-  get type() {
+  get socketType() {
     return this.__type;
   }
 

@@ -96,7 +96,7 @@ export default class ShaderGraphResolver {
 
         shaderityObjectCreator.addAttributeDeclaration(
           `${aInputSocket.variableName}_${node.id}`,
-          aInputSocket.type,
+          aInputSocket.socketType,
           {
             precision: aInputSocket.precision,
             location: aInputSocket.location,
@@ -107,7 +107,7 @@ export default class ShaderGraphResolver {
 
         shaderityObjectCreator.addVaryingDeclaration(
           `${vInputSocket.variableName}_${node.id}`,
-          vInputSocket.type,
+          vInputSocket.socketType,
           {
             precision: vInputSocket.precision,
             interpolationType: vInputSocket.interpolationType,
@@ -118,7 +118,7 @@ export default class ShaderGraphResolver {
 
         shaderityObjectCreator.addUniformDeclaration(
           `${uInputSocket.variableName}_${node.id}`,
-          uInputSocket.type,
+          uInputSocket.socketType,
           {
             precision: uInputSocket.precision,
           }

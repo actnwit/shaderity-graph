@@ -17,12 +17,13 @@ const _SocketType = {
   IVec2: 'ivec2',
   IVec3: 'ivec3',
   IVec4: 'ivec4',
-  Mat22: 'mat22',
-  Mat33: 'mat33',
-  Mat44: 'mat44',
+  Mat22: 'mat2',
+  Mat33: 'mat3',
+  Mat44: 'mat4',
   Texture2D: 'sampler2D',
   // Texture3D: 'sampler3D',
   TextureCube: 'samplerCube',
+  Unsupported: 'unsupported',
 } as const;
 
 export const SocketType = {
@@ -33,7 +34,7 @@ export const SocketType = {
         return type as SocketTypeEnum;
       }
     }
-    return void 0;
+    return 'unsupported';
   },
   getGlslTypeStr,
   getGlslComponentNumber,
@@ -54,7 +55,7 @@ export type GlslTypeStr =
   | 'mat2'
   | 'mat3'
   | 'mat4'
-  | 'unknown';
+  | 'unsupported';
 
 function getGlslTypeStr(socketType: SocketTypeEnum): GlslTypeStr {
   switch (socketType) {
@@ -87,7 +88,7 @@ function getGlslTypeStr(socketType: SocketTypeEnum): GlslTypeStr {
     case SocketType.TextureCube:
       return 'samplerCube';
     default:
-      return 'unknown';
+      return 'unsupported';
   }
 }
 
@@ -117,3 +118,11 @@ function getGlslComponentNumber(socketType: SocketTypeEnum): number {
 }
 
 export type SocketTypeEnum = typeof SocketType[keyof typeof _SocketType];
+
+export const SocketDirection = {
+  Input: 'input',
+  Output: 'output',
+} as const;
+
+export type SocketDirectionEnum =
+  typeof SocketDirection[keyof typeof SocketDirection];

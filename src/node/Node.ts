@@ -1,4 +1,8 @@
-import {ShaderStage, ShaderStageEnum} from '../types/CommonEnum';
+import {
+  ShaderStage,
+  ShaderStageEnum,
+  SocketDirection,
+} from '../types/CommonEnum';
 import {
   NodeData,
   ConnectableInputSocketData,
@@ -47,7 +51,7 @@ export default class Node implements INode {
 
     for (let i = 0; i < socketDataArray.length; i++) {
       const socketData = socketDataArray[i];
-      if (socketData.direction === 'input') {
+      if (socketData.direction === SocketDirection.Input) {
         this.__addInputSocket(
           socketData as
             | ConnectableInputSocketData
@@ -56,7 +60,7 @@ export default class Node implements INode {
             | UniformInputSocketData
         );
       } else {
-        this.__addOutputSocket(socketData);
+        this.__addOutputSocket(socketData as ConnectableOutputSocketData);
       }
     }
 
@@ -311,37 +315,32 @@ export default class Node implements INode {
       return;
     }
 
-    const type = socketData.type;
-
     let inputSocket;
-    if ((socketData as AttributeInputSocketData).attribute != null) {
+    if ((socketData as AttributeInputSocketData).attributeData != null) {
       const aSocketData = socketData as AttributeInputSocketData;
       inputSocket = new AttributeInputSocket(
-        type,
         this,
         socketName,
-        aSocketData.attribute
+        aSocketData.attributeData
       );
-    } else if ((socketData as VaryingInputSocketData).varying != null) {
+    } else if ((socketData as VaryingInputSocketData).varyingData != null) {
       const vSocketData = socketData as VaryingInputSocketData;
       inputSocket = new VaryingInputSocket(
-        type,
         this,
         socketName,
-        vSocketData.varying
+        vSocketData.varyingData
       );
-    } else if ((socketData as UniformInputSocketData).uniform != null) {
+    } else if ((socketData as UniformInputSocketData).uniformData != null) {
       const uSocketData = socketData as UniformInputSocketData;
       inputSocket = new UniformInputSocket(
-        type,
         this,
         socketName,
-        uSocketData.uniform
+        uSocketData.uniformData
       );
     } else {
       const cSocketData = socketData as ConnectableInputSocketData;
       inputSocket = new ConnectableInputSocket(
-        socketData.type,
+        cSocketData.type,
         this,
         socketName,
         cSocketData.defaultValue

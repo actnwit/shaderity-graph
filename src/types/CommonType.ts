@@ -11,7 +11,11 @@ import {
   ShaderUniformObject as _ShaderUniformObject,
   ShaderVaryingObject as _ShaderVaryingObject,
 } from 'shaderity/dist/esm';
-import {SocketTypeEnum} from './CommonEnum';
+import {
+  ShaderStageEnum,
+  SocketDirectionEnum,
+  SocketTypeEnum,
+} from './CommonEnum';
 
 export type ShaderPrecisionType = _ShaderPrecisionType;
 export type ShaderAttributeVarType = _ShaderAttributeVarType;
@@ -45,11 +49,7 @@ export interface ShaderityGraphJson {
 }
 
 export interface ShaderityGraphNode {
-  nodeData:
-    | NodeData
-    | AttributeInputNodeData
-    | VaryingInputNodeData
-    | UniformInputNodeData;
+  nodeData: NodeData;
   socketDataArray: (
     | ConnectableInputSocketData
     | ConnectableOutputSocketData
@@ -62,20 +62,8 @@ export interface ShaderityGraphNode {
 
 export interface NodeData {
   shaderFunctionName: string;
-  shaderStage: 'vertex' | 'fragment' | 'noUse';
+  shaderStage: ShaderStageEnum;
   extras?: {[key: string]: unknown};
-}
-
-export interface AttributeInputNodeData extends NodeData {
-  attribute: ShaderAttributeObject;
-}
-
-export interface VaryingInputNodeData extends NodeData {
-  varying: ShaderVaryingObject;
-}
-
-export interface UniformInputNodeData extends NodeData {
-  uniform: ShaderUniformObject;
 }
 
 export interface ShaderGlobalData {
@@ -88,38 +76,40 @@ export interface FragmentShaderGlobalData extends ShaderGlobalData {
   outputVariableName: string;
 }
 
-export interface SocketConnectionDatum {
+export interface SocketConnectionData {
   connectedSocketName: string;
   connectedNodeId: number;
 }
 
-// if the direction is input/output, the socket is InputSocket/OutputSocket
 export interface SocketData {
   name: string;
-  type: SocketTypeEnum;
-  direction: 'input' | 'output';
+  direction: SocketDirectionEnum;
 }
 
 export interface ConnectableInputSocketData extends SocketData {
+  direction: 'input';
+  type: SocketTypeEnum;
   defaultValue: number[];
-  socketConnectionDatum?: SocketConnectionDatum;
+  socketConnectionData?: SocketConnectionData;
 }
 
 export interface ConnectableOutputSocketData extends SocketData {
-  socketConnectionData?: SocketConnectionDatum[];
+  direction: 'output';
+  type: SocketTypeEnum;
+  socketConnectionData?: SocketConnectionData[];
 }
 
 export interface AttributeInputSocketData extends SocketData {
-  attribute: ShaderAttributeObject;
   direction: 'input';
+  attributeData: ShaderAttributeObject;
 }
 
 export interface VaryingInputSocketData extends SocketData {
-  varying: ShaderVaryingObject;
   direction: 'input';
+  varyingData: ShaderVaryingObject;
 }
 
 export interface UniformInputSocketData extends SocketData {
-  uniform: ShaderUniformObject;
   direction: 'input';
+  uniformData: ShaderUniformObject;
 }

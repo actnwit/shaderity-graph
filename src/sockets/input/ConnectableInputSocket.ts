@@ -15,12 +15,12 @@ export default class ConnectableInputSocket
   private __defaultValue: number[];
 
   constructor(
-    SocketType: SocketTypeEnum,
+    socketType: SocketTypeEnum,
     node: INode,
     socketName: string,
     defaultValue: number[]
   ) {
-    super(SocketType, node, socketName);
+    super(socketType, node, socketName);
     this.__defaultValue = defaultValue;
   }
 
