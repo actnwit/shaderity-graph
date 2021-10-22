@@ -12,6 +12,7 @@ import {INonConnectableInputSocket} from './INonConnectableInputSocket';
  * The AttributeInputSocket is an input socket that receives an attribute variable.
  * If the function corresponding to a node uses an attribute variable,
  * the function must use this socket to receive the variable as an argument.
+ * This socket can be used only with vertex shader nodes.
  */
 export default class AttributeInputSocket
   extends AbstractSocket

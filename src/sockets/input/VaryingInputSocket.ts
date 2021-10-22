@@ -13,6 +13,7 @@ import {INonConnectableInputSocket} from './INonConnectableInputSocket';
  * The VaryingInputSocket is an input socket that receives an varying variable.
  * If the function corresponding to a node uses an varying variable,
  * the function must use this socket to receive the variable as an argument.
+ * This socket can be used only with fragment shader nodes.
  */
 export default class VaryingInputSocket
   extends AbstractSocket
