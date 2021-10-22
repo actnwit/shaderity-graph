@@ -1,5 +1,4 @@
 import {SocketTypeEnum} from '../../types/CommonEnum';
-import {SocketClassName} from '../interface/ISocket';
 import {IConnectableInputSocket} from '../interface/input/IConnectableInputSocket';
 import {IConnectableOutputSocket} from '../interface/output/IConnectableOutputSocket';
 import {INode} from '../../node/INode';
@@ -42,7 +41,7 @@ export default class ConnectableInputSocket
   /**
    * Get the class name of this socket
    */
-  get className(): SocketClassName {
+  get className(): 'ConnectableInputSocket' {
     return 'ConnectableInputSocket';
   }
 

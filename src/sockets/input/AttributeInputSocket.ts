@@ -1,5 +1,4 @@
 import AbstractSocket from '../abstract/AbstractSocket';
-import {SocketClassName} from '../interface/ISocket';
 import {INode} from '../../node/INode';
 import {
   ShaderAttributeObject,
@@ -39,7 +38,7 @@ export default class AttributeInputSocket
   /**
    * Get the class name of this socket
    */
-  get className(): SocketClassName {
+  get className(): 'AttributeInputSocket' {
     return 'AttributeInputSocket';
   }
 

@@ -1,5 +1,4 @@
 import AbstractSocket from '../abstract/AbstractSocket';
-import {SocketClassName} from '../interface/ISocket';
 import {INode} from '../../node/INode';
 import {
   ShaderPrecisionType,
@@ -32,7 +31,7 @@ export default class UniformInputSocket
   /**
    * Get the class name of this socket
    */
-  get className(): SocketClassName {
+  get className(): 'UniformInputSocket' {
     return 'UniformInputSocket';
   }
 

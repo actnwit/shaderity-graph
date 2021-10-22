@@ -2,7 +2,6 @@ import {INode} from '../../node/INode';
 import {SocketTypeEnum} from '../../types/CommonEnum';
 import AbstractSocket from './AbstractSocket';
 import {IConnectableInputSocket} from '../interface/input/IConnectableInputSocket';
-import {SocketClassName} from '../interface/ISocket';
 import {IConnectableOutputSocket} from '../interface/output/IConnectableOutputSocket';
 
 /**
@@ -44,7 +43,9 @@ export default abstract class AbstractConnectableSocket extends AbstractSocket {
   /**
    * Get the class name of this socket
    */
-  abstract get className(): SocketClassName;
+  abstract get className():
+    | 'ConnectableInputSocket'
+    | 'ConnectableOutputSocket';
 
   /**
    * Connect this socket and the argument socket
