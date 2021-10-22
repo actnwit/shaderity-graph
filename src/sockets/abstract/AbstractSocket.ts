@@ -1,11 +1,11 @@
-import {INode} from '../node/INode';
-import {SocketTypeEnum} from '../types/CommonEnum';
+import {INode} from '../../node/INode';
+import {SocketTypeEnum} from '../../types/CommonEnum';
 import {
   ShaderAttributeVarType,
   ShaderUniformVarTypeES3,
   ShaderVaryingVarType,
-} from '../types/CommonType';
-import {ISocket, SocketClassName} from './ISocket';
+} from '../../types/CommonType';
+import {ISocket, SocketClassName} from './../ISocket';
 
 /**
  * The roll of the socket is to manage the input and output of each node.

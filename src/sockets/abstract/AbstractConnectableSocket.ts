@@ -1,9 +1,9 @@
-import {INode} from '../node/INode';
-import {SocketTypeEnum} from '../types/CommonEnum';
+import {INode} from '../../node/INode';
+import {SocketTypeEnum} from '../../types/CommonEnum';
 import AbstractSocket from './AbstractSocket';
-import {IConnectableInputSocket} from './input/IConnectableInputSocket';
-import {ISocket, SocketClassName} from './ISocket';
-import {IConnectableOutputSocket} from './output/IConnectableOutputSocket';
+import {IConnectableInputSocket} from '../input/IConnectableInputSocket';
+import {ISocket, SocketClassName} from '../ISocket';
+import {IConnectableOutputSocket} from '../output/IConnectableOutputSocket';
 
 /**
  * The roll of connectable sockets are connecting nodes.

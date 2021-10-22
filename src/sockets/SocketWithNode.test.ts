@@ -13,7 +13,7 @@ import ConnectableInputSocket from './input/ConnectableInputSocket';
 import UniformInputSocket from './input/UniformInputSocket';
 import VaryingInputSocket from './input/VaryingInputSocket';
 import ConnectableOutputSocket from './output/ConnectableOutputSocket';
-import AbstractConnectableSocket from './AbstractConnectableSocket';
+import AbstractConnectableSocket from './abstract/AbstractConnectableSocket';
 
 // This is the integration test of socket with node.
 

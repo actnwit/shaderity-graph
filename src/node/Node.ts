@@ -15,7 +15,7 @@ import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
 import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
 import {INode} from './INode';
 import ShaderFunctionCodeRepository from './ShaderFunctionCodeRepository';
-import AbstractConnectableSocket from '../sockets/AbstractConnectableSocket';
+import AbstractConnectableSocket from '../sockets/abstract/AbstractConnectableSocket';
 import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';

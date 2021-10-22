@@ -3,7 +3,7 @@ import {SocketClassName} from '../ISocket';
 import {IConnectableOutputSocket} from './IConnectableOutputSocket';
 import {IConnectableInputSocket} from '../input/IConnectableInputSocket';
 import {INode} from '../../node/INode';
-import AbstractConnectableSocket from '../AbstractConnectableSocket';
+import AbstractConnectableSocket from '../abstract/AbstractConnectableSocket';
 
 /**
  * The ConnectableOutputSocket is an output socket that can connect to ConnectableInputSockets.

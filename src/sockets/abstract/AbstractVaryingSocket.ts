@@ -1,13 +1,13 @@
-import {INode} from '../node/INode';
+import {INode} from '../../node/INode';
 import {
   ShaderPrecisionType,
   ShaderVaryingInterpolationType,
   ShaderVaryingObject,
   ShaderVaryingVarType,
-} from '../types/CommonType';
+} from '../../types/CommonType';
 import AbstractSocket from './AbstractSocket';
-import {IVaryingInputSocket} from './input/IVaryingInputSocket';
-import {IVaryingOutputSocket} from './output/IVaryingOutputSocket';
+import {IVaryingInputSocket} from './../input/IVaryingInputSocket';
+import {IVaryingOutputSocket} from './../output/IVaryingOutputSocket';
 
 /**
  *

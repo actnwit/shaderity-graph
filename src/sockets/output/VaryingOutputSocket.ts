@@ -1,6 +1,6 @@
 import {INode} from '../../node/INode';
 import {ShaderVaryingObject} from '../../types/CommonType';
-import AbstractVaryingSocket from '../AbstractVaryingSocket';
+import AbstractVaryingSocket from '../abstract/AbstractVaryingSocket';
 import {IVaryingOutputSocket} from './IVaryingOutputSocket';
 import {IVaryingInputSocket} from '../input/IVaryingInputSocket';
 

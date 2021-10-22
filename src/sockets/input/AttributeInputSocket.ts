@@ -1,4 +1,4 @@
-import AbstractSocket from '../AbstractSocket';
+import AbstractSocket from '../abstract/AbstractSocket';
 import {SocketClassName} from '../ISocket';
 import {INode} from '../../node/INode';
 import {
