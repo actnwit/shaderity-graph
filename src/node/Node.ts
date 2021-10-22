@@ -245,13 +245,15 @@ export default class Node implements INode {
       return undefined;
     }
 
-    if (targetSocket.className !== 'StandardInputSocket') {
-      // non-standard socket cannot connect another node
+    if (
+      targetSocket.className === 'AttributeInputSocket' ||
+      targetSocket.className === 'UniformInputSocket'
+    ) {
+      // non-connectable socket cannot connect another node
       return undefined;
     }
 
-    const cInputSocket = targetSocket as StandardInputSocket;
-    const connectedNode = cInputSocket.connectedNode;
+    const connectedNode = targetSocket.connectedNode;
     return connectedNode;
   }
 
