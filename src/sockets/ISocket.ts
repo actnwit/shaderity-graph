@@ -8,10 +8,11 @@ import {
 
 export type SocketClassName =
   | 'ConnectableInputSocket'
-  | 'ConnectableOutputSocket'
   | 'AttributeInputSocket'
   | 'VaryingInputSocket'
-  | 'UniformInputSocket';
+  | 'UniformInputSocket'
+  | 'ConnectableOutputSocket'
+  | 'VaryingOutputSocket';
 
 export interface ISocket {
   get className(): SocketClassName;
