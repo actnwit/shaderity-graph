@@ -10,6 +10,7 @@ import {
   UniformInputSocketData,
   VaryingInputSocketData,
   AttributeInputSocketData,
+  VaryingOutputSocketData,
 } from '../types/CommonType';
 import StandardInputSocket from '../sockets/input/StandardInputSocket';
 import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
@@ -59,6 +60,7 @@ export default class Node implements INode {
       | StandardOutputSocketData
       | AttributeInputSocketData
       | VaryingInputSocketData
+      | VaryingOutputSocketData
       | UniformInputSocketData
     )[]
   ) {
@@ -68,15 +70,9 @@ export default class Node implements INode {
     for (let i = 0; i < socketDataArray.length; i++) {
       const socketData = socketDataArray[i];
       if (socketData.direction === SocketDirection.Input) {
-        this.__addInputSocket(
-          socketData as
-            | StandardInputSocketData
-            | AttributeInputSocketData
-            | VaryingInputSocketData
-            | UniformInputSocketData
-        );
+        this.__addInputSocket(socketData);
       } else {
-        this.__addOutputSocket(socketData as StandardOutputSocketData);
+        this.__addOutputSocket(socketData);
       }
     }
 
@@ -360,12 +356,12 @@ export default class Node implements INode {
         uSocketData.uniformData
       );
     } else {
-      const cSocketData = socketData as StandardInputSocketData;
+      const sSocketData = socketData as StandardInputSocketData;
       inputSocket = new StandardInputSocket(
-        cSocketData.type,
+        sSocketData.type,
         this,
         socketName,
-        cSocketData.defaultValue
+        sSocketData.defaultValue
       );
     }
 
@@ -389,7 +385,9 @@ export default class Node implements INode {
    * Add output socket of this node to connect another node
    */
 
-  private __addOutputSocket(socketData: StandardOutputSocketData) {
+  private __addOutputSocket(
+    socketData: StandardOutputSocketData | VaryingOutputSocketData
+  ) {
     const socketName = socketData.name;
 
     const duplicateOutputSocket =
@@ -402,11 +400,23 @@ export default class Node implements INode {
       return;
     }
 
-    const outputSocket = new StandardOutputSocket(
-      socketData.type,
-      this,
-      socketName
-    );
+    let outputSocket;
+    if ((socketData as VaryingOutputSocketData).varyingData != null) {
+      const vSocketData = socketData as VaryingOutputSocketData;
+      outputSocket = new VaryingOutputSocket(
+        this,
+        socketName,
+        vSocketData.varyingData
+      );
+    } else {
+      const sSocketData = socketData as StandardOutputSocketData;
+      outputSocket = new StandardOutputSocket(
+        sSocketData.type,
+        this,
+        socketName
+      );
+    }
+
     this.__sockets.push(outputSocket);
   }
 
