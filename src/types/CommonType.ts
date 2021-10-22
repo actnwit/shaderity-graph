@@ -114,6 +114,7 @@ export interface AttributeInputSocketData extends AbstractSocketData {
 export interface VaryingInputSocketData extends AbstractSocketData {
   direction: 'input';
   varyingData: ShaderVaryingObject;
+  socketConnectionData?: SocketConnectionData;
 }
 
 export interface UniformInputSocketData extends AbstractSocketData {
