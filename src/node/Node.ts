@@ -20,6 +20,8 @@ import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import {ISocket} from '../sockets/interface/ISocket';
+import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
+import AbstractVaryingSocket from '../sockets/abstract/AbstractVaryingSocket';
 
 /**
  * A node is an object that contains functions to be used in the shader.
@@ -164,16 +166,24 @@ export default class Node implements INode {
       return;
     }
 
-    if (inputSocket.className !== 'ConnectableInputSocket') {
-      console.error(
-        'Node.connectNodes: the input socket is non-connectable socket'
-      );
+    if (
+      inputSocket.className === 'ConnectableInputSocket' &&
+      outputSocket.className === 'ConnectableOutputSocket'
+    ) {
+      AbstractConnectableSocket.connectSockets(inputSocket, outputSocket);
       return;
     }
 
-    AbstractConnectableSocket.connectSockets(
-      inputSocket as ConnectableInputSocket,
-      outputSocket
+    if (
+      inputSocket.className === 'VaryingInputSocket' &&
+      outputSocket.className === 'VaryingOutputSocket'
+    ) {
+      AbstractVaryingSocket.connectSockets(inputSocket, outputSocket);
+      return;
+    }
+
+    console.error(
+      'Node.connectNodes: the input socket is non-connectable socket'
     );
   }
 
@@ -294,7 +304,7 @@ export default class Node implements INode {
   private __getOutputSocket(socketName: string) {
     const resultSocket = this.__sockets.find(
       socket => !socket.isInputSocket() && socket.name === socketName
-    ) as ConnectableOutputSocket;
+    ) as ConnectableOutputSocket | VaryingOutputSocket;
 
     if (resultSocket == null) {
       console.error(
