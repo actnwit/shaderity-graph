@@ -252,7 +252,9 @@ ${functionCalls}
    * @returns array to store the variable names
    */
   private static __initializeVariableNames(nodes: Node[]) {
-    const variableNames: Array<Array<string>> = new Array(nodes.length);
+    const variableNames: Array<Array<string>> = new Array(Node.allNodes.length);
+    variableNames.fill(new Array(0));
+
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
       const argumentCountOfNodeFunction = node._sockets.length;
