@@ -6,9 +6,8 @@ import {
   ShaderVaryingVarType,
 } from '../types/CommonType';
 import AbstractSocket from './AbstractSocket';
-// import VaryingInputSocket from './input/VaryingInputSocket';
-import {ISocket} from './ISocket';
-// import VaryingOutputSocket from './output/VaryingOutputSocket';
+import {IVaryingInputSocket} from './input/IVaryingInputSocket';
+import {IVaryingOutputSocket} from './output/IVaryingOutputSocket';
 
 /**
  *
@@ -33,19 +32,19 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
    * @param inputSocket varying input socket contained in the output node
    * @param outputSocket varying output socket contained in the input node
    */
-  // static connectSockets(
-  //   inputSocket: VaryingInputSocket,
-  //   outputSocket: VaryingOutputSocket
-  // ) {
-  //   if (inputSocket.socketType === outputSocket.socketType) {
-  //     inputSocket._connectSocketWith(outputSocket);
-  //     outputSocket._connectSocketWith(inputSocket);
-  //   } else {
-  //     console.error(
-  //       'AbstractVaryingSocket.connectSockets: socketType is different'
-  //     );
-  //   }
-  // }
+  static connectSockets(
+    inputSocket: IVaryingInputSocket,
+    outputSocket: IVaryingOutputSocket
+  ) {
+    if (inputSocket.socketType === outputSocket.socketType) {
+      inputSocket._connectSocketWith(outputSocket);
+      outputSocket._connectSocketWith(inputSocket);
+    } else {
+      console.error(
+        'AbstractVaryingSocket.connectSockets: socketType is different'
+      );
+    }
+  }
 
   /**
    * Get the varying variable name
@@ -84,5 +83,7 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
    * Connect this socket and the argument socket
    * @param socket The socket to connect to
    */
-  abstract _connectSocketWith(socket: ISocket): void;
+  abstract _connectSocketWith(
+    socket: IVaryingInputSocket | IVaryingOutputSocket
+  ): void;
 }
