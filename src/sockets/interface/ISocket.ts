@@ -7,11 +7,11 @@ import {
 } from '../../types/CommonType';
 
 export type SocketClassName =
-  | 'ConnectableInputSocket'
+  | 'StandardInputSocket'
   | 'AttributeInputSocket'
   | 'VaryingInputSocket'
   | 'UniformInputSocket'
-  | 'ConnectableOutputSocket'
+  | 'StandardOutputSocket'
   | 'VaryingOutputSocket';
 
 export interface ISocket {

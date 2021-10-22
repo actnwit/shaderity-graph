@@ -1,5 +1,5 @@
 import {ISocket} from './ISocket';
 
-export interface IConnectableSocket extends ISocket {
+export interface IStandardSocket extends ISocket {
   _connectSocketWith(socket: ISocket): void;
 }

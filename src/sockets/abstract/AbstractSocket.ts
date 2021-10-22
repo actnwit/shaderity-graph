@@ -16,16 +16,16 @@ import {ISocket, SocketClassName} from '../interface/ISocket';
  * The parent-child relationship for each class is as follows.
  *
  * AbstractSocket
- *  - AbstractConnectableSocket
- *     - ConnectableInputSocket
- *     - ConnectableOutputSocket
+ *  - AbstractStandardSocket
+ *     - StandardInputSocket
+ *     - StandardOutputSocket
  *  - AttributeInputSocket
  *  - VaryingInputSocket
  *  - UniformInputSocket
  *
- * ConnectableInputSocket can be connected to ConnectableOutputSocket and vice versa.
+ * StandardInputSocket can be connected to StandardOutputSocket and vice versa.
  * Attribute/Varying/UniformInputSocket is a socket that cannot be connected to other sockets.
- * These non-connectable nodes are usually not visible in the GUI.
+ * These non-Standard nodes are usually not visible in the GUI.
  */
 export default abstract class AbstractSocket implements ISocket {
   private __name: string;
@@ -55,7 +55,7 @@ export default abstract class AbstractSocket implements ISocket {
    */
   isInputSocket() {
     if (
-      this.className === 'ConnectableInputSocket' ||
+      this.className === 'StandardInputSocket' ||
       this.className === 'AttributeInputSocket' ||
       this.className === 'VaryingInputSocket' ||
       this.className === 'UniformInputSocket'

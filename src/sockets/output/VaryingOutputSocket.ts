@@ -47,7 +47,7 @@ export default class VaryingOutputSocket
   }
 
   /**
-   * Connect this socket and a connectable input socket
+   * Connect this socket and a varying input socket
    * @param socket The socket to connect to
    */
   _connectSocketWith(socket: IVaryingInputSocket) {

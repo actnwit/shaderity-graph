@@ -5,7 +5,7 @@ import {
   ShaderUniformObject,
   ShaderUniformVarTypeES3,
 } from '../../types/CommonType';
-import {INonConnectableInputSocket} from '../interface/input/INonConnectableInputSocket';
+import {INonStandardInputSocket} from '../interface/input/INonStandardInputSocket';
 
 /**
  * The UniformInputSocket is an input socket that receives an uniform variable.
@@ -14,7 +14,7 @@ import {INonConnectableInputSocket} from '../interface/input/INonConnectableInpu
  */
 export default class UniformInputSocket
   extends AbstractSocket
-  implements INonConnectableInputSocket
+  implements INonStandardInputSocket
 {
   private __variableName: string;
   private __type: ShaderUniformVarTypeES3;

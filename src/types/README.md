@@ -6,9 +6,9 @@
   - [ShaderityGraphNode](#shaderitygraphnode)
     - [NodeData](#nodedata)
     - [AbstractSocketData](#abstractsocketdata)
-      - [ConnectableInputSocketData](#connectableinputsocketdata)
+      - [StandardInputSocketData](#standardinputsocketdata)
         - [SocketConnectionData](#socketconnectiondata)
-      - [ConnectableOutputSocketData](#connectableoutputsocketdata)
+      - [StandardOutputSocketData](#standardoutputsocketdata)
       - [AttributeInputSocketData](#attributeinputsocketdata)
         - [ShaderAttributeObject](#shaderattributeobject)
       - [VaryingInputSocketData](#varyinginputsocketdata)
@@ -206,8 +206,8 @@ All nodes input and output data through sockets. There are two ways to input and
 3. passing output of varying variables (TODO)
 
 AbstractSocketData is an abstract object for convenience to group several objects together. The concrete objects are
-[ConnectableInputSocketData](#connectableinputsocketdata),
-[ConnectableOutputSocketData](#connectableoutputsocketdata),
+[StandardInputSocketData](#standardinputsocketdata),
+[StandardOutputSocketData](#standardoutputsocketdata),
 [AttributeInputSocketData](#attributeinputsocketdata),
 [VaryingInputSocketData](#varyinginputsocketdata), and
 [UniformInputSocketData](#uniforminputsocketdata).
@@ -256,9 +256,9 @@ Application-specific data.
 
 <br>
 
-## ConnectableInputSocketData
+## StandardInputSocketData
 
-Data for a socket that can be connected to a single ConnectableOutputSocket.
+Data for a socket that can be connected to a single StandardOutputSocket.
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
@@ -271,7 +271,7 @@ Data for a socket that can be connected to a single ConnectableOutputSocket.
 
 <br>
 
-### ConnectableInputSocketData.name ✅
+### StandardInputSocketData.name ✅
 
 Name of this socket.
 
@@ -281,7 +281,7 @@ Name of this socket.
 
 <br>
 
-### ConnectableInputSocketData.direction ✅
+### StandardInputSocketData.direction ✅
 
 This property must be set `input`. See [AbstractSocketData.direction](#abstractsocketdatadirection) for detail.
 
@@ -294,7 +294,7 @@ This property must be set `input`. See [AbstractSocketData.direction](#abstracts
 
 <br>
 
-### ConnectableInputSocketData.type ✅
+### StandardInputSocketData.type ✅
 
 GLSL type of data to be input on this socket.
 
@@ -320,7 +320,7 @@ GLSL type of data to be input on this socket.
 
 <br>
 
- ### ConnectableInputSocketData.defaultValue ✅
+ ### StandardInputSocketData.defaultValue ✅
 
 Value to take as input when this socket is not connected to any socket.
 
@@ -330,7 +330,7 @@ Value to take as input when this socket is not connected to any socket.
 
 <br>
 
-### ConnectableInputSocketData.socketConnectionData
+### StandardInputSocketData.socketConnectionData
 
 Data of the connected output socket. If it is not connected to an output socket, the value is undefined.
 
@@ -340,7 +340,7 @@ Data of the connected output socket. If it is not connected to an output socket,
 
 <br>
 
-### ConnectableInputSocketData.extras
+### StandardInputSocketData.extras
 
 Application-specific data.
 
@@ -382,7 +382,7 @@ Node id of the node that has the connected socket. See [ShaderityGraphJson.shade
 
 <br>
 
-### ConnectableInputSocketData.extras
+### StandardInputSocketData.extras
 
 Application-specific data.
 
@@ -392,9 +392,9 @@ Application-specific data.
 
 <br>
 
-## ConnectableOutputSocketData
+## StandardOutputSocketData
 
-Data for a socket that can be connected to a multiple ConnectableInputSocket.
+Data for a socket that can be connected to a multiple StandardInputSocket.
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
@@ -405,7 +405,7 @@ Data for a socket that can be connected to a multiple ConnectableInputSocket.
 
 <br>
 
-### ConnectableOutputSocketData.name ✅
+### StandardOutputSocketData.name ✅
 
 Name of this socket.
 
@@ -415,7 +415,7 @@ Name of this socket.
 
 <br>
 
-### ConnectableOutputSocketData.direction ✅
+### StandardOutputSocketData.direction ✅
 
 This property must be set `output`. See [AbstractSocketData.direction](#abstractsocketdatadirection) for detail.
 
@@ -428,7 +428,7 @@ This property must be set `output`. See [AbstractSocketData.direction](#abstract
 
 <br>
 
-### ConnectableOutputSocketData.type ✅
+### StandardOutputSocketData.type ✅
 
 GLSL type of data to be output on this socket.
 
@@ -454,7 +454,7 @@ GLSL type of data to be output on this socket.
 
 <br>
 
-### ConnectableOutputSocketData.extras
+### StandardOutputSocketData.extras
 
 Application-specific data.
 

@@ -2,31 +2,31 @@ import Node from '../node/Node';
 import {SocketDirection, SocketType} from '../types/CommonEnum';
 import {
   AttributeInputSocketData,
-  ConnectableInputSocketData,
-  ConnectableOutputSocketData,
+  StandardInputSocketData,
+  StandardOutputSocketData,
   NodeData,
   UniformInputSocketData,
   VaryingInputSocketData,
 } from '../types/CommonType';
 import AttributeInputSocket from './input/AttributeInputSocket';
-import ConnectableInputSocket from './input/ConnectableInputSocket';
+import StandardInputSocket from './input/StandardInputSocket';
 import UniformInputSocket from './input/UniformInputSocket';
 import VaryingInputSocket from './input/VaryingInputSocket';
-import ConnectableOutputSocket from './output/ConnectableOutputSocket';
-import AbstractConnectableSocket from './abstract/AbstractConnectableSocket';
+import StandardOutputSocket from './output/StandardOutputSocket';
+import AbstractStandardSocket from './abstract/AbstractStandardSocket';
 
 // This is the integration test of socket with node.
 
 // --- test for non-connecting sockets  ---------------------------------------------
 
-const connectableInputSocketData0: ConnectableInputSocketData = {
+const standardInputSocketData0: StandardInputSocketData = {
   name: 'inputSocket0',
   type: SocketType.Vec3,
   direction: SocketDirection.Input,
   defaultValue: [0, 0, 0],
 };
 
-const connectableOutputSocketData: ConnectableOutputSocketData = {
+const standardOutputSocketData: StandardOutputSocketData = {
   name: 'outputSocket',
   type: SocketType.Vec2,
   direction: SocketDirection.Output,
@@ -67,8 +67,8 @@ const driverNodeData0: NodeData = {
 };
 
 const sockets0 = [
-  connectableInputSocketData0,
-  connectableOutputSocketData,
+  standardInputSocketData0,
+  standardOutputSocketData,
   attributeInputSocketData,
   varyingInputSocketData,
   uniformInputSocketData,
@@ -84,8 +84,8 @@ test('node._sockets.length', () => {
 });
 
 test('socket.className', () => {
-  expect(socketsOfNode0[0].className).toBe('ConnectableInputSocket');
-  expect(socketsOfNode0[1].className).toBe('ConnectableOutputSocket');
+  expect(socketsOfNode0[0].className).toBe('StandardInputSocket');
+  expect(socketsOfNode0[1].className).toBe('StandardOutputSocket');
   expect(socketsOfNode0[2].className).toBe('AttributeInputSocket');
   expect(socketsOfNode0[3].className).toBe('VaryingInputSocket');
   expect(socketsOfNode0[4].className).toBe('UniformInputSocket');
@@ -123,26 +123,26 @@ test('socket.node', () => {
   expect(socketsOfNode0[4].isInputSocket()).toBe(true);
 });
 
-const connectableInputSocket0 = socketsOfNode0[0] as ConnectableInputSocket;
-test('ConnectableInputSocket.connectedSocket', () => {
-  expect(connectableInputSocket0.connectedSocket).toBe(undefined);
+const standardInputSocket0 = socketsOfNode0[0] as StandardInputSocket;
+test('StandardInputSocket.connectedSocket', () => {
+  expect(standardInputSocket0.connectedSocket).toBe(undefined);
 });
 
-test('ConnectableInputSocket.connectedNode', () => {
-  expect(connectableInputSocket0.connectedNode).toBe(undefined);
+test('StandardInputSocket.connectedNode', () => {
+  expect(standardInputSocket0.connectedNode).toBe(undefined);
 });
 
-test('ConnectableInputSocket.defaultValue', () => {
-  expect(connectableInputSocket0.defaultValue).toStrictEqual([0, 0, 0]);
+test('StandardInputSocket.defaultValue', () => {
+  expect(standardInputSocket0.defaultValue).toStrictEqual([0, 0, 0]);
 });
 
-const connectableOutputSocket = socketsOfNode0[1] as ConnectableOutputSocket;
-test('connectableOutputSocket.connectedNodes', () => {
-  expect(connectableOutputSocket.connectedNodes).toStrictEqual([]);
+const standardOutputSocket = socketsOfNode0[1] as StandardOutputSocket;
+test('StandardOutputSocket.connectedNodes', () => {
+  expect(standardOutputSocket.connectedNodes).toStrictEqual([]);
 });
 
-test('connectableOutputSocket.connectedSockets', () => {
-  expect(connectableOutputSocket.connectedSockets).toStrictEqual([]);
+test('StandardOutputSocket.connectedSockets', () => {
+  expect(standardOutputSocket.connectedSockets).toStrictEqual([]);
 });
 
 const attributeInputSocket = socketsOfNode0[2] as AttributeInputSocket;
@@ -170,7 +170,7 @@ test('uniformInputSocket.connectedSockets', () => {
 
 // --- test for connecting sockets  -------------------------------------------------
 
-const connectableInputSocketData1: ConnectableInputSocketData = {
+const standardInputSocketData1: StandardInputSocketData = {
   name: 'inputSocket1',
   type: SocketType.Vec2,
   direction: SocketDirection.Input,
@@ -186,26 +186,26 @@ const driverNodeData1: NodeData = {
   shaderStage: 'vertex',
 };
 
-const sockets1 = [connectableInputSocketData1];
+const sockets1 = [standardInputSocketData1];
 
 const node1 = new Node(driverNodeData1, sockets1);
 console.log('Please ignore the console.error above if the test passes.');
 
 const socketsOfNode1 = node1._sockets;
 
-const connectableInputSocket1 = socketsOfNode1[0] as ConnectableInputSocket;
-test('AbstractConnectableSocket.connectSockets', () => {
-  AbstractConnectableSocket.connectSockets(
-    connectableInputSocket1,
-    connectableOutputSocket
+const standardInputSocket1 = socketsOfNode1[0] as StandardInputSocket;
+test('AbstractStandardSocket.connectSockets', () => {
+  AbstractStandardSocket.connectSockets(
+    standardInputSocket1,
+    standardOutputSocket
   );
 
-  expect(connectableInputSocket1.connectedSocket).toStrictEqual(
-    connectableOutputSocket
+  expect(standardInputSocket1.connectedSocket).toStrictEqual(
+    standardOutputSocket
   );
-  expect(connectableOutputSocket.connectedSockets).toStrictEqual([
-    connectableInputSocket1,
+  expect(standardOutputSocket.connectedSockets).toStrictEqual([
+    standardInputSocket1,
   ]);
-  expect(connectableInputSocket1.connectedNode).toStrictEqual(node0);
-  expect(connectableOutputSocket.connectedNodes).toStrictEqual([node1]);
+  expect(standardInputSocket1.connectedNode).toStrictEqual(node0);
+  expect(standardOutputSocket.connectedNodes).toStrictEqual([node1]);
 });

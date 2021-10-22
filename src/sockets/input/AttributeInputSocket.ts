@@ -5,7 +5,7 @@ import {
   ShaderAttributeVarType,
   ShaderPrecisionType,
 } from '../../types/CommonType';
-import {INonConnectableInputSocket} from '../interface/input/INonConnectableInputSocket';
+import {INonStandardInputSocket} from '../interface/input/INonStandardInputSocket';
 
 /**
  * The AttributeInputSocket is an input socket that receives an attribute variable.
@@ -15,7 +15,7 @@ import {INonConnectableInputSocket} from '../interface/input/INonConnectableInpu
  */
 export default class AttributeInputSocket
   extends AbstractSocket
-  implements INonConnectableInputSocket
+  implements INonStandardInputSocket
 {
   private __variableName: string;
   private __type: ShaderAttributeVarType;

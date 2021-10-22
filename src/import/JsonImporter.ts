@@ -3,7 +3,7 @@ import ShaderFunctionCodeRepository from '../node/ShaderFunctionCodeRepository';
 import {
   ShaderityGraphNode,
   ShaderityGraphJson,
-  ConnectableInputSocketData,
+  StandardInputSocketData,
   ShaderFunctionCodeObject,
 } from '../types/CommonType';
 
@@ -65,7 +65,7 @@ export default class JsonImporter {
           continue;
         }
 
-        const inputSocketData = socketData as ConnectableInputSocketData;
+        const inputSocketData = socketData as StandardInputSocketData;
         const socketConnectionData = inputSocketData.socketConnectionData;
         if (socketConnectionData == null) {
           continue;

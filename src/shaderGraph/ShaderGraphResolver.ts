@@ -8,11 +8,11 @@ import Shaderity, {
   ShaderStageStr,
   ShaderityObjectCreator,
 } from 'shaderity/dist/esm';
-import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
+import StandardInputSocket from '../sockets/input/StandardInputSocket';
 import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
-import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
+import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
 import NodeSorter from './NodeSorter';
 
 /**
@@ -264,7 +264,7 @@ ${functionCalls}
 
   /**
    * @private
-   * Create a string of variable definitions corresponding to the connectable input socket
+   * Create a string of variable definitions corresponding to the standard input socket
    * that is not connected to the output socket.
    * The created variable is initialized with the default value of the socket.
    *
@@ -283,10 +283,10 @@ ${functionCalls}
     const sockets = node._sockets;
     for (let i = 0; i < sockets.length; i++) {
       const socket = sockets[i];
-      if (socket.className !== 'ConnectableInputSocket') {
+      if (socket.className !== 'StandardInputSocket') {
         continue;
       }
-      const cInputSocket = socket as ConnectableInputSocket;
+      const cInputSocket = socket as StandardInputSocket;
 
       const socketType = cInputSocket.socketType;
       const glslComponentNumber = SocketType.getGlslComponentNumber(socketType);
@@ -342,7 +342,7 @@ ${functionCalls}
         continue;
       }
 
-      const outputSocket = socket as ConnectableOutputSocket;
+      const outputSocket = socket as StandardOutputSocket;
       const outputNodes = outputSocket.connectedNodes;
 
       // for debugging
