@@ -286,9 +286,9 @@ ${functionCalls}
       if (socket.className !== 'StandardInputSocket') {
         continue;
       }
-      const cInputSocket = socket as StandardInputSocket;
+      const sInputSocket = socket as StandardInputSocket;
 
-      const socketType = cInputSocket.socketType;
+      const socketType = sInputSocket.socketType;
       const glslComponentNumber = SocketType.getGlslComponentNumber(socketType);
 
       if (glslComponentNumber === 0) {
@@ -296,7 +296,7 @@ ${functionCalls}
         console.error(message);
 
         return `  // ${message}\n`;
-      } else if (cInputSocket.defaultValue.length !== glslComponentNumber) {
+      } else if (sInputSocket.defaultValue.length !== glslComponentNumber) {
         console.warn(
           'ShaderGraphResolver.__getInputVariableDefinitions: defaultValue.length is invalid'
         );
@@ -306,11 +306,11 @@ ${functionCalls}
 
       let defaultValue = glslTypeStr + '(';
       for (let j = 0; j < glslComponentNumber; j++) {
-        defaultValue += cInputSocket.defaultValue[j] + ', ';
+        defaultValue += sInputSocket.defaultValue[j] + ', ';
       }
       defaultValue = defaultValue.replace(/,\s$/, ')');
 
-      const variableName = `${cInputSocket.name}_${node.id}`;
+      const variableName = `${sInputSocket.name}_${node.id}`;
       returnStr += `  ${glslTypeStr} ${variableName} = ${defaultValue};\n`;
 
       variableNames[node.id][i] = variableName;
