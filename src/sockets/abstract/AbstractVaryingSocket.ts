@@ -10,7 +10,8 @@ import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
 import {IVaryingOutputSocket} from '../interface/output/IVaryingOutputSocket';
 
 /**
- *
+ * The roll of varying sockets are passing data from the vertex shader to the fragment shader.
+ * The user can connect sockets by Node.connectNodes method.
  */
 export default abstract class AbstractVaryingSocket extends AbstractSocket {
   private __variableName: string;

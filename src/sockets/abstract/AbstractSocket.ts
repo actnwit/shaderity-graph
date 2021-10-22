@@ -20,12 +20,15 @@ import {ISocket, SocketClassName} from '../interface/ISocket';
  *     - StandardInputSocket
  *     - StandardOutputSocket
  *  - AttributeInputSocket
- *  - VaryingInputSocket
  *  - UniformInputSocket
+ *  - AbstractVaryingSocket
+ *    - VaryingInputSocket
+ *    - VaryingOutputSocket
  *
  * StandardInputSocket can be connected to StandardOutputSocket and vice versa.
- * Attribute/Varying/UniformInputSocket is a socket that cannot be connected to other sockets.
- * These non-Standard nodes are usually not visible in the GUI.
+ * VaryingInputSocket can be connected to VaryingOutputSocket and vice versa.
+ * Attribute/UniformInputSocket is a socket that cannot be connected to other sockets.
+ * Attribute/UniformInputSocket are usually not visible in the GUI.
  */
 export default abstract class AbstractSocket implements ISocket {
   private __name: string;

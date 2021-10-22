@@ -6,6 +6,7 @@ import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
 
 /**
  * The VaryingOutputSocket is an output socket that sets a value to a varying variable.
+ * This socket can connects with VaryingInputSockets.
  * This socket can be used only with vertex shader nodes.
  */
 export default class VaryingOutputSocket
