@@ -17,10 +17,11 @@ import {
   ShaderFunctionCodeObject,
   NodeData,
   StandardInputSocketData,
-  StandardOutputSocketData,
   AttributeInputSocketData,
   VaryingInputSocketData,
   UniformInputSocketData,
+  StandardOutputSocketData,
+  VaryingOutputSocketData,
   SocketConnectionData,
 } from './types/CommonType';
 
@@ -45,9 +46,10 @@ export type {
   ShaderFunctionCodeObject,
   NodeData,
   StandardInputSocketData,
-  StandardOutputSocketData,
   AttributeInputSocketData,
   VaryingInputSocketData,
   UniformInputSocketData,
+  StandardOutputSocketData,
+  VaryingOutputSocketData,
   SocketConnectionData,
 };
