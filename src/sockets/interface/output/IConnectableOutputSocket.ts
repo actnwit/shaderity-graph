@@ -1,4 +1,4 @@
-import {INode} from '../../node/INode';
+import {INode} from '../../../node/INode';
 import {IConnectableSocket} from '../IConnectableSocket';
 import {IConnectableInputSocket} from '../input/IConnectableInputSocket';
 

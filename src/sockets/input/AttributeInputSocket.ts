@@ -1,12 +1,12 @@
 import AbstractSocket from '../abstract/AbstractSocket';
-import {SocketClassName} from '../ISocket';
+import {SocketClassName} from '../interface/ISocket';
 import {INode} from '../../node/INode';
 import {
   ShaderAttributeObject,
   ShaderAttributeVarType,
   ShaderPrecisionType,
 } from '../../types/CommonType';
-import {INonConnectableInputSocket} from './INonConnectableInputSocket';
+import {INonConnectableInputSocket} from '../interface/input/INonConnectableInputSocket';
 
 /**
  * The AttributeInputSocket is an input socket that receives an attribute variable.

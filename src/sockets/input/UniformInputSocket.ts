@@ -1,12 +1,12 @@
 import AbstractSocket from '../abstract/AbstractSocket';
-import {SocketClassName} from '../ISocket';
+import {SocketClassName} from '../interface/ISocket';
 import {INode} from '../../node/INode';
 import {
   ShaderPrecisionType,
   ShaderUniformObject,
   ShaderUniformVarTypeES3,
 } from '../../types/CommonType';
-import {INonConnectableInputSocket} from './INonConnectableInputSocket';
+import {INonConnectableInputSocket} from '../interface/input/INonConnectableInputSocket';
 
 /**
  * The UniformInputSocket is an input socket that receives an uniform variable.

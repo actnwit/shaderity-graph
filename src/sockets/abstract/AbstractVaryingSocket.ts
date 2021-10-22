@@ -7,7 +7,7 @@ import {
 } from '../../types/CommonType';
 import AbstractSocket from './AbstractSocket';
 // import VaryingInputSocket from './input/VaryingInputSocket';
-import {ISocket} from './../ISocket';
+import {ISocket} from '../interface/ISocket';
 // import VaryingOutputSocket from './output/VaryingOutputSocket';
 
 /**

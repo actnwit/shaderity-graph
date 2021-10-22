@@ -19,7 +19,7 @@ import AbstractConnectableSocket from '../sockets/abstract/AbstractConnectableSo
 import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
-import {ISocket} from '../sockets/ISocket';
+import {ISocket} from '../sockets/interface/ISocket';
 
 /**
  * A node is an object that contains functions to be used in the shader.

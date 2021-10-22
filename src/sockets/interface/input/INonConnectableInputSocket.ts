@@ -3,7 +3,7 @@ import {
   ShaderPrecisionType,
   ShaderUniformVarTypeES3,
   ShaderVaryingVarType,
-} from '../../types/CommonType';
+} from '../../../types/CommonType';
 import {ISocket} from '../ISocket';
 
 export interface INonConnectableInputSocket extends ISocket {

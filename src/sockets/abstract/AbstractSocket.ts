@@ -5,7 +5,7 @@ import {
   ShaderUniformVarTypeES3,
   ShaderVaryingVarType,
 } from '../../types/CommonType';
-import {ISocket, SocketClassName} from './../ISocket';
+import {ISocket, SocketClassName} from '../interface/ISocket';
 
 /**
  * The roll of the socket is to manage the input and output of each node.

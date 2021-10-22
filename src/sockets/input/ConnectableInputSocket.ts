@@ -1,7 +1,7 @@
 import {SocketTypeEnum} from '../../types/CommonEnum';
-import {SocketClassName} from '../ISocket';
-import {IConnectableInputSocket} from './IConnectableInputSocket';
-import {IConnectableOutputSocket} from '../output/IConnectableOutputSocket';
+import {SocketClassName} from '../interface/ISocket';
+import {IConnectableInputSocket} from '../interface/input/IConnectableInputSocket';
+import {IConnectableOutputSocket} from '../interface/output/IConnectableOutputSocket';
 import {INode} from '../../node/INode';
 import AbstractConnectableSocket from '../abstract/AbstractConnectableSocket';
 

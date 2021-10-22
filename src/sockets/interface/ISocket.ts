@@ -1,10 +1,10 @@
-import {SocketTypeEnum} from '../types/CommonEnum';
-import {INode} from '../node/INode';
+import {SocketTypeEnum} from '../../types/CommonEnum';
+import {INode} from '../../node/INode';
 import {
   ShaderAttributeVarType,
   ShaderUniformVarTypeES3,
   ShaderVaryingVarType,
-} from '../types/CommonType';
+} from '../../types/CommonType';
 
 export type SocketClassName =
   | 'ConnectableInputSocket'

@@ -1,4 +1,4 @@
-import {ISocket} from '../sockets/ISocket';
+import {ISocket} from '../sockets/interface/ISocket';
 import {ShaderStageEnum} from '../types/CommonEnum';
 
 export interface INode {

@@ -1,8 +1,8 @@
 import {INode} from '../../node/INode';
 import {ShaderVaryingObject} from '../../types/CommonType';
 import AbstractVaryingSocket from '../abstract/AbstractVaryingSocket';
-import {IVaryingOutputSocket} from '../output/IVaryingOutputSocket';
-import {IVaryingInputSocket} from './IVaryingInputSocket';
+import {IVaryingOutputSocket} from '../interface/output/IVaryingOutputSocket';
+import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
 
 /**
  * The VaryingInputSocket is an input socket that receives an varying variable.
