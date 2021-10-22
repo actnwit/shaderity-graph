@@ -5,6 +5,7 @@ import {
   ShaderityGraphJson,
   StandardInputSocketData,
   ShaderFunctionCodeObject,
+  VaryingInputSocketData,
 } from '../types/CommonType';
 
 /**
@@ -65,8 +66,11 @@ export default class JsonImporter {
           continue;
         }
 
-        const inputSocketData = socketData as StandardInputSocketData;
-        const socketConnectionData = inputSocketData.socketConnectionData;
+        const connectableInputSocketData = socketData as
+          | StandardInputSocketData
+          | VaryingInputSocketData;
+        const socketConnectionData =
+          connectableInputSocketData.socketConnectionData;
         if (socketConnectionData == null) {
           continue;
         }
@@ -77,7 +81,7 @@ export default class JsonImporter {
         const outputSocketNameOfInputNode =
           socketConnectionData.connectedSocketName;
         const outputNode = Node.getNodeById(outputNodeId);
-        const inputSocketNameOfOutputNode = inputSocketData.name;
+        const inputSocketNameOfOutputNode = connectableInputSocketData.name;
 
         Node.connectNodes(
           inputNode,
