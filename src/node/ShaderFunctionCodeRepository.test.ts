@@ -1,13 +1,11 @@
-import {ShaderFunctionCode} from '../types/CommonType';
+import {ShaderFunctionData} from '../types/CommonType';
 import ShaderFunctionCodeRepository from './ShaderFunctionCodeRepository';
 
-const shaderFunctionCode0: ShaderFunctionCode = {
-  shaderFunctionCode:
-    'void identityFunc(in vec2 inVec, out vec2 outVec) {\n  outVec = inVec;\n}\n\nvec3 identityFunc(in vec3 inVec, out vec3 outVec) {\n  outVec = inVec;\n}\n',
+const shaderFunctionCode0: ShaderFunctionData = {
+  code: 'void identityFunc(in vec2 inVec, out vec2 outVec) {\n  outVec = inVec;\n}\n\nvec3 identityFunc(in vec3 inVec, out vec3 outVec) {\n  outVec = inVec;\n}\n',
 };
-const shaderFunctionCode1: ShaderFunctionCode = {
-  shaderFunctionCode:
-    'void derivativePosX(in vec3 pos, out vec3 dx) {\n  dx = dFdx(pos);\n}\n',
+const shaderFunctionCode1: ShaderFunctionData = {
+  code: 'void derivativePosX(in vec3 pos, out vec3 dx) {\n  dx = dFdx(pos);\n}\n',
   extensions: ['GL_OES_standard_derivatives'],
 };
 

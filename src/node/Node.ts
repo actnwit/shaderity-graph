@@ -186,8 +186,7 @@ export default class Node implements INode {
     const shaderCode =
       ShaderFunctionCodeRepository.getShaderFunctionCode(
         this.__shaderFunctionName
-      )?.shaderFunctionCode ??
-      `// function name ${this.__shaderFunctionName} is not found`;
+      )?.code ?? `// function name ${this.__shaderFunctionName} is not found`;
 
     return shaderCode;
   }

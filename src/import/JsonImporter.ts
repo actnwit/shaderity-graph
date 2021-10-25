@@ -4,7 +4,7 @@ import {
   ShaderityGraphNode,
   ShaderityGraphJson,
   StandardInputSocketData,
-  ShaderFunctionCodeObject,
+  ShaderFunctions,
   VaryingInputSocketData,
 } from '../types/CommonType';
 
@@ -18,7 +18,7 @@ export default class JsonImporter {
    * @param json json to create node graph
    */
   static importShaderityGraphJson(json: ShaderityGraphJson) {
-    this.__setShaderFunctions(json.shaderFunctionCodeObject);
+    this.__setShaderFunctions(json.shaderFunctions);
 
     this.__createNodes(json.shaderityGraphNodes);
     this.__connectSockets(json.shaderityGraphNodes);
@@ -29,7 +29,7 @@ export default class JsonImporter {
    * Register the functions corresponding to each nodes in the ShaderFunctionCodeRepository
    */
   private static __setShaderFunctions(
-    shaderFunctionCodeObject: ShaderFunctionCodeObject
+    shaderFunctionCodeObject: ShaderFunctions
   ) {
     for (const nodeFunctionName in shaderFunctionCodeObject) {
       const shaderFunctionCode = shaderFunctionCodeObject[nodeFunctionName];
