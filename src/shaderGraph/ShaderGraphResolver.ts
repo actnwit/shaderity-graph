@@ -137,6 +137,8 @@ export default class ShaderGraphResolver {
   /**
    * @private
    * Set data of a node to shaderityObjectCreator
+   * This supports declaration of attribute, varying and uniform variables and
+   * definition of extensions and functions in shader
    * @param shaderityObjectCreator shaderityObjectCreator object of shaderity
    * @param node target node
    * @param functionNames array to prevent duplicate function definitions in shader
