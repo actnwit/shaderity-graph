@@ -14,6 +14,7 @@ import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
 import NodeSorter from './NodeSorter';
+import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
 
 /**
  * This class resolves the created node graph and creates vertex and fragment shaders.
@@ -193,6 +194,25 @@ export default class ShaderGraphResolver {
       functionNames.push(node.functionName);
       shaderityObjectCreator.addFunctionDefinition(node.shaderCode);
     }
+  }
+
+  /**
+   * @private
+   * Create varying variable name from varying output socket
+   * @param vOutputSocket varying output socket
+   */
+  private static __createVaryingVariableName(
+    vOutputSocket: VaryingOutputSocket
+  ) {
+    const outputNodes = vOutputSocket.connectedNodes;
+
+    let variableName = `${vOutputSocket.variableName}_node${vOutputSocket.node.id}_${vOutputSocket.name}_to`;
+    for (let j = 0; j < outputNodes.length; j++) {
+      const connectedNode = outputNodes[j];
+      variableName += `_node${connectedNode.id}`;
+    }
+
+    return variableName;
   }
 
   /**
