@@ -150,6 +150,8 @@ export default class ShaderGraphResolver {
       shaderityObjectCreator.addExtension(extension);
     }
 
+    const varyingOutputSockets: VaryingOutputSocket[] = [];
+
     const sockets = node._sockets;
     for (let i = 0; i < sockets.length; i++) {
       const socket = sockets[i];
@@ -165,17 +167,6 @@ export default class ShaderGraphResolver {
             location: aInputSocket.location,
           }
         );
-      } else if (socket.className === 'VaryingInputSocket') {
-        const vInputSocket = socket as VaryingInputSocket;
-
-        shaderityObjectCreator.addVaryingDeclaration(
-          `${vInputSocket.variableName}_${node.id}`,
-          vInputSocket.socketType,
-          {
-            precision: vInputSocket.precision,
-            interpolationType: vInputSocket.interpolationType,
-          }
-        );
       } else if (socket.className === 'UniformInputSocket') {
         const uInputSocket = socket as UniformInputSocket;
 
@@ -184,6 +175,53 @@ export default class ShaderGraphResolver {
           uInputSocket.socketType,
           {
             precision: uInputSocket.precision,
+          }
+        );
+      } else if (socket.className === 'VaryingInputSocket') {
+        // for fragment shader
+        const vInputSocket = socket as VaryingInputSocket;
+        const vOutputSocket = vInputSocket.connectedSocket as
+          | VaryingOutputSocket
+          | undefined;
+        if (vOutputSocket == null) {
+          console.error(
+            `ShaderGraphResolver.__addNodeDataToShaderityObjectCreator: variableInputSocket ${vInputSocket.name} does not connected to variableOutputSocket`
+          );
+          continue;
+        }
+
+        const alreadyDeclared = varyingOutputSockets.some(
+          elem => elem === vOutputSocket
+        );
+
+        if (alreadyDeclared) {
+          continue;
+        } else {
+          varyingOutputSockets.push(vOutputSocket);
+        }
+
+        const variableName = this.__createVaryingVariableName(vOutputSocket);
+
+        shaderityObjectCreator.addVaryingDeclaration(
+          variableName,
+          vOutputSocket.socketType,
+          {
+            precision: vOutputSocket.precision,
+            interpolationType: vOutputSocket.interpolationType,
+          }
+        );
+      } else if (socket.className === 'VaryingOutputSocket') {
+        // for vertex shader
+        const vOutputSocket = socket as VaryingOutputSocket;
+
+        const variableName = this.__createVaryingVariableName(vOutputSocket);
+
+        shaderityObjectCreator.addVaryingDeclaration(
+          variableName,
+          vOutputSocket.socketType,
+          {
+            precision: vOutputSocket.precision,
+            interpolationType: vOutputSocket.interpolationType,
           }
         );
       }
