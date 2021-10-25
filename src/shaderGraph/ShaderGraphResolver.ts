@@ -402,27 +402,39 @@ ${functionCalls}
         continue;
       }
 
-      const outputSocket = socket as StandardOutputSocket;
-      const outputNodes = outputSocket.connectedNodes;
-
-      // for debugging
-      // const inputSockets = outputSocket.connectedSockets;
-
-      let variableName = `node${node.id}_${outputSocket.name}_to`;
-      for (let j = 0; j < outputNodes.length; j++) {
-        const connectedNode = outputNodes[j];
-        variableName += `_node${connectedNode.id}`;
+      let variableName: string;
+      if (socket.className === 'VaryingOutputSocket') {
+        variableName = this.__createVaryingVariableName(
+          socket as VaryingOutputSocket
+        );
+      } else {
+        const outputSocket = socket as StandardOutputSocket;
+        const outputNodes = outputSocket.connectedNodes;
 
         // for debugging
-        // const inputSocketName = inputSockets[j].name;
-        // returnStr += `_node${connectedNode.id}_${inputSocketName}`;
+        // const inputSockets = outputSocket.connectedSockets;
+        variableName = `node${node.id}_${outputSocket.name}_to`;
+        for (let j = 0; j < outputNodes.length; j++) {
+          const connectedNode = outputNodes[j];
+          variableName += `_node${connectedNode.id}`;
+
+          // for debugging
+          // const inputSocketName = inputSockets[j].name;
+          // returnStr += `_node${connectedNode.id}_${inputSocketName}`;
+        }
       }
 
+      const outputSocket = socket as StandardOutputSocket | VaryingOutputSocket;
       const glslTypeStr = SocketType.getGlslTypeStr(outputSocket.socketType);
       returnStr += `  ${glslTypeStr} ${variableName};\n`;
 
       // set variable name corresponding to output socket
       variableNames[node.id][i] = variableName;
+
+      if (socket.className === 'VaryingOutputSocket') {
+        // VaryingInputSocket is present in the other shader
+        continue;
+      }
 
       // set variable name corresponding to input sockets
       const sInputSockets = outputSocket.connectedSockets;
@@ -431,6 +443,32 @@ ${functionCalls}
         const outputNode = sInputSocket.node;
         const connectedNodeId = outputNode.id;
         const socketIndex = outputNode._sockets.indexOf(sInputSocket);
+
+        variableNames[connectedNodeId][socketIndex] = variableName;
+      }
+    }
+
+    // for fragment shader
+    for (let i = 0; i < sockets.length; i++) {
+      const socket = sockets[i];
+      if (socket.className !== 'VaryingInputSocket') {
+        continue;
+      }
+
+      if (variableNames[node.id][i] !== null) {
+        continue;
+      }
+
+      const vInputSocket = socket as VaryingInputSocket;
+      const vOutputSocket = vInputSocket.connectedSocket as VaryingOutputSocket;
+      const variableName = this.__createVaryingVariableName(vOutputSocket);
+
+      const vInputSockets = vOutputSocket.connectedSockets;
+      for (let j = 0; j < vInputSockets.length; j++) {
+        const vInputSocket = vInputSockets[j];
+        const outputNode = vInputSocket.node;
+        const connectedNodeId = outputNode.id;
+        const socketIndex = outputNode._sockets.indexOf(vInputSocket);
 
         variableNames[connectedNodeId][socketIndex] = variableName;
       }
