@@ -11,6 +11,7 @@ import {
   VaryingInputSocketData,
   AttributeInputSocketData,
   VaryingOutputSocketData,
+  SocketData,
 } from '../types/CommonType';
 import StandardInputSocket from '../sockets/input/StandardInputSocket';
 import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
@@ -53,17 +54,7 @@ export default class Node implements INode {
    * @param socketDataArray define sockets. The order of the socketData must match the order of
    *                        the arguments of the node's shader function.
    */
-  constructor(
-    nodeData: NodeData,
-    socketDataArray: (
-      | StandardInputSocketData
-      | StandardOutputSocketData
-      | AttributeInputSocketData
-      | VaryingInputSocketData
-      | VaryingOutputSocketData
-      | UniformInputSocketData
-    )[]
-  ) {
+  constructor(nodeData: NodeData, socketDataArray: SocketData[]) {
     this.__shaderFunctionName = nodeData.shaderFunctionName;
     this.__shaderStage = nodeData.shaderStage;
 

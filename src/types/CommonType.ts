@@ -53,16 +53,17 @@ export interface ShaderityGraphJson {
   extras?: {[key: string]: unknown};
 }
 
+export type SocketData =
+  | StandardInputSocketData
+  | AttributeInputSocketData
+  | VaryingInputSocketData
+  | UniformInputSocketData
+  | StandardOutputSocketData
+  | VaryingOutputSocketData;
+
 export interface ShaderityGraphNode {
   nodeData: NodeData;
-  socketDataArray: (
-    | StandardInputSocketData
-    | AttributeInputSocketData
-    | VaryingInputSocketData
-    | UniformInputSocketData
-    | StandardOutputSocketData
-    | VaryingOutputSocketData
-  )[]; // the order must be the order of the function arguments for this node
+  socketDataArray: SocketData[]; // the order must be the order of the function arguments for this node
   extras?: {[key: string]: unknown};
 }
 
