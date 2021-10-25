@@ -363,10 +363,18 @@ ${functionCalls}
       const glslTypeStr = SocketType.getGlslTypeStr(outputSocket.socketType);
       returnStr += `  ${glslTypeStr} ${variableName};\n`;
 
-      variableNames[node.id][i] = variableName; // set variable name corresponding to output socket
-      for (let j = 0; j < outputNodes.length; j++) {
-        const connectedNodeId = outputNodes[j].id;
-        variableNames[connectedNodeId][j] = variableName; // set variable name corresponding to input sockets
+      // set variable name corresponding to output socket
+      variableNames[node.id][i] = variableName;
+
+      // set variable name corresponding to input sockets
+      const sInputSockets = outputSocket.connectedSockets;
+      for (let j = 0; j < sInputSockets.length; j++) {
+        const sInputSocket = sInputSockets[j];
+        const outputNode = sInputSocket.node;
+        const connectedNodeId = outputNode.id;
+        const socketIndex = outputNode._sockets.indexOf(sInputSocket);
+
+        variableNames[connectedNodeId][socketIndex] = variableName;
       }
     }
 
