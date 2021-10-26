@@ -24,8 +24,8 @@
   - [FragmentShaderGlobalData](#fragmentshaderglobaldata)
     - [ShaderPrecisionObject](#shaderprecisionobject)
     - [ShaderConstantValueObject](#shaderconstantvalueobject)
-  - [ShaderFunctionCodeObject](#shaderfunctioncodeobject)
-    - [ShaderFunctionCode](#shaderfunctioncode)
+  - [ShaderFunctions](#shaderfunctions)
+    - [ShaderFunctionData](#shaderfunctiondata)
 
 The `extras` property is an object that can be freely set by the user.
 
@@ -41,7 +41,7 @@ The root object of the JSON
 |shaderityGraphNodes|`Object[1-*]`|Data of each node itself and connection information|✅ Yes|
 |vertexShaderGlobalData|`Object`|Data to be set in the vertex shader|No|
 |fragmentShaderGlobalData|`Object`|Data to be set in the fragment shader|No|
-|shaderFunctionCodeObject|`Object`|Functions corresponding to each node|✅ Yes|
+|shaderFunctions|`Object`|Function data corresponding to each node|✅ Yes|
 |extras|`Object`|Application-specific data|No|
 
 <br>
@@ -86,11 +86,11 @@ Information to be set in the global space of the fragment shader.
 
 <br>
 
-### ShaderityGraphJson.shaderFunctionCodeObject ✅
+### ShaderityGraphJson.shaderFunctions ✅
 
 Functions corresponding to each node.
 
-- Type: `Object` ([ShaderFunctionCodeObject](#shaderfunctioncodeobject))
+- Type: `Object` ([ShaderFunctions](#shaderfunctions))
 
 - Required: Yes
 
@@ -166,9 +166,9 @@ Data of one node that is not associated with any other node
 
 ### NodeData.shaderFunctionName ✅
 
-Name of the function of the shader corresponding to this node.  
+Name of the function of the shader corresponding to this node.
 You need to set the data of the shader function with this name
-as key in the [ShaderFunctionCodeObject](#shaderfunctioncodeobject).
+as key in the [ShaderFunctions](#shaderfunctions).
 
 - Type: `string`
 
@@ -1185,9 +1185,9 @@ Application-specific data.
 
 ***
 
-## shaderFunctionCodeObject
+## ShaderFunctions
 
-The shaderFunctionCodeObject is an object that contains the data of the shader function of all the nodes. For the shaderFunctionCodeObject property, [shaderFunctionName](#nodedatashaderfunctionname-✅) is the key and the corresponding value is [shaderFunctionCode](#shaderfunctioncode).
+The ShaderFunctions is an object that contains the data of the shader function of all the nodes. For the ShaderFunctions property, [shaderFunctionName](#nodedatashaderfunctionname-✅) is the key and the corresponding value is [shaderFunctionData](#shaderfunctiondata).
 
 |Name|Type|Description|
 |:--|:--|:--|
@@ -1195,30 +1195,30 @@ The shaderFunctionCodeObject is an object that contains the data of the shader f
 
 <br>
 
-### shaderFunctionCodeObject.(shaderFunctionName)
+### ShaderFunctions.(shaderFunctionName)
 
 Data of the function corresponding to shaderFunctionName
 
-- Type: `Object` ([shaderFunctionCode](#shaderfunctioncode))
+- Type: `Object` ([shaderFunctionData](#shaderfunctiondata))
 
 <br>
 
 ***
 
-## shaderFunctionCode
+## shaderFunctionData
 
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|shaderFunctionCode|`string`|Data of the function corresponding to shaderFunctionName|true|
-|extensions|`string[0-*]`|Extensions required by shaderFunctionCode|true|
+|code|`string`|Data of the function corresponding to shaderFunctionName|true|
+|extensions|`string[0-*]`|Extensions required by shaderFunctionData|true|
 |extras|`Object`|Value to be assigned as Constant value|No|
 
 <br>
 
-### ShaderFunctionCode.shaderFunctionCode ✅
+### ShaderFunctionData.code ✅
 
-Function in the shader. You need to write a function with the name of the key [shaderFunctionName](#nodedatashaderfunctionname-✅) in shaderFunctionCodeObject. The function can be overloaded.
+Function code in the shader. You need to write a function with the name of the key [shaderFunctionName](#nodedatashaderfunctionname-✅) in ShaderFunctions. The function can be overloaded.
 
 - Type: `string`
 
@@ -1226,9 +1226,9 @@ Function in the shader. You need to write a function with the name of the key [s
 
 <br>
 
-### ShaderFunctionCode.extensions ✅
+### ShaderFunctionData.extensions ✅
 
-Extensions required by [shaderFunctionCode](#shaderfunctioncodeshaderfunctioncode-✅).
+Extensions required by [code](#shaderfunctiondatacode-✅).
 
 - Type: `string[0-*]`
 
@@ -1236,7 +1236,7 @@ Extensions required by [shaderFunctionCode](#shaderfunctioncodeshaderfunctioncod
 
 <br>
 
-### ShaderFunctionCode.extras
+### ShaderFunctionData.extras
 
 Application-specific data.
 
