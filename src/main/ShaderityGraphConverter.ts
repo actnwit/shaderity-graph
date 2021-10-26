@@ -2,7 +2,7 @@ import Node from '../node/Node';
 import {ShaderCodes, ShaderityGraphJson} from '../types/CommonType';
 import JsonImporter from '../import/JsonImporter';
 import ShaderGraphResolver from '../shaderGraph/ShaderGraphResolver';
-import ShaderFunctionCodeRepository from '../node/ShaderFunctionCodeRepository';
+import ShaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
 
 /**
  * This class converts ShaderityGraphJson into shader code for GLSL ES3.0.
@@ -43,7 +43,7 @@ export default class ShaderityGraphConverter {
     }
 
     Node.resetNodes();
-    ShaderFunctionCodeRepository.resetShaderFunctionCode();
+    ShaderFunctionDataRepository.resetShaderFunctionCode();
 
     JsonImporter.importShaderityGraphJson(json);
 

@@ -1,5 +1,5 @@
 import Node from '../node/Node';
-import ShaderFunctionCodeRepository from '../node/ShaderFunctionCodeRepository';
+import ShaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
 import {
   ShaderityGraphNode,
   ShaderityGraphJson,
@@ -26,14 +26,14 @@ export default class JsonImporter {
 
   /**
    * @private
-   * Register the functions corresponding to each nodes in the ShaderFunctionCodeRepository
+   * Register the functions corresponding to each nodes in the ShaderFunctionDataRepository
    */
   private static __setShaderFunctions(
     shaderFunctionCodeObject: ShaderFunctions
   ) {
     for (const nodeFunctionName in shaderFunctionCodeObject) {
       const shaderFunctionCode = shaderFunctionCodeObject[nodeFunctionName];
-      ShaderFunctionCodeRepository.setShaderFunctionCode(
+      ShaderFunctionDataRepository.setShaderFunctionCode(
         nodeFunctionName,
         shaderFunctionCode
       );

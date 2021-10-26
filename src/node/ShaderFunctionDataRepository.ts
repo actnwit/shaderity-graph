@@ -1,17 +1,17 @@
 import {ShaderFunctionData, ShaderFunctions} from '../types/CommonType';
 
 /**
- * ShaderFunctionCodeRepository is a class that manages the functions that nodes have.
- * Each node can get the ShaderFunctionCode from this class using shaderFunctionName
+ * ShaderFunctionDataRepository is a class that manages the functions that nodes have.
+ * Each node can get the ShaderFunctionData from this class using shaderFunctionName
  * as a key(see: node.shaderCode).
- * The shaderFunctionName must match the function name in the ShaderFunctionCode.
- * The function in the ShaderFunctionCode can be overloaded and
+ * The shaderFunctionName must match the function name in the ShaderFunctionData.
+ * The function in the ShaderFunctionData can be overloaded and
  * its behavior can be changed depending on the socket attached to the node.
  *
- * Note1: All the return type of shaderFunctionCode should be 'void'.
+ * Note1: All the return type of shaderFunctionData should be 'void'.
  *        This is because we do not use the return value of the function.
  *        You need to use 'out' qualifier to output value.
- * Note2: Users can write multiple functions in ShaderFunctionCode by being careful
+ * Note2: Users can write multiple functions in ShaderFunctionData by being careful
  *        about the function names.
  * Note3: The output of the fragment shader must be assigned to a variable with
  *        the name specified in ShaderityGraphJson.fragmentShaderGlobalData.outputVariableName.
@@ -23,11 +23,11 @@ import {ShaderFunctionData, ShaderFunctions} from '../types/CommonType';
  *          }
  */
 
-export default class ShaderFunctionCodeRepository {
+export default class ShaderFunctionDataRepository {
   private static __shaderFunctionCode: ShaderFunctions = {};
 
   /**
-   * Remove all set shaderFunctionCode
+   * Remove all set shaderFunctionData
    */
   static resetShaderFunctionCode() {
     this.__shaderFunctionCode = {};

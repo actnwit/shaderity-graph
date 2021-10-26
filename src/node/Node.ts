@@ -16,7 +16,7 @@ import {
 import StandardInputSocket from '../sockets/input/StandardInputSocket';
 import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
 import {INode} from './INode';
-import ShaderFunctionCodeRepository from './ShaderFunctionCodeRepository';
+import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
 import AbstractStandardSocket from '../sockets/abstract/AbstractStandardSocket';
 import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
@@ -68,12 +68,12 @@ export default class Node implements INode {
     }
 
     const existShaderFunctionCode =
-      ShaderFunctionCodeRepository.existShaderFunctionCode(
+      ShaderFunctionDataRepository.existShaderFunctionCode(
         this.__shaderFunctionName
       );
     if (!existShaderFunctionCode) {
       console.warn(
-        `Node: function ${this.__shaderFunctionName} is not found in ShaderFunctionCodeRepository`
+        `Node: function ${this.__shaderFunctionName} is not found in ShaderFunctionDataRepository`
       );
     }
 
@@ -180,11 +180,11 @@ export default class Node implements INode {
   }
 
   /**
-   * Get the corresponding function of this node from ShaderFunctionCodeRepository
+   * Get the corresponding function of this node from ShaderFunctionDataRepository
    */
   get shaderCode() {
     const shaderCode =
-      ShaderFunctionCodeRepository.getShaderFunctionCode(
+      ShaderFunctionDataRepository.getShaderFunctionCode(
         this.__shaderFunctionName
       )?.code ?? `// function name ${this.__shaderFunctionName} is not found`;
 
@@ -211,7 +211,7 @@ export default class Node implements INode {
    */
   get _extensions() {
     const extensions =
-      ShaderFunctionCodeRepository.getShaderFunctionCode(
+      ShaderFunctionDataRepository.getShaderFunctionCode(
         this.__shaderFunctionName
       )?.extensions ?? [];
 
