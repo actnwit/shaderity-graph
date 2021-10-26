@@ -24,22 +24,22 @@ import {ShaderFunctionData, ShaderFunctions} from '../types/CommonType';
  */
 
 export default class ShaderFunctionDataRepository {
-  private static __shaderFunctionCode: ShaderFunctions = {};
+  private static __shaderFunctions: ShaderFunctions = {};
 
   /**
    * Remove all set shaderFunctionData
    */
-  static resetShaderFunctionCode() {
-    this.__shaderFunctionCode = {};
+  static resetRepository() {
+    this.__shaderFunctions = {};
   }
 
   /**
-   * Check if there is a shaderFunctionCode with the specified function name
+   * Check if there is a shaderFunctionData with the specified function name
    * @returns boolean
    */
-  static existShaderFunctionCode(functionName: string) {
-    const shaderFunctionCode = this.__shaderFunctionCode[functionName];
-    if (shaderFunctionCode != null) {
+  static existShaderFunctionData(functionName: string) {
+    const shaderFunctionData = this.__shaderFunctions[functionName];
+    if (shaderFunctionData != null) {
       return true;
     } else {
       return false;
@@ -47,25 +47,25 @@ export default class ShaderFunctionDataRepository {
   }
 
   /**
-   * Add shaderFunctionCode to this repository
+   * Add shaderFunctionData to this repository
    */
-  static setShaderFunctionCode(
+  static setShaderFunctionData(
     functionName: string,
-    shaderFunctionCode: ShaderFunctionData
+    shaderFunctionData: ShaderFunctionData
   ) {
-    this.__shaderFunctionCode[functionName] = shaderFunctionCode;
+    this.__shaderFunctions[functionName] = shaderFunctionData;
   }
 
   /**
-   * Get the shaderFunctionCode corresponding to the function name
+   * Get the shaderFunctionData corresponding to the function name
    */
-  static getShaderFunctionCode(functionName: string) {
-    const shaderFunctionCode = this.__shaderFunctionCode[functionName];
-    if (shaderFunctionCode == null) {
+  static getShaderFunctionData(functionName: string) {
+    const shaderFunctionData = this.__shaderFunctions[functionName];
+    if (shaderFunctionData == null) {
       console.error(
-        `ShaderFunctionCodeRepository.getShaderFunctionCode: the data of ${functionName} is not found`
+        `ShaderFunctionDataRepository.getShaderFunctionData: the data of ${functionName} is not found`
       );
     }
-    return shaderFunctionCode;
+    return shaderFunctionData;
   }
 }

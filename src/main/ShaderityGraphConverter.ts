@@ -43,7 +43,7 @@ export default class ShaderityGraphConverter {
     }
 
     Node.resetNodes();
-    ShaderFunctionDataRepository.resetShaderFunctionCode();
+    ShaderFunctionDataRepository.resetRepository();
 
     JsonImporter.importShaderityGraphJson(json);
 
