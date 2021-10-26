@@ -36,7 +36,7 @@ const attributeInputSocketData: AttributeInputSocketData = {
   name: 'attributeSocket',
   direction: SocketDirection.Input,
   attributeData: {
-    variableName: 'position',
+    variableName: 'a_position',
     type: 'vec4',
   },
 };
@@ -45,7 +45,7 @@ const varyingInputSocketData: VaryingInputSocketData = {
   name: 'varyingSocket',
   direction: SocketDirection.Input,
   varyingData: {
-    variableName: 'texcoord',
+    variableName: 'v_texcoord',
     type: 'vec2',
     precision: 'mediump',
   },
@@ -55,7 +55,7 @@ const uniformInputSocketData: UniformInputSocketData = {
   name: 'uniformSocket',
   direction: SocketDirection.Input,
   uniformData: {
-    variableName: 'texcoord',
+    variableName: 'u_texcoord',
     type: 'float',
     precision: 'highp',
   },
@@ -146,25 +146,37 @@ test('StandardOutputSocket.connectedSockets', () => {
 });
 
 const attributeInputSocket = socketsOfNode0[2] as AttributeInputSocket;
-test('attributeInputSocket.connectedSockets', () => {
+test('attributeInputSocket.variableName', () => {
+  expect(attributeInputSocket.variableName).toBe('a_position');
+});
+
+test('attributeInputSocket.precision', () => {
   expect(attributeInputSocket.precision).toBe('highp');
 });
 
-test('attributeInputSocket.connectedSockets', () => {
+test('attributeInputSocket.location', () => {
   expect(attributeInputSocket.location).toBe(undefined);
 });
 
 const varyingInputSocket = socketsOfNode0[3] as VaryingInputSocket;
-test('varyingInputSocket.connectedSockets', () => {
+test('varyingInputSocket.variableName', () => {
+  expect(varyingInputSocket.variableName).toBe('v_texcoord');
+});
+
+test('varyingInputSocket.precision', () => {
   expect(varyingInputSocket.precision).toBe('mediump');
 });
 
-test('varyingInputSocket.connectedSockets', () => {
+test('varyingInputSocket.interpolationType', () => {
   expect(varyingInputSocket.interpolationType).toBe(undefined);
 });
 
 const uniformInputSocket = socketsOfNode0[4] as UniformInputSocket;
-test('uniformInputSocket.connectedSockets', () => {
+test('uniformInputSocket.variableName', () => {
+  expect(uniformInputSocket.variableName).toBe('u_texcoord');
+});
+
+test('uniformInputSocket.precision', () => {
   expect(uniformInputSocket.precision).toBe('highp');
 });
 
@@ -182,7 +194,7 @@ const standardInputSocketData1: StandardInputSocketData = {
 };
 
 const driverNodeData1: NodeData = {
-  shaderFunctionName: 'funcA',
+  shaderFunctionName: 'funcB',
   shaderStage: 'vertex',
 };
 
