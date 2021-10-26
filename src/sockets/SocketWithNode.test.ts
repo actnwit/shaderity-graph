@@ -7,6 +7,7 @@ import {
   NodeData,
   UniformInputSocketData,
   VaryingInputSocketData,
+  VaryingOutputSocketData,
 } from '../types/CommonType';
 import AttributeInputSocket from './input/AttributeInputSocket';
 import StandardInputSocket from './input/StandardInputSocket';
@@ -14,6 +15,8 @@ import UniformInputSocket from './input/UniformInputSocket';
 import VaryingInputSocket from './input/VaryingInputSocket';
 import StandardOutputSocket from './output/StandardOutputSocket';
 import AbstractStandardSocket from './abstract/AbstractStandardSocket';
+import VaryingOutputSocket from './output/VaryingOutputSocket';
+import AbstractVaryingSocket from './abstract/AbstractVaryingSocket';
 
 // This is the integration test of socket with node.
 
@@ -41,8 +44,8 @@ const attributeInputSocketData: AttributeInputSocketData = {
   },
 };
 
-const varyingInputSocketData: VaryingInputSocketData = {
-  name: 'varyingSocket',
+const varyingInputSocketData0: VaryingInputSocketData = {
+  name: 'varyingInputSocket0',
   direction: SocketDirection.Input,
   varyingData: {
     variableName: 'v_texcoord',
@@ -61,6 +64,17 @@ const uniformInputSocketData: UniformInputSocketData = {
   },
 };
 
+const varyingOutputSocketData: VaryingOutputSocketData = {
+  name: 'varyingOutputSocket',
+  direction: SocketDirection.Output,
+  varyingData: {
+    variableName: 'v_position',
+    type: 'vec4',
+    precision: 'lowp',
+    interpolationType: 'flat',
+  },
+};
+
 const driverNodeData0: NodeData = {
   shaderFunctionName: 'funcA',
   shaderStage: 'vertex',
@@ -70,8 +84,9 @@ const sockets0 = [
   standardInputSocketData0,
   standardOutputSocketData,
   attributeInputSocketData,
-  varyingInputSocketData,
+  varyingInputSocketData0,
   uniformInputSocketData,
+  varyingOutputSocketData,
 ];
 
 const node0 = new Node(driverNodeData0, sockets0);
@@ -89,14 +104,16 @@ test('socket.className', () => {
   expect(socketsOfNode0[2].className).toBe('AttributeInputSocket');
   expect(socketsOfNode0[3].className).toBe('VaryingInputSocket');
   expect(socketsOfNode0[4].className).toBe('UniformInputSocket');
+  expect(socketsOfNode0[5].className).toBe('VaryingOutputSocket');
 });
 
 test('socket.name', () => {
   expect(socketsOfNode0[0].name).toBe('inputSocket0');
   expect(socketsOfNode0[1].name).toBe('outputSocket');
   expect(socketsOfNode0[2].name).toBe('attributeSocket');
-  expect(socketsOfNode0[3].name).toBe('varyingSocket');
+  expect(socketsOfNode0[3].name).toBe('varyingInputSocket0');
   expect(socketsOfNode0[4].name).toBe('uniformSocket');
+  expect(socketsOfNode0[5].name).toBe('varyingOutputSocket');
 });
 
 test('socket.socketType', () => {
@@ -105,6 +122,7 @@ test('socket.socketType', () => {
   expect(socketsOfNode0[2].socketType).toBe('vec4');
   expect(socketsOfNode0[3].socketType).toBe('vec2');
   expect(socketsOfNode0[4].socketType).toBe('float');
+  expect(socketsOfNode0[5].socketType).toBe('vec4');
 });
 
 test('socket.node', () => {
@@ -113,6 +131,7 @@ test('socket.node', () => {
   expect(socketsOfNode0[2].node).toStrictEqual(node0);
   expect(socketsOfNode0[3].node).toStrictEqual(node0);
   expect(socketsOfNode0[4].node).toStrictEqual(node0);
+  expect(socketsOfNode0[5].node).toStrictEqual(node0);
 });
 
 test('socket.node', () => {
@@ -121,6 +140,7 @@ test('socket.node', () => {
   expect(socketsOfNode0[2].isInputSocket()).toBe(true);
   expect(socketsOfNode0[3].isInputSocket()).toBe(true);
   expect(socketsOfNode0[4].isInputSocket()).toBe(true);
+  expect(socketsOfNode0[5].isInputSocket()).toBe(false);
 });
 
 const standardInputSocket0 = socketsOfNode0[0] as StandardInputSocket;
@@ -180,6 +200,19 @@ test('uniformInputSocket.precision', () => {
   expect(uniformInputSocket.precision).toBe('highp');
 });
 
+const varyingOutputSocket = socketsOfNode0[5] as VaryingOutputSocket;
+test('varyingOutputSocket.variableName', () => {
+  expect(varyingOutputSocket.variableName).toBe('v_position');
+});
+
+test('varyingOutputSocket.precision', () => {
+  expect(varyingOutputSocket.precision).toBe('lowp');
+});
+
+test('varyingOutputSocket.interpolationType', () => {
+  expect(varyingOutputSocket.interpolationType).toBe('flat');
+});
+
 // --- test for connecting sockets  -------------------------------------------------
 
 const standardInputSocketData1: StandardInputSocketData = {
@@ -187,10 +220,27 @@ const standardInputSocketData1: StandardInputSocketData = {
   type: SocketType.Vec2,
   direction: SocketDirection.Input,
   defaultValue: [0, 0],
-  socketConnectionData: {
-    connectedSocketName: 'outputSocket',
-    connectedNodeId: 0,
+  // Here, we connect sockets manually
+  // socketConnectionData: {
+  //   connectedSocketName: 'outputSocket',
+  //   connectedNodeId: 0,
+  // },
+};
+
+const varyingInputSocketData1: VaryingInputSocketData = {
+  name: 'varyingInputSocket1',
+  direction: SocketDirection.Input,
+  varyingData: {
+    variableName: 'v_position',
+    type: 'vec4',
+    precision: 'lowp',
+    interpolationType: 'flat',
   },
+  // Here, we connect sockets manually
+  // socketConnectionData: {
+  //   connectedSocketName: 'varyingOutputSocket',
+  //   connectedNodeId: 0,
+  // },
 };
 
 const driverNodeData1: NodeData = {
@@ -198,14 +248,27 @@ const driverNodeData1: NodeData = {
   shaderStage: 'vertex',
 };
 
+const driverNodeData2: NodeData = {
+  shaderFunctionName: 'funcC',
+  shaderStage: 'vertex',
+};
+
 const sockets1 = [standardInputSocketData1];
+
+const sockets2 = [varyingInputSocketData1];
 
 const node1 = new Node(driverNodeData1, sockets1);
 console.log('Please ignore the console.error above if the test passes.');
 
+const node2 = new Node(driverNodeData2, sockets2);
+console.log('Please ignore the console.error above if the test passes.');
+
 const socketsOfNode1 = node1._sockets;
+const socketsOfNode2 = node2._sockets;
 
 const standardInputSocket1 = socketsOfNode1[0] as StandardInputSocket;
+const varyingInputSocket1 = socketsOfNode2[0] as VaryingInputSocket;
+
 test('AbstractStandardSocket.connectSockets', () => {
   AbstractStandardSocket.connectSockets(
     standardInputSocket1,
@@ -220,4 +283,20 @@ test('AbstractStandardSocket.connectSockets', () => {
   ]);
   expect(standardInputSocket1.connectedNode).toStrictEqual(node0);
   expect(standardOutputSocket.connectedNodes).toStrictEqual([node1]);
+});
+
+test('AbstractVaryingSocket.connectSockets', () => {
+  AbstractVaryingSocket.connectSockets(
+    varyingInputSocket1,
+    varyingOutputSocket
+  );
+
+  expect(varyingInputSocket1.connectedSocket).toStrictEqual(
+    varyingOutputSocket
+  );
+  expect(varyingOutputSocket.connectedSockets).toStrictEqual([
+    varyingInputSocket1,
+  ]);
+  expect(varyingInputSocket1.connectedNode).toStrictEqual(node0);
+  expect(varyingOutputSocket.connectedNodes).toStrictEqual([node2]);
 });
