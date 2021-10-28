@@ -43,10 +43,28 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
     if (inputSocket.socketType === outputSocket.socketType) {
       inputSocket._connectSocketWith(outputSocket);
       outputSocket._connectSocketWith(inputSocket);
+
+      this.__updateVariableName(outputSocket);
     } else {
       console.error(
         'AbstractVaryingSocket.connectSockets: socketType is different'
       );
+    }
+  }
+
+  /**
+   * @private
+   * Update the variable name of the output socket of the argument and
+   * all input sockets connected to it to the same unique value
+   * @param outputSocket target output socket
+   */
+  private static __updateVariableName(outputSocket: IVaryingOutputSocket) {
+    const newVariableName = outputSocket._createNewVariableName();
+
+    outputSocket._setVariableName(newVariableName);
+    const inputSockets = outputSocket.connectedSockets;
+    for (const inputSocket of inputSockets) {
+      inputSocket._setVariableName(newVariableName);
     }
   }
 

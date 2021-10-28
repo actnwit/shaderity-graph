@@ -19,4 +19,5 @@ export interface IVaryingInputSocket extends ISocket {
   get connectedSocket(): IVaryingOutputSocket | undefined;
 
   _connectSocketWith(socket: ISocket): void;
+  _setVariableName(newVariableName: string): void;
 }

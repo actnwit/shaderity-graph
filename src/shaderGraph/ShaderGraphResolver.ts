@@ -211,10 +211,8 @@ export default class ShaderGraphResolver {
           varyingOutputSockets.push(vOutputSocket);
         }
 
-        const variableName = this.__createVaryingVariableName(vOutputSocket);
-
         shaderityObjectCreator.addVaryingDeclaration(
-          variableName,
+          vOutputSocket.variableName,
           vOutputSocket.socketType,
           {
             precision: vOutputSocket.precision,
@@ -225,10 +223,8 @@ export default class ShaderGraphResolver {
         // for vertex shader
         const vOutputSocket = socket as VaryingOutputSocket;
 
-        const variableName = this.__createVaryingVariableName(vOutputSocket);
-
         shaderityObjectCreator.addVaryingDeclaration(
-          variableName,
+          vOutputSocket.variableName,
           vOutputSocket.socketType,
           {
             precision: vOutputSocket.precision,
@@ -243,25 +239,6 @@ export default class ShaderGraphResolver {
       functionNames.push(node.functionName);
       shaderityObjectCreator.addFunctionDefinition(node.shaderCode);
     }
-  }
-
-  /**
-   * @private
-   * Create varying variable name from varying output socket
-   * @param vOutputSocket varying output socket
-   */
-  private static __createVaryingVariableName(
-    vOutputSocket: VaryingOutputSocket
-  ) {
-    const outputNodes = vOutputSocket.connectedNodes;
-
-    let variableName = `${vOutputSocket.variableName}_node${vOutputSocket.node.id}_${vOutputSocket.name}_to`;
-    for (let j = 0; j < outputNodes.length; j++) {
-      const connectedNode = outputNodes[j];
-      variableName += `_node${connectedNode.id}`;
-    }
-
-    return variableName;
   }
 
   /**
@@ -415,16 +392,15 @@ ${functionCalls}
 
       let variableName: string;
       if (socket.className === 'VaryingOutputSocket') {
-        variableName = this.__createVaryingVariableName(
-          socket as VaryingOutputSocket
-        );
+        const vOutputSocket = socket as VaryingOutputSocket;
+        variableName = vOutputSocket.variableName;
       } else {
-        const outputSocket = socket as StandardOutputSocket;
-        const outputNodes = outputSocket.connectedNodes;
+        const sOutputSocket = socket as StandardOutputSocket;
+        const outputNodes = sOutputSocket.connectedNodes;
 
         // for debugging
         // const inputSockets = outputSocket.connectedSockets;
-        variableName = `node${node.id}_${outputSocket.name}_to`;
+        variableName = `node${node.id}_${sOutputSocket.name}_to`;
         for (let j = 0; j < outputNodes.length; j++) {
           const connectedNode = outputNodes[j];
           variableName += `_node${connectedNode.id}`;
@@ -472,7 +448,6 @@ ${functionCalls}
 
       const vInputSocket = socket as VaryingInputSocket;
       const vOutputSocket = vInputSocket.connectedSocket as VaryingOutputSocket;
-      const variableName = this.__createVaryingVariableName(vOutputSocket);
 
       const vInputSockets = vOutputSocket.connectedSockets;
       for (let j = 0; j < vInputSockets.length; j++) {
@@ -481,7 +456,8 @@ ${functionCalls}
         const connectedNodeId = outputNode.id;
         const socketIndex = outputNode._sockets.indexOf(vInputSocket);
 
-        variableNames[connectedNodeId][socketIndex] = variableName;
+        variableNames[connectedNodeId][socketIndex] =
+          vOutputSocket.variableName;
       }
     }
 

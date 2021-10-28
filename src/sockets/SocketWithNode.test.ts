@@ -310,7 +310,7 @@ test('AbstractVaryingSocket.connectSockets', () => {
   );
 
   expect(varyingInputSocket1.variableName).toStrictEqual(
-    'v_2_varyingInputSocket1'
+    'v_0_varyingOutputSocket_to_2'
   );
   expect(varyingInputSocket1.connectedSocket).toStrictEqual(
     varyingOutputSocket

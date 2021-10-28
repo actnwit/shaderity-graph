@@ -19,5 +19,6 @@ export interface IVaryingOutputSocket extends ISocket {
   get connectedSockets(): IVaryingInputSocket[];
 
   _connectSocketWith(socket: ISocket): void;
+  _setVariableName(newVariableName: string): void;
   _createNewVariableName(): string;
 }
