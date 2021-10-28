@@ -14,7 +14,8 @@ import {IVaryingOutputSocket} from '../interface/output/IVaryingOutputSocket';
  * The user can connect sockets by Node.connectNodes method.
  */
 export default abstract class AbstractVaryingSocket extends AbstractSocket {
-  private __variableName: string;
+  protected __rawVariableName: string | undefined;
+  protected __variableName: string;
   private __type: ShaderVaryingVarType;
   private __precision: ShaderPrecisionType;
   private __interpolationType: ShaderVaryingInterpolationType | undefined;
@@ -22,7 +23,9 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
   constructor(node: INode, socketName: string, varying: ShaderVaryingObject) {
     super(node, socketName);
 
-    this.__variableName = varying.variableName;
+    this.__rawVariableName = varying.variableName;
+    this.__variableName =
+      this.__rawVariableName ?? `v_${node.id}_${socketName}`;
     this.__type = varying.type;
     this.__precision = varying.precision ?? 'highp';
     this.__interpolationType = varying.interpolationType;
