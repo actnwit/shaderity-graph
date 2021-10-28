@@ -1,7 +1,7 @@
 import AbstractSocket from '../abstract/AbstractSocket';
 import {INode} from '../../node/INode';
 import {
-  ShaderAttributeObject,
+  ShaderAttributeData,
   ShaderAttributeVarType,
   ShaderPrecisionType,
 } from '../../types/CommonType';
@@ -22,11 +22,7 @@ export default class AttributeInputSocket
   private __precision: ShaderPrecisionType;
   private __location: number | undefined;
 
-  constructor(
-    node: INode,
-    socketName: string,
-    attribute: ShaderAttributeObject
-  ) {
+  constructor(node: INode, socketName: string, attribute: ShaderAttributeData) {
     super(node, socketName);
 
     this.__variableName = attribute.variableName;

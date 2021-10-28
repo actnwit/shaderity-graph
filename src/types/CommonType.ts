@@ -104,9 +104,11 @@ export interface StandardOutputSocketData extends AbstractSocketData {
   type: SocketTypeEnum;
 }
 
+export type ShaderAttributeData = ShaderAttributeObject;
+
 export interface AttributeInputSocketData extends AbstractSocketData {
   direction: 'input';
-  attributeData: ShaderAttributeObject;
+  attributeData: ShaderAttributeData;
 }
 
 export interface ShaderVaryingInputData {
