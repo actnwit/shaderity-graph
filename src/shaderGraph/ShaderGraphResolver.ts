@@ -154,21 +154,30 @@ export default class ShaderGraphResolver {
 
     const varyingOutputSockets: VaryingOutputSocket[] = [];
 
+    // to avoid duplication of attributes
+    const attributeNames: string[] = [];
+
     const sockets = node._sockets;
     for (let i = 0; i < sockets.length; i++) {
       const socket = sockets[i];
 
       if (socket.className === 'AttributeInputSocket') {
         const aInputSocket = socket as AttributeInputSocket;
+        const variableName = aInputSocket.variableName;
+
+        if (attributeNames.some(name => name === variableName)) {
+          continue;
+        }
 
         shaderityObjectCreator.addAttributeDeclaration(
-          `${aInputSocket.variableName}_${node.id}`,
+          `${variableName}`,
           aInputSocket.socketType,
           {
             precision: aInputSocket.precision,
             location: aInputSocket.location,
           }
         );
+        attributeNames.push(variableName);
       } else if (socket.className === 'UniformInputSocket') {
         const uInputSocket = socket as UniformInputSocket;
 
@@ -499,7 +508,7 @@ ${functionCalls}
         const aInputSocket = inputSocket as AttributeInputSocket;
         const variableName = aInputSocket.variableName;
 
-        variableNames[nodeId][i] = `${variableName}_${nodeId}`;
+        variableNames[nodeId][i] = `${variableName}`;
       } else if (inputSocket.className === 'VaryingInputSocket') {
         const vInputSocket = inputSocket as VaryingInputSocket;
         const variableName = vInputSocket.variableName;
