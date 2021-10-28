@@ -57,6 +57,8 @@ export default class Node implements INode {
   constructor(nodeData: NodeData, socketDataArray: SocketData[]) {
     this.__shaderFunctionName = nodeData.shaderFunctionName;
     this.__shaderStage = nodeData.shaderStage;
+    this.__id = Node.__nodes.length;
+    Node.__nodes[this.__id] = this;
 
     for (let i = 0; i < socketDataArray.length; i++) {
       const socketData = socketDataArray[i];
@@ -76,9 +78,6 @@ export default class Node implements INode {
         `Node: function ${this.__shaderFunctionName} is not found in ShaderFunctionDataRepository`
       );
     }
-
-    this.__id = Node.__nodes.length;
-    Node.__nodes[this.__id] = this;
   }
 
   /**
