@@ -182,7 +182,7 @@ export default class ShaderGraphResolver {
         const uInputSocket = socket as UniformInputSocket;
 
         shaderityObjectCreator.addUniformDeclaration(
-          `${uInputSocket.variableName}_${node.id}`,
+          `${uInputSocket.variableName}`,
           uInputSocket.socketType,
           {
             precision: uInputSocket.precision,
@@ -516,9 +516,7 @@ ${functionCalls}
         variableNames[nodeId][i] = `${variableName}_${nodeId}`;
       } else if (inputSocket.className === 'UniformInputSocket') {
         const uInputSocket = inputSocket as UniformInputSocket;
-        const variableName = uInputSocket.variableName;
-
-        variableNames[nodeId][i] = `${variableName}_${nodeId}`;
+        variableNames[nodeId][i] = uInputSocket.variableName;
       }
     }
   }
