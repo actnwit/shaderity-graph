@@ -8,7 +8,6 @@ import {
   ShaderPrecisionObject as _ShaderPrecisionObject,
   ShaderAttributeObject as _ShaderAttributeObject,
   ShaderConstantValueObject as _ShaderConstantValueObject,
-  ShaderUniformObject as _ShaderUniformObject,
   ShaderVaryingObject as _ShaderVaryingObject,
 } from 'shaderity/dist/esm';
 import {
@@ -26,7 +25,6 @@ export type ShaderUniformVarTypeES3 = _ShaderUniformVarTypeES3;
 export type ShaderPrecisionObject = _ShaderPrecisionObject;
 export type ShaderAttributeObject = _ShaderAttributeObject;
 export type ShaderConstantValueObject = _ShaderConstantValueObject;
-export type ShaderUniformObject = _ShaderUniformObject;
 export type ShaderVaryingObject = _ShaderVaryingObject;
 
 export interface ShaderCodes {
@@ -124,7 +122,13 @@ export interface VaryingOutputSocketData extends AbstractSocketData {
   varyingData: ShaderVaryingObject;
 }
 
+export interface ShaderUniformData {
+  type: ShaderUniformVarTypeES3;
+  variableName?: string;
+  precision?: ShaderPrecisionType;
+}
+
 export interface UniformInputSocketData extends AbstractSocketData {
   direction: 'input';
-  uniformData: ShaderUniformObject;
+  uniformData: ShaderUniformData;
 }

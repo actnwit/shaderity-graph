@@ -2,7 +2,7 @@ import AbstractSocket from '../abstract/AbstractSocket';
 import {INode} from '../../node/INode';
 import {
   ShaderPrecisionType,
-  ShaderUniformObject,
+  ShaderUniformData,
   ShaderUniformVarTypeES3,
 } from '../../types/CommonType';
 import {INonStandardInputSocket} from '../interface/input/INonStandardInputSocket';
@@ -20,7 +20,7 @@ export default class UniformInputSocket
   private __type: ShaderUniformVarTypeES3;
   private __precision: ShaderPrecisionType;
 
-  constructor(node: INode, socketName: string, uniform: ShaderUniformObject) {
+  constructor(node: INode, socketName: string, uniform: ShaderUniformData) {
     super(node, socketName);
 
     this.__variableName = uniform.variableName ?? `u_${node.id}_${socketName}`;
