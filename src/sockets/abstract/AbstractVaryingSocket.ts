@@ -2,7 +2,7 @@ import {INode} from '../../node/INode';
 import {
   ShaderPrecisionType,
   ShaderVaryingInterpolationType,
-  ShaderVaryingObject,
+  ShaderVaryingData,
   ShaderVaryingVarType,
 } from '../../types/CommonType';
 import AbstractSocket from './AbstractSocket';
@@ -20,7 +20,7 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
   private __precision: ShaderPrecisionType;
   private __interpolationType: ShaderVaryingInterpolationType | undefined;
 
-  constructor(node: INode, socketName: string, varying: ShaderVaryingObject) {
+  constructor(node: INode, socketName: string, varying: ShaderVaryingData) {
     super(node, socketName);
 
     this.__rawVariableName = varying.variableName;

@@ -8,7 +8,6 @@ import {
   ShaderPrecisionObject as _ShaderPrecisionObject,
   ShaderAttributeObject as _ShaderAttributeObject,
   ShaderConstantValueObject as _ShaderConstantValueObject,
-  ShaderVaryingObject as _ShaderVaryingObject,
 } from 'shaderity/dist/esm';
 import {
   ShaderStageEnum,
@@ -25,7 +24,6 @@ export type ShaderUniformVarTypeES3 = _ShaderUniformVarTypeES3;
 export type ShaderPrecisionObject = _ShaderPrecisionObject;
 export type ShaderAttributeObject = _ShaderAttributeObject;
 export type ShaderConstantValueObject = _ShaderConstantValueObject;
-export type ShaderVaryingObject = _ShaderVaryingObject;
 
 export interface ShaderCodes {
   vertexShader: string;
@@ -111,15 +109,22 @@ export interface AttributeInputSocketData extends AbstractSocketData {
   attributeData: ShaderAttributeObject;
 }
 
+export interface ShaderVaryingData {
+  type: ShaderVaryingVarType;
+  variableName?: string;
+  precision?: ShaderPrecisionType;
+  interpolationType?: ShaderVaryingInterpolationType;
+}
+
 export interface VaryingInputSocketData extends AbstractSocketData {
   direction: 'input';
-  varyingData: ShaderVaryingObject;
+  varyingData: ShaderVaryingData;
   socketConnectionData?: SocketConnectionData;
 }
 
 export interface VaryingOutputSocketData extends AbstractSocketData {
   direction: 'output';
-  varyingData: ShaderVaryingObject;
+  varyingData: ShaderVaryingData;
 }
 
 export interface ShaderUniformData {
