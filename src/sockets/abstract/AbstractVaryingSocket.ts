@@ -79,6 +79,14 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
   }
 
   /**
+   * @private
+   * change variable name of this socket
+   */
+  _setVariableName(newVariableName: string) {
+    this.__variableName = newVariableName;
+  }
+
+  /**
    * Get the class name of this socket
    */
   abstract get className(): 'VaryingInputSocket' | 'VaryingOutputSocket';
