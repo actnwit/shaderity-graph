@@ -49,7 +49,6 @@ const varyingInputSocketData0: VaryingInputSocketData = {
   direction: SocketDirection.Input,
   varyingData: {
     type: 'vec2',
-    precision: 'mediump',
   },
 };
 
@@ -199,7 +198,7 @@ test('varyingInputSocket.variableName', () => {
 });
 
 test('varyingInputSocket.precision', () => {
-  expect(varyingInputSocket.precision).toBe('mediump');
+  expect(varyingInputSocket.precision).toBe('highp');
 });
 
 test('varyingInputSocket.interpolationType', () => {
@@ -252,8 +251,6 @@ const varyingInputSocketData1: VaryingInputSocketData = {
   direction: SocketDirection.Input,
   varyingData: {
     type: 'vec4',
-    precision: 'lowp',
-    interpolationType: 'flat',
   },
   // Here, we connect sockets manually
   // socketConnectionData: {

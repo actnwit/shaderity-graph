@@ -109,21 +109,27 @@ export interface AttributeInputSocketData extends AbstractSocketData {
   attributeData: ShaderAttributeObject;
 }
 
-export interface ShaderVaryingData {
+export interface ShaderVaryingInputData {
+  type: ShaderVaryingVarType;
+}
+
+export interface ShaderVaryingOutputData {
   type: ShaderVaryingVarType;
   precision?: ShaderPrecisionType;
   interpolationType?: ShaderVaryingInterpolationType;
 }
 
+export type ShaderVaryingData = ShaderVaryingOutputData;
+
 export interface VaryingInputSocketData extends AbstractSocketData {
   direction: 'input';
-  varyingData: ShaderVaryingData;
+  varyingData: ShaderVaryingInputData;
   socketConnectionData?: SocketConnectionData;
 }
 
 export interface VaryingOutputSocketData extends AbstractSocketData {
   direction: 'output';
-  varyingData: ShaderVaryingData;
+  varyingData: ShaderVaryingOutputData;
 }
 
 export interface ShaderUniformData {
