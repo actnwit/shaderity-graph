@@ -58,7 +58,7 @@ const uniformInputSocketData: UniformInputSocketData = {
   name: 'uniformSocket',
   direction: SocketDirection.Input,
   uniformData: {
-    variableName: 'u_texcoord',
+    variableName: 'u_float',
     type: 'float',
     precision: 'highp',
   },
@@ -193,7 +193,7 @@ test('varyingInputSocket.interpolationType', () => {
 
 const uniformInputSocket = socketsOfNode0[4] as UniformInputSocket;
 test('uniformInputSocket.variableName', () => {
-  expect(uniformInputSocket.variableName).toBe('u_texcoord');
+  expect(uniformInputSocket.variableName).toBe('u_float');
 });
 
 test('uniformInputSocket.precision', () => {

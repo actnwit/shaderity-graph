@@ -23,7 +23,7 @@ export default class UniformInputSocket
   constructor(node: INode, socketName: string, uniform: ShaderUniformObject) {
     super(node, socketName);
 
-    this.__variableName = uniform.variableName;
+    this.__variableName = uniform.variableName ?? `u_${node.id}_${socketName}`;
     this.__type = uniform.type;
     this.__precision = uniform.precision ?? 'highp';
   }
