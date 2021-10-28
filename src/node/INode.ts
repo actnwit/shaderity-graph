@@ -11,4 +11,5 @@ export interface INode {
 
   getInputNode(socketName: string): INode | undefined;
   getOutputNodes(socketName: string): INode[];
+  getVariableNameOfInputSocket(socketName: string): string;
 }
