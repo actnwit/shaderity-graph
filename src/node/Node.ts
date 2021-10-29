@@ -50,6 +50,9 @@ export default class Node implements INode {
   protected __id: number;
   protected __sockets: ISocket[] = [];
 
+  private static __existVertexShaderOutputSocket = false;
+  private static __existFragmentShaderOutputSocket = false;
+
   /**
    * Create a new node
    * @param nodeData define shader function name and shader stage
@@ -119,6 +122,8 @@ export default class Node implements INode {
    * Remove all created nodes
    */
   static resetNodes() {
+    this.__existVertexShaderOutputSocket = false;
+    this.__existFragmentShaderOutputSocket = false;
     this.__nodes.length = 0;
   }
 
@@ -425,6 +430,7 @@ export default class Node implements INode {
         socketName
       );
     } else {
+      this.__checkUniquenessOfShaderOutputSocket();
       outputSocket = new ShaderOutputSocket(this, socketName);
     }
 
@@ -440,6 +446,28 @@ export default class Node implements INode {
       return true;
     } else {
       return false;
+    }
+  }
+
+  /**
+   * @private
+   * Display an error message if there are two or more ShaderOutputSockets in the same shader stage.
+   */
+  private __checkUniquenessOfShaderOutputSocket() {
+    if (this.shaderStage === ShaderStage.Vertex) {
+      if (Node.__existVertexShaderOutputSocket) {
+        console.error(
+          'Node.__addOutputSocket: ShaderOutputSocket must be one in the vertex shader'
+        );
+      }
+      Node.__existVertexShaderOutputSocket = true;
+    } else {
+      if (Node.__existFragmentShaderOutputSocket) {
+        console.error(
+          'Node.__addOutputSocket: ShaderOutputSocket must be one in the fragment shader'
+        );
+      }
+      Node.__existFragmentShaderOutputSocket = true;
     }
   }
 }
