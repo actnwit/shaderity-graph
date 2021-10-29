@@ -379,6 +379,10 @@ export default class Node implements INode {
     this.__sockets.push(inputSocket);
   }
 
+  /**
+   * @private
+   * Check for duplicate socket names in the input sockets.
+   */
   private __checkDuplicationOfInputSocket(socketName: string) {
     const existSocketName = this.__sockets.some(
       socket => socket.isInputSocket() && socket.socketName === socketName
@@ -437,6 +441,10 @@ export default class Node implements INode {
     this.__sockets.push(outputSocket);
   }
 
+  /**
+   * @private
+   * Check for duplicate socket names in the output sockets.
+   */
   private __checkDuplicationOfOutputSocket(socketName: string) {
     const existSocketName = this.__sockets.some(
       socket => !socket.isInputSocket() && socket.socketName === socketName
