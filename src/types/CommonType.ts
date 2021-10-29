@@ -55,7 +55,8 @@ export type SocketData =
   | VaryingInputSocketData
   | UniformInputSocketData
   | StandardOutputSocketData
-  | VaryingOutputSocketData;
+  | VaryingOutputSocketData
+  | ShaderOutputSocketData;
 
 export interface ShaderityGraphNode {
   nodeData: NodeData;
@@ -143,4 +144,8 @@ export interface ShaderUniformData {
 export interface UniformInputSocketData extends AbstractSocketData {
   direction: 'input';
   uniformData: ShaderUniformData;
+}
+
+export interface ShaderOutputSocketData extends AbstractSocketData {
+  direction: 'output';
 }

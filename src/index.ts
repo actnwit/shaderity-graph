@@ -28,6 +28,7 @@ import {
   StandardOutputSocketData,
   VaryingOutputSocketData,
   SocketConnectionData,
+  ShaderOutputSocketData,
 } from './types/CommonType';
 
 export default {
@@ -62,4 +63,5 @@ export type {
   StandardOutputSocketData,
   VaryingOutputSocketData,
   SocketConnectionData,
+  ShaderOutputSocketData,
 };

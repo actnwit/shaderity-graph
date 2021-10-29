@@ -12,6 +12,7 @@ import {
   AttributeInputSocketData,
   VaryingOutputSocketData,
   SocketData,
+  ShaderOutputSocketData,
 } from '../types/CommonType';
 import StandardInputSocket from '../sockets/input/StandardInputSocket';
 import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
@@ -24,6 +25,7 @@ import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import {ISocket} from '../sockets/interface/ISocket';
 import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
 import AbstractVaryingSocket from '../sockets/abstract/AbstractVaryingSocket';
+import ShaderOutputSocket from '../sockets/output/ShaderOutputSocket';
 
 /**
  * A node is an object that contains functions to be used in the shader.
@@ -390,7 +392,10 @@ export default class Node implements INode {
    */
 
   private __addOutputSocket(
-    socketData: StandardOutputSocketData | VaryingOutputSocketData
+    socketData:
+      | StandardOutputSocketData
+      | VaryingOutputSocketData
+      | ShaderOutputSocketData
   ) {
     const socketName = socketData.socketName;
 
@@ -412,13 +417,15 @@ export default class Node implements INode {
         socketName,
         vSocketData.varyingData
       );
-    } else {
+    } else if ((socketData as StandardOutputSocketData).type != null) {
       const sSocketData = socketData as StandardOutputSocketData;
       outputSocket = new StandardOutputSocket(
         sSocketData.type,
         this,
         socketName
       );
+    } else {
+      outputSocket = new ShaderOutputSocket(this, socketName);
     }
 
     this.__sockets.push(outputSocket);
