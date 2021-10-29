@@ -12,7 +12,8 @@ export type SocketClassName =
   | 'VaryingInputSocket'
   | 'UniformInputSocket'
   | 'StandardOutputSocket'
-  | 'VaryingOutputSocket';
+  | 'VaryingOutputSocket'
+  | 'ShaderOutputSocket';
 
 export interface ISocket {
   get className(): SocketClassName;
