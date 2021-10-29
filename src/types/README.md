@@ -18,10 +18,8 @@
       - [StandardOutputSocketData](#standardoutputsocketdata)
       - [VaryingOutputSocketData](#varyingoutputsocketdata)
         - [ShaderVaryingOutputData](#shadervaryingoutputdata)
-  - [VertexShaderGlobalData](#vertexshaderglobaldata)
-    - [ShaderPrecisionObject](#shaderprecisionobject)
-    - [ShaderConstantValueObject](#shaderconstantvalueobject)
-  - [FragmentShaderGlobalData](#fragmentshaderglobaldata)
+      - [ShaderOutputSocketData](#shaderoutputsocketdata)
+  - [ShaderGlobalData](#shaderglobaldata)
     - [ShaderPrecisionObject](#shaderprecisionobject)
     - [ShaderConstantValueObject](#shaderconstantvalueobject)
   - [ShaderFunctions](#shaderfunctions)
@@ -70,7 +68,7 @@ Data that each node has. The index of the array is the id of the node. e.g. The 
 
 Information to be set in the global space of the vertex shader.
 
-- Type: `Object` ([VertexShaderGlobalData](#vertexshaderglobaldata))
+- Type: `Object` ([ShaderGlobalData](#shaderglobaldata))
 
 - Required: No
 
@@ -80,7 +78,7 @@ Information to be set in the global space of the vertex shader.
 
 Information to be set in the global space of the fragment shader.
 
-- Type: `Object` ([FragmentShaderGlobalData](#fragmentshaderglobaldata))
+- Type: `Object` ([ShaderGlobalData](#shaderglobaldata))
 
 - Required: No
 
@@ -205,26 +203,30 @@ Application-specific data.
 
 ## AbstractSocketData
 
-All nodes input and output data through sockets. There are three ways to input and output data.
-1. input/output between nodes
-2. receiving input of attribute/varying/uniform variables
-3. passing output of varying variables
+Data input and output for all nodes can be divided into the following three types:
+1. input/output between nodes (Use the varying variable when communicating with different shaders)
+2. input of attribute/uniform variables
+3. Shader output with gl_Position and gl_FragColor (or variables for color output of fragment shader)
 
-Normally, attribute sockets and uniform sockets are not shown in the GUI.
+In shaderity graph, all nodes input and output data through sockets. The following types of sockets are available. The numbers on the right show the correspondence with the types above.
 
+- [StandardInputSocketData](#standardinputsocketdata) (1)
+- [StandardOutputSocketData](#standardoutputsocketdata) (1)
+- [VaryingInputSocketData](#varyinginputsocketdata) (1)
+- [VaryingOutputSocketData](#varyingoutputsocketdata) (1)
+- [AttributeInputSocketData](#attributeinputsocketdata) (2)
+- [UniformInputSocketData](#uniforminputsocketdata) (2)
+- [ShaderOutputSocketData](#shaderoutputsocketdata) (3)
 
-AbstractSocketData is an abstract object for convenience to group several objects together. The concrete objects are
-[StandardInputSocketData](#standardinputsocketdata),
-[StandardOutputSocketData](#standardoutputsocketdata),
-[AttributeInputSocketData](#attributeinputsocketdata),
-[VaryingInputSocketData](#varyinginputsocketdata),
-[VaryingOutputSocketData](#varyingoutputsocketdata), and
-[UniformInputSocketData](#uniforminputsocketdata).
-The attribute input socket only works with a vertex shader.
-The varying input socket only works with a fragment shader.
-The varying output socket only works with a vertex shader.
+Note:
+1. Normally, type 2 and 3 are not shown in the GUI.
+2. The attribute input socket only works with a vertex shader.
+3. The varying input socket only works with a fragment shader.
+4. The varying output socket only works with a vertex shader.
+5. There is only one shader output socket for each shader.
 
-All concrete objects have the following properties in common:
+AbstractSocketData is an abstract object for convenience to group these objects together.
+All concrete objects have the following properties:
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
@@ -988,24 +990,70 @@ Interpolation type of the varying variable(for GLSL ES3.0)
 
 <br>
 
-***
 
-## VertexShaderGlobalData
-
-Data to be set in the vertex shader
+## ShaderOutputSocketData
+Output data to gl_Position, gl_FragColor (or variables for color output of fragment shader). The type is fixed at Vec4. The argument corresponding to this socket in shaderFunctionData.code must be of type `out vec4`.
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|defineDirectives|`string[0-*]`|Define directives used in the vertex shader|No|
-|precision|`Object`|Precision of each type in the vertex shader|No|
-|constantValues|`Object`|Constant values used in the vertex shader|No|
+|socketName|`string`|Name of this socket|✅ Yes|
+|direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
 |extras|`Object`|Application-specific data|No|
 
 <br>
 
-### VertexShaderGlobalData.defineDirectives
+### ShaderOutputSocketData.socketName ✅
 
-Define directives used in the vertex shader.
+Name of this socket. For sockets in the same node, the AbstractSocketData.name must be unique.
+
+- Type: `string`
+
+- Required: Yes
+
+<br>
+
+### ShaderOutputSocketData.direction ✅
+
+This property must be set `output`. See [AbstractSocketData.direction](#abstractsocketdatadirection) for detail.
+
+- Type: `string`
+
+- Required: Yes
+
+- Allowed values
+  - `output`: This socket passes data.
+
+<br>
+
+### ShaderOutputSocketData.extras
+
+Application-specific data.
+
+- Type: `Object`
+
+- Required: No
+
+<br>
+
+
+***
+
+## ShaderGlobalData
+
+Data to be set in the each shader
+
+|Name|Type|Description|Required|
+|:--|:--|:--|:--|
+|defineDirectives|`string[0-*]`|Define directives used in a shader|No|
+|precision|`Object`|Precision of each type in a shader|No|
+|constantValues|`Object`|Constant values used in a shader|No|
+|extras|`Object`|Application-specific data|No|
+
+<br>
+
+### ShaderGlobalData.defineDirectives
+
+Define directives used in a shader.
 
 - Type: `string[0-*]`
 
@@ -1013,9 +1061,9 @@ Define directives used in the vertex shader.
 
 <br>
 
-### VertexShaderGlobalData.precision
+### ShaderGlobalData.precision
 
-Default precision of each type in the vertex shader
+Default precision of each type in a shader
 
 - Type: `Object` ([ShaderPrecisionObject](#shaderprecisionobject))
 
@@ -1023,9 +1071,9 @@ Default precision of each type in the vertex shader
 
 <br>
 
-### VertexShaderGlobalData.constantValues
+### ShaderGlobalData.constantValues
 
-Constant values used in the vertex shader
+Constant values used in a shader
 
 - Type: `Object[0-*]` ([ShaderConstantValueObject](#shaderconstantvalueobject))
 
@@ -1033,7 +1081,7 @@ Constant values used in the vertex shader
 
 <br>
 
-### VertexShaderGlobalData.extras
+### ShaderGlobalData.extras
 
 Application-specific data.
 
@@ -1164,73 +1212,6 @@ Constant value to assign to a constant variable
 - Type: `number[1-16]`
 
 - Required: Yes
-
-<br>
-
-***
-
-## fragmentShaderGlobalData
-
-Data to be set in the fragment shader
-
-|Name|Type|Description|Required|
-|:--|:--|:--|:--|
-|defineDirectives|`string[0-*]`|Define directives used in the fragment shader|No|
-|precision|`Object`|Precision of each type in the fragment shader|No|
-|constantValues|`Object`|Constant values used in the fragment shader|No|
-|outputVariableName|`string`|Variable name for assigning the vec4 of the fragment shader output|No|
-|extras|`Object`|Application-specific data|No|
-
-<br>
-
-### fragmentShaderGlobalData.defineDirectives
-
-Define directives used in the fragment shader.
-
-- Type: `string[0-*]`
-
-- Required: No
-
-<br>
-
-### fragmentShaderGlobalData.precision
-
-Default precision of each type in the fragment shader
-
-- Type: `Object` ([ShaderPrecisionObject](#shaderprecisionobject))
-
-- Required: No
-
-<br>
-
-### fragmentShaderGlobalData.constantValues
-
-Constant values used in the fragment shader
-
-- Type: `Object[0-*]` ([ShaderConstantValueObject](#shaderconstantvalueobject))
-
-- Required: No
-
-<br>
-
-### fragmentShaderGlobalData.outputVariableName
-
-Variable name for assigning the vec4 of the fragment shader output
-TODO: Prepare a socket for the output of the fragment shader and remove this property
-
-- Type: `string`
-
-- Required: No
-
-<br>
-
-### fragmentShaderGlobalData.extras
-
-Application-specific data.
-
-- Type: `Object`
-
-- Required: No
 
 <br>
 
