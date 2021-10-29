@@ -3,7 +3,7 @@ import {
   VertexShaderGlobalData,
   FragmentShaderGlobalData,
 } from '../types/CommonType';
-import {SocketType} from '../types/CommonEnum';
+import {ShaderStage, SocketType} from '../types/CommonEnum';
 import Shaderity, {
   ShaderStageStr,
   ShaderityObjectCreator,
@@ -126,12 +126,6 @@ export default class ShaderGraphResolver {
         );
       }
     }
-
-    const outputVariableName = (globalData as FragmentShaderGlobalData)
-      .outputVariableName;
-    if (outputVariableName != null) {
-      shaderityObjectCreator.updateOutputColorVariableName(outputVariableName);
-    }
   }
 
   /**
@@ -248,6 +242,7 @@ export default class ShaderGraphResolver {
    * @returns shader code of main function
    */
   private static __createMainFunctionCode(sortedNodes: Node[]) {
+    // stock variable names to be used as arguments in each node's function call
     // usage: variableNames[node.id][index of socket] = variableName;
     const variableNames: Array<Array<string>> =
       this.__initializeVariableNames(sortedNodes);
@@ -270,6 +265,7 @@ export default class ShaderGraphResolver {
       );
 
       this.__addStorageQualifierVariableName(node, variableNames);
+      this.__addShaderOutputVariableName(node, variableNames);
     }
 
     let functionCalls = '';
@@ -497,6 +493,25 @@ ${functionCalls}
       } else if (inputSocket.className === 'UniformInputSocket') {
         const uInputSocket = inputSocket as UniformInputSocket;
         variableNames[nodeId][i] = uInputSocket.variableName;
+      }
+    }
+  }
+
+  private static __addShaderOutputVariableName(
+    node: Node,
+    variableNames: string[][]
+  ): void {
+    const nodeId = node.id;
+
+    const sockets = node._sockets;
+    for (let i = 0; i < sockets.length; i++) {
+      const inputSocket = sockets[i];
+      if (inputSocket.className === 'ShaderOutputSocket') {
+        if (node.shaderStage === ShaderStage.Vertex) {
+          variableNames[nodeId][i] = 'gl_Position';
+        } else {
+          variableNames[nodeId][i] = 'renderTarget0';
+        }
       }
     }
   }
