@@ -166,7 +166,8 @@ Data of one node that is not associated with any other node
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|shaderFunctionName|`string`|Name of the function of the shader corresponding to this node|✅ Yes|
+|shaderFunctionName|`string`|Name of the function which is used by this node|✅ Yes|
+|shaderFunctionDataKey|`string`|Key of the shader function data|✅ Yes|
 |shaderStage|`string`|Specifies whether this node is used by the vertex shader or the fragment shader.|✅ Yes|
 |extras|`Object`|Application-specific data|No|
 
@@ -174,9 +175,21 @@ Data of one node that is not associated with any other node
 
 ### NodeData.shaderFunctionName ✅
 
-Name of the function of the shader corresponding to this node.
-You need to set the data of the shader function with this name
-as key in the [ShaderFunctions](#shaderfunctions).
+Function name in the shader corresponding to this node.
+The function is called within the main function.
+The function definition is written in the shaderFunctionData corresponding to the [shaderFunctionDataKey](#shaderfunctiondatakey).
+
+- Type: `string`
+
+- Required: Yes
+
+<br>
+
+### NodeData.shaderFunctionDataKey ✅
+
+Key of the shader function data.
+When this node is used, the shader function data corresponding to this key will be used in the shader.
+You need to set the shader function data with this key in the [ShaderFunctions](#shaderfunctions).
 
 - Type: `string`
 
@@ -1058,7 +1071,7 @@ Output data to gl_Position, gl_FragColor (or variables for color output of fragm
 
 ### ShaderOutputSocketData.socketName ✅
 
-Name of this socket. For sockets in the same node, the AbstractSocketData.name must be unique.
+Name of this socket. For sockets in the same node, the AbstractSocketData.socketName must be unique.
 
 - Type: `string`
 
@@ -1273,17 +1286,17 @@ Constant value to assign to a constant variable
 
 ## ShaderFunctions
 
-The ShaderFunctions is an object that contains the data of the shader function of all the nodes. For the ShaderFunctions property, [shaderFunctionName](#nodedatashaderfunctionname-✅) is the key and the corresponding value is [shaderFunctionData](#shaderfunctiondata).
+The ShaderFunctions is an object that contains the data of the shader function of all the nodes. For the ShaderFunctions property, [shaderFunctionDataKey](#nodedatashaderfunctiondatakey-✅) is the key and the corresponding value is [shaderFunctionData](#shaderfunctiondata).
 
 |Name|Type|Description|
 |:--|:--|:--|
-|(shaderFunctionName)[1*-]|`Object`|Data of the function corresponding to shaderFunctionName|
+|(shaderFunctionDataKey)[1*-]|`Object`|Data of the function corresponding to shaderFunctionDataKey|
 
 <br>
 
-### ShaderFunctions.(shaderFunctionName)
+### ShaderFunctions.(shaderFunctionDataKey)
 
-Data of the function corresponding to shaderFunctionName
+Data of the function corresponding to shaderFunctionDataKey
 
 - Type: `Object` ([shaderFunctionData](#shaderfunctiondata))
 
@@ -1296,7 +1309,7 @@ Data of the function corresponding to shaderFunctionName
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|code|`string`|Data of the function corresponding to shaderFunctionName|true|
+|code|`string`|Shader code|true|
 |extensions|`string[0-*]`|Extensions required by shaderFunctionData|true|
 |extras|`Object`|Value to be assigned as Constant value|No|
 
@@ -1304,7 +1317,17 @@ Data of the function corresponding to shaderFunctionName
 
 ### ShaderFunctionData.code ✅
 
-Function code in the shader. You need to write a function with the name of the key [shaderFunctionName](#nodedatashaderfunctionname-✅) in ShaderFunctions. The function can be overloaded.
+Function codes used in the shader.
+You need to write a function with the name of [shaderFunctionName](#nodedatashaderfunctionname-✅) of the node corresponding to this ShaderFunctionData to this property.
+The function with the name of [shaderFunctionName](#nodedatashaderfunctionname-✅) is the entry point of ShaderFunctionData.code. 
+
+Note
+1. In the function whose name is shaderFunctionName, all inputs and outputs should be written as arguments. The return value of the function itself should be of type void. The return value is not used in shaders.
+2. It is possible to write multiple functions in ShaderFunctionData.code. In this case, be careful not to duplicate the name of the function in the other ShaderFunctionData.code.
+3. By changing the shaderFunctionName of a node, you can switch the function to be executed by that node. The function corresponding to the changed shaderFunctionName must be written in the ShaderFunctionData.code.
+
+
+The function can be overloaded.
 
 - Type: `string`
 
