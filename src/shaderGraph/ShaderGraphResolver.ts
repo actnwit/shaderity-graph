@@ -421,20 +421,18 @@ ${functionCalls}
       // set variable name corresponding to output socket
       variableNames[node.id][i] = variableName;
 
-      if (socket.className === 'VaryingOutputSocket') {
-        // VaryingInputSocket is present in the other shader
-        continue;
-      }
+      // VaryingInputSocket is present in the other shader stage
+      if (socket.className === 'StandardOutputSocket') {
+        // set variable name corresponding to input sockets
+        const sInputSockets = outputSocket.connectedSockets;
+        for (let j = 0; j < sInputSockets.length; j++) {
+          const sInputSocket = sInputSockets[j];
+          const outputNode = sInputSocket.node;
+          const connectedNodeId = outputNode.id;
+          const socketIndex = outputNode._sockets.indexOf(sInputSocket);
 
-      // set variable name corresponding to input sockets
-      const sInputSockets = outputSocket.connectedSockets;
-      for (let j = 0; j < sInputSockets.length; j++) {
-        const sInputSocket = sInputSockets[j];
-        const outputNode = sInputSocket.node;
-        const connectedNodeId = outputNode.id;
-        const socketIndex = outputNode._sockets.indexOf(sInputSocket);
-
-        variableNames[connectedNodeId][socketIndex] = variableName;
+          variableNames[connectedNodeId][socketIndex] = variableName;
+        }
       }
     }
 
