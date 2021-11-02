@@ -394,7 +394,7 @@ ${functionCalls}
       if (socket.className === 'VaryingOutputSocket') {
         const vOutputSocket = socket as VaryingOutputSocket;
         variableName = vOutputSocket.variableName;
-      } else {
+      } else if (socket.className === 'StandardOutputSocket') {
         const sOutputSocket = socket as StandardOutputSocket;
         const outputNodes = sOutputSocket.connectedNodes;
 
@@ -409,6 +409,9 @@ ${functionCalls}
           // const inputSocketName = inputSockets[j].socketName;
           // returnStr += `_node${connectedNode.id}_${inputSocketName}`;
         }
+      } else {
+        // ShaderOutputSocket
+        continue;
       }
 
       const outputSocket = socket as StandardOutputSocket | VaryingOutputSocket;
