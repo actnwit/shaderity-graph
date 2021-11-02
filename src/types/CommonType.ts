@@ -37,7 +37,7 @@ export interface ShaderFunctionData {
 }
 
 export interface ShaderFunctions {
-  [shaderFunctionName: string]: ShaderFunctionData;
+  [shaderFunctionDataKey: string]: ShaderFunctionData;
 }
 
 export interface ShaderityGraphJson {
@@ -66,6 +66,7 @@ export interface ShaderityGraphNode {
 
 export interface NodeData {
   shaderFunctionName: string;
+  shaderFunctionDataKey: string;
   shaderStage: ShaderStageEnum;
   extras?: {[key: string]: unknown};
 }

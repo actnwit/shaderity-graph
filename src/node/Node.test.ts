@@ -7,16 +7,19 @@ import Node from './Node';
 
 const vertexNodeData: NodeData = {
   shaderFunctionName: 'funcA',
+  shaderFunctionDataKey: 'funcA',
   shaderStage: 'vertex',
 };
 
 const fragmentNodeData: NodeData = {
   shaderFunctionName: 'funcB',
+  shaderFunctionDataKey: 'funcB',
   shaderStage: 'fragment',
 };
 
 const noUseNodeData: NodeData = {
   shaderFunctionName: 'funcC',
+  shaderFunctionDataKey: 'funcC',
   shaderStage: 'noUse',
 };
 

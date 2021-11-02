@@ -93,6 +93,7 @@ const shaderOutputSocketData: ShaderOutputSocketData = {
 
 const driverNodeData0: NodeData = {
   shaderFunctionName: 'funcA',
+  shaderFunctionDataKey: 'funcA',
   shaderStage: 'vertex',
 };
 
@@ -279,11 +280,13 @@ const varyingInputSocketData1: VaryingInputSocketData = {
 
 const driverNodeData1: NodeData = {
   shaderFunctionName: 'funcB',
+  shaderFunctionDataKey: 'funcB',
   shaderStage: 'vertex',
 };
 
 const driverNodeData2: NodeData = {
   shaderFunctionName: 'funcC',
+  shaderFunctionDataKey: 'funcC',
   shaderStage: 'vertex',
 };
 
