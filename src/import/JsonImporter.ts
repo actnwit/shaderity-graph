@@ -29,10 +29,10 @@ export default class JsonImporter {
    * Register the functions corresponding to each nodes in the ShaderFunctionDataRepository
    */
   private static __setShaderFunctions(shaderFunctions: ShaderFunctions) {
-    for (const nodeFunctionName in shaderFunctions) {
-      const shaderFunctionData = shaderFunctions[nodeFunctionName];
+    for (const shaderFunctionDataKey in shaderFunctions) {
+      const shaderFunctionData = shaderFunctions[shaderFunctionDataKey];
       ShaderFunctionDataRepository.setShaderFunctionData(
-        nodeFunctionName,
+        shaderFunctionDataKey,
         shaderFunctionData
       );
     }
