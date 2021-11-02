@@ -37,8 +37,8 @@ export default class ShaderFunctionDataRepository {
    * Check if there is a shaderFunctionData with the specified function name
    * @returns boolean
    */
-  static existShaderFunctionData(functionName: string) {
-    const shaderFunctionData = this.__shaderFunctions[functionName];
+  static existShaderFunctionData(shaderFunctionDataKey: string) {
+    const shaderFunctionData = this.__shaderFunctions[shaderFunctionDataKey];
     if (shaderFunctionData != null) {
       return true;
     } else {
@@ -50,20 +50,20 @@ export default class ShaderFunctionDataRepository {
    * Add shaderFunctionData to this repository
    */
   static setShaderFunctionData(
-    functionName: string,
+    shaderFunctionDataKey: string,
     shaderFunctionData: ShaderFunctionData
   ) {
-    this.__shaderFunctions[functionName] = shaderFunctionData;
+    this.__shaderFunctions[shaderFunctionDataKey] = shaderFunctionData;
   }
 
   /**
    * Get the shaderFunctionData corresponding to the function name
    */
-  static getShaderFunctionData(functionName: string) {
-    const shaderFunctionData = this.__shaderFunctions[functionName];
+  static getShaderFunctionData(shaderFunctionDataKey: string) {
+    const shaderFunctionData = this.__shaderFunctions[shaderFunctionDataKey];
     if (shaderFunctionData == null) {
       console.error(
-        `ShaderFunctionDataRepository.getShaderFunctionData: the data of ${functionName} is not found`
+        `ShaderFunctionDataRepository.getShaderFunctionData: the data of ${shaderFunctionDataKey} is not found`
       );
     }
     return shaderFunctionData;
