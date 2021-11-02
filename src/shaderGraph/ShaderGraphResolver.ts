@@ -73,13 +73,13 @@ export default class ShaderGraphResolver {
       );
     }
 
-    const functionNames: string[] = [];
+    const shaderFunctionDataKeys: string[] = [];
     for (let i = 0; i < sortedNodes.length; i++) {
       const node = sortedNodes[i];
       this.__addNodeDataToShaderityObjectCreator(
         shaderityObjectCreator,
         node,
-        functionNames
+        shaderFunctionDataKeys
       );
     }
 
@@ -132,12 +132,12 @@ export default class ShaderGraphResolver {
    * definition of extensions and functions in shader
    * @param shaderityObjectCreator shaderityObjectCreator object of shaderity
    * @param node target node
-   * @param functionNames array to prevent duplicate function definitions in shader
+   * @param shaderFunctionDataKeys array to prevent duplicate function definitions in shader
    */
   private static __addNodeDataToShaderityObjectCreator(
     shaderityObjectCreator: ShaderityObjectCreator,
     node: Node,
-    functionNames: string[]
+    shaderFunctionDataKeys: string[]
   ) {
     for (const extension of node._extensions) {
       shaderityObjectCreator.addExtension(extension);
@@ -225,9 +225,11 @@ export default class ShaderGraphResolver {
       }
     }
 
-    const existSameNameNode = functionNames.includes(node.functionName);
-    if (!existSameNameNode) {
-      functionNames.push(node.functionName);
+    const existShaderFunction = shaderFunctionDataKeys.includes(
+      node._shaderFunctionDataKey
+    );
+    if (!existShaderFunction) {
+      shaderFunctionDataKeys.push(node._shaderFunctionDataKey);
       shaderityObjectCreator.addFunctionDefinition(node.shaderCode);
     }
   }
