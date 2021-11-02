@@ -369,10 +369,10 @@ export default class Node implements INode {
     } else {
       const sSocketData = socketData as StandardInputSocketData;
       inputSocket = new StandardInputSocket(
-        sSocketData.type,
+        sSocketData.shaderData.type,
         this,
         socketName,
-        sSocketData.defaultValue
+        sSocketData.shaderData.defaultValue
       );
     }
 
@@ -426,10 +426,10 @@ export default class Node implements INode {
         socketName,
         vSocketData.varyingData
       );
-    } else if ((socketData as StandardOutputSocketData).type != null) {
+    } else if ((socketData as StandardOutputSocketData).shaderData != null) {
       const sSocketData = socketData as StandardOutputSocketData;
       outputSocket = new StandardOutputSocket(
-        sSocketData.type,
+        sSocketData.shaderData.type,
         this,
         socketName
       );
