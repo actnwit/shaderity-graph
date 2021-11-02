@@ -181,7 +181,14 @@ export default class Node implements INode {
   }
 
   /**
-   * Get the name of the function that corresponds to this node in the shader
+   * Set the name of the function that corresponds to the entry point of this node in the shader
+   */
+  set functionName(name: string) {
+    this.__shaderFunctionName = name;
+  }
+
+  /**
+   * Get the name of the function that corresponds to entry point of this node in the shader
    */
   get functionName() {
     return this.__shaderFunctionName;
@@ -212,6 +219,14 @@ export default class Node implements INode {
    */
   get id() {
     return this.__id;
+  }
+
+  /**
+   * @private
+   * Get shaderFunctionDataKey
+   */
+  get _shaderFunctionDataKey() {
+    return this.__shaderFunctionDataKey;
   }
 
   /**

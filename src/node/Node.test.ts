@@ -60,6 +60,20 @@ test('node.functionName', () => {
   expect(nodeForVertexShader.functionName).toBe('functionA');
   expect(nodeForFragmentShader.functionName).toBe('functionB');
   expect(nodeNotUseInShader.functionName).toBe('functionC');
+
+  nodeForVertexShader.functionName = 'functionD';
+  nodeForFragmentShader.functionName = 'functionE';
+  nodeNotUseInShader.functionName = 'functionF';
+
+  expect(nodeForVertexShader.functionName).toBe('functionD');
+  expect(nodeForFragmentShader.functionName).toBe('functionE');
+  expect(nodeNotUseInShader.functionName).toBe('functionF');
+});
+
+test('node.functionName', () => {
+  expect(nodeForVertexShader._shaderFunctionDataKey).toBe('funcA');
+  expect(nodeForFragmentShader._shaderFunctionDataKey).toBe('funcB');
+  expect(nodeNotUseInShader._shaderFunctionDataKey).toBe('funcC');
 });
 
 test('node.shaderCode', () => {
