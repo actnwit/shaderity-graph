@@ -18,7 +18,12 @@ export default class VaryingInputSocket
   _connectedSocket: IVaryingOutputSocket | undefined = undefined;
 
   constructor(node: INode, socketName: string, varying: ShaderVaryingData) {
-    super(node, socketName, varying);
+    super(
+      node,
+      socketName,
+      varying,
+      `v_non_connected_${node.id}_${socketName}`
+    );
   }
 
   /**

@@ -111,7 +111,6 @@ export interface AttributeInputSocketData extends AbstractSocketData {
 
 export interface ShaderVaryingData {
   type: ShaderVaryingVarType;
-  variableName?: string;
   precision?: ShaderPrecisionType;
   interpolationType?: ShaderVaryingInterpolationType;
 }

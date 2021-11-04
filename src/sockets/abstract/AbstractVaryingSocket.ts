@@ -14,18 +14,20 @@ import {IVaryingOutputSocket} from '../interface/output/IVaryingOutputSocket';
  * The user can connect sockets by Node.connectNodes method.
  */
 export default abstract class AbstractVaryingSocket extends AbstractSocket {
-  protected __rawVariableName: string | undefined;
-  protected __variableName: string;
+  private __variableName: string;
   private __type: ShaderVaryingVarType;
   private __precision: ShaderPrecisionType;
   private __interpolationType: ShaderVaryingInterpolationType | undefined;
 
-  constructor(node: INode, socketName: string, varying: ShaderVaryingData) {
+  constructor(
+    node: INode,
+    socketName: string,
+    varying: ShaderVaryingData,
+    variableName: string
+  ) {
     super(node, socketName);
 
-    this.__rawVariableName = varying.variableName;
-    this.__variableName =
-      this.__rawVariableName ?? `v_${node.id}_${socketName}`;
+    this.__variableName = variableName;
     this.__type = varying.type;
     this.__precision = varying.precision ?? 'highp';
     this.__interpolationType = varying.interpolationType;
@@ -44,27 +46,11 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
       inputSocket._connectSocketWith(outputSocket);
       outputSocket._connectSocketWith(inputSocket);
 
-      this.__updateVariableName(outputSocket);
+      inputSocket._setVariableName(outputSocket.variableName);
     } else {
       console.error(
         'AbstractVaryingSocket.connectSockets: socketType is different'
       );
-    }
-  }
-
-  /**
-   * @private
-   * Update the variable name of the output socket of the argument and
-   * all input sockets connected to it to the same unique value
-   * @param outputSocket target output socket
-   */
-  private static __updateVariableName(outputSocket: IVaryingOutputSocket) {
-    const newVariableName = outputSocket._createNewVariableName();
-
-    outputSocket._setVariableName(newVariableName);
-    const inputSockets = outputSocket.connectedSockets;
-    for (const inputSocket of inputSockets) {
-      inputSocket._setVariableName(newVariableName);
     }
   }
 

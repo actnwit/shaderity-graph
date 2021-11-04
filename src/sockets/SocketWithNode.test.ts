@@ -48,7 +48,6 @@ const varyingInputSocketData0: VaryingInputSocketData = {
   socketName: 'varyingInputSocket0',
   direction: SocketDirection.Input,
   varyingData: {
-    variableName: 'v_texcoord',
     type: 'vec2',
     precision: 'mediump',
   },
@@ -194,7 +193,9 @@ test('attributeInputSocket.location', () => {
 
 const varyingInputSocket = socketsOfNode0[3] as VaryingInputSocket;
 test('varyingInputSocket.variableName', () => {
-  expect(varyingInputSocket.variableName).toBe('v_texcoord');
+  expect(varyingInputSocket.variableName).toBe(
+    'v_non_connected_0_varyingInputSocket0'
+  );
 });
 
 test('varyingInputSocket.precision', () => {
@@ -310,7 +311,7 @@ test('AbstractVaryingSocket.connectSockets', () => {
   );
 
   expect(varyingInputSocket1.variableName).toStrictEqual(
-    'v_0_varyingOutputSocket_to_2'
+    'v_0_varyingOutputSocket'
   );
   expect(varyingInputSocket1.connectedSocket).toStrictEqual(
     varyingOutputSocket

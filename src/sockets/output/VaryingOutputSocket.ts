@@ -16,7 +16,7 @@ export default class VaryingOutputSocket
   _connectedSockets: IVaryingInputSocket[] = [];
 
   constructor(node: INode, socketName: string, varying: ShaderVaryingData) {
-    super(node, socketName, varying);
+    super(node, socketName, varying, `v_${node.id}_${socketName}`);
   }
 
   /**
@@ -53,21 +53,5 @@ export default class VaryingOutputSocket
    */
   _connectSocketWith(socket: IVaryingInputSocket) {
     this._connectedSockets.push(socket);
-  }
-
-  _createNewVariableName() {
-    const outputNodes = this.connectedNodes;
-
-    if (this.__rawVariableName != null) {
-      return this.__rawVariableName;
-    }
-
-    let variableName = `v_${this.node.id}_${this.socketName}_to`;
-    for (let i = 0; i < outputNodes.length; i++) {
-      const connectedNode = outputNodes[i];
-      variableName += `_${connectedNode.id}`;
-    }
-
-    return variableName;
   }
 }
