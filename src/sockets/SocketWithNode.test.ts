@@ -23,20 +23,20 @@ import AbstractVaryingSocket from './abstract/AbstractVaryingSocket';
 // --- test for non-connecting sockets  ---------------------------------------------
 
 const standardInputSocketData0: StandardInputSocketData = {
-  name: 'inputSocket0',
+  socketName: 'inputSocket0',
   type: SocketType.Vec3,
   direction: SocketDirection.Input,
   defaultValue: [0, 0, 0],
 };
 
 const standardOutputSocketData: StandardOutputSocketData = {
-  name: 'outputSocket',
+  socketName: 'outputSocket',
   type: SocketType.Vec2,
   direction: SocketDirection.Output,
 };
 
 const attributeInputSocketData: AttributeInputSocketData = {
-  name: 'attributeSocket',
+  socketName: 'attributeSocket',
   direction: SocketDirection.Input,
   attributeData: {
     variableName: 'a_position',
@@ -45,7 +45,7 @@ const attributeInputSocketData: AttributeInputSocketData = {
 };
 
 const varyingInputSocketData0: VaryingInputSocketData = {
-  name: 'varyingInputSocket0',
+  socketName: 'varyingInputSocket0',
   direction: SocketDirection.Input,
   varyingData: {
     variableName: 'v_texcoord',
@@ -55,7 +55,7 @@ const varyingInputSocketData0: VaryingInputSocketData = {
 };
 
 const uniformInputSocketData0: UniformInputSocketData = {
-  name: 'uniformSocketA',
+  socketName: 'uniformSocketA',
   direction: SocketDirection.Input,
   uniformData: {
     variableName: 'u_float',
@@ -65,7 +65,7 @@ const uniformInputSocketData0: UniformInputSocketData = {
 };
 
 const uniformInputSocketData1: UniformInputSocketData = {
-  name: 'uniformSocketB',
+  socketName: 'uniformSocketB',
   direction: SocketDirection.Input,
   uniformData: {
     type: 'sampler2D',
@@ -74,7 +74,7 @@ const uniformInputSocketData1: UniformInputSocketData = {
 };
 
 const varyingOutputSocketData: VaryingOutputSocketData = {
-  name: 'varyingOutputSocket',
+  socketName: 'varyingOutputSocket',
   direction: SocketDirection.Output,
   varyingData: {
     type: 'vec4',
@@ -117,14 +117,14 @@ test('socket.className', () => {
   expect(socketsOfNode0[6].className).toBe('VaryingOutputSocket');
 });
 
-test('socket.name', () => {
-  expect(socketsOfNode0[0].name).toBe('inputSocket0');
-  expect(socketsOfNode0[1].name).toBe('outputSocket');
-  expect(socketsOfNode0[2].name).toBe('attributeSocket');
-  expect(socketsOfNode0[3].name).toBe('varyingInputSocket0');
-  expect(socketsOfNode0[4].name).toBe('uniformSocketA');
-  expect(socketsOfNode0[5].name).toBe('uniformSocketB');
-  expect(socketsOfNode0[6].name).toBe('varyingOutputSocket');
+test('socket.socketName', () => {
+  expect(socketsOfNode0[0].socketName).toBe('inputSocket0');
+  expect(socketsOfNode0[1].socketName).toBe('outputSocket');
+  expect(socketsOfNode0[2].socketName).toBe('attributeSocket');
+  expect(socketsOfNode0[3].socketName).toBe('varyingInputSocket0');
+  expect(socketsOfNode0[4].socketName).toBe('uniformSocketA');
+  expect(socketsOfNode0[5].socketName).toBe('uniformSocketB');
+  expect(socketsOfNode0[6].socketName).toBe('varyingOutputSocket');
 });
 
 test('socket.socketType', () => {
@@ -235,7 +235,7 @@ test('varyingOutputSocket.interpolationType', () => {
 // --- test for connecting sockets  -------------------------------------------------
 
 const standardInputSocketData1: StandardInputSocketData = {
-  name: 'inputSocket1',
+  socketName: 'inputSocket1',
   type: SocketType.Vec2,
   direction: SocketDirection.Input,
   defaultValue: [0, 0],
@@ -247,7 +247,7 @@ const standardInputSocketData1: StandardInputSocketData = {
 };
 
 const varyingInputSocketData1: VaryingInputSocketData = {
-  name: 'varyingInputSocket1',
+  socketName: 'varyingInputSocket1',
   direction: SocketDirection.Input,
   varyingData: {
     type: 'vec4',

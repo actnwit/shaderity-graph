@@ -79,7 +79,8 @@ export default class JsonImporter {
         const outputSocketNameOfInputNode =
           socketConnectionData.connectedSocketName;
         const outputNode = Node.getNodeById(outputNodeId);
-        const inputSocketNameOfOutputNode = connectableInputSocketData.name;
+        const inputSocketNameOfOutputNode =
+          connectableInputSocketData.socketName;
 
         Node.connectNodes(
           inputNode,

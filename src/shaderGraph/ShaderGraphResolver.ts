@@ -196,7 +196,7 @@ export default class ShaderGraphResolver {
           | undefined;
         if (vOutputSocket == null) {
           console.error(
-            `ShaderGraphResolver.__addNodeDataToShaderityObjectCreator: variableInputSocket ${vInputSocket.name} does not connected to variableOutputSocket`
+            `ShaderGraphResolver.__addNodeDataToShaderityObjectCreator: variableInputSocket ${vInputSocket.socketName} does not connected to variableOutputSocket`
           );
           continue;
         }
@@ -358,7 +358,7 @@ ${functionCalls}
       }
       defaultValue = defaultValue.replace(/,\s$/, ')');
 
-      const variableName = `${sInputSocket.name}_${node.id}`;
+      const variableName = `${sInputSocket.socketName}_${node.id}`;
       returnStr += `  ${glslTypeStr} ${variableName} = ${defaultValue};\n`;
 
       variableNames[node.id][i] = variableName;
@@ -400,13 +400,13 @@ ${functionCalls}
 
         // for debugging
         // const inputSockets = outputSocket.connectedSockets;
-        variableName = `node${node.id}_${sOutputSocket.name}_to`;
+        variableName = `node${node.id}_${sOutputSocket.socketName}_to`;
         for (let j = 0; j < outputNodes.length; j++) {
           const connectedNode = outputNodes[j];
           variableName += `_node${connectedNode.id}`;
 
           // for debugging
-          // const inputSocketName = inputSockets[j].name;
+          // const inputSocketName = inputSockets[j].socketName;
           // returnStr += `_node${connectedNode.id}_${inputSocketName}`;
         }
       }

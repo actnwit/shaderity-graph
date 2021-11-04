@@ -62,7 +62,7 @@ export default class VaryingOutputSocket
       return this.__rawVariableName;
     }
 
-    let variableName = `v_${this.node.id}_${this.name}_to`;
+    let variableName = `v_${this.node.id}_${this.socketName}_to`;
     for (let i = 0; i < outputNodes.length; i++) {
       const connectedNode = outputNodes[i];
       variableName += `_${connectedNode.id}`;

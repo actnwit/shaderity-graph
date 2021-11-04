@@ -87,7 +87,7 @@ export interface SocketConnectionData {
 }
 
 export interface AbstractSocketData {
-  name: string;
+  socketName: string;
   direction: SocketDirectionEnum;
   extras?: {[key: string]: unknown};
 }
