@@ -8,6 +8,7 @@ import {
   UniformInputSocketData,
   VaryingInputSocketData,
   VaryingOutputSocketData,
+  ShaderOutputSocketData,
 } from '../types/CommonType';
 import AttributeInputSocket from './input/AttributeInputSocket';
 import StandardInputSocket from './input/StandardInputSocket';
@@ -81,6 +82,11 @@ const varyingOutputSocketData: VaryingOutputSocketData = {
   },
 };
 
+const shaderOutputSocketData: ShaderOutputSocketData = {
+  socketName: 'mvpPosition',
+  direction: SocketDirection.Output,
+};
+
 const driverNodeData0: NodeData = {
   shaderFunctionName: 'funcA',
   shaderStage: 'vertex',
@@ -94,6 +100,7 @@ const sockets0 = [
   uniformInputSocketData0,
   uniformInputSocketData1,
   varyingOutputSocketData,
+  shaderOutputSocketData,
 ];
 
 const node0 = new Node(driverNodeData0, sockets0);
@@ -113,6 +120,7 @@ test('socket.className', () => {
   expect(socketsOfNode0[4].className).toBe('UniformInputSocket');
   expect(socketsOfNode0[5].className).toBe('UniformInputSocket');
   expect(socketsOfNode0[6].className).toBe('VaryingOutputSocket');
+  expect(socketsOfNode0[7].className).toBe('ShaderOutputSocket');
 });
 
 test('socket.socketName', () => {
@@ -123,6 +131,7 @@ test('socket.socketName', () => {
   expect(socketsOfNode0[4].socketName).toBe('uniformSocketA');
   expect(socketsOfNode0[5].socketName).toBe('uniformSocketB');
   expect(socketsOfNode0[6].socketName).toBe('varyingOutputSocket');
+  expect(socketsOfNode0[7].socketName).toBe('mvpPosition');
 });
 
 test('socket.socketType', () => {
@@ -133,6 +142,7 @@ test('socket.socketType', () => {
   expect(socketsOfNode0[4].socketType).toBe('float');
   expect(socketsOfNode0[5].socketType).toBe('sampler2D');
   expect(socketsOfNode0[6].socketType).toBe('vec4');
+  expect(socketsOfNode0[7].socketType).toBe('vec4');
 });
 
 test('socket.node', () => {
@@ -143,6 +153,7 @@ test('socket.node', () => {
   expect(socketsOfNode0[4].node).toStrictEqual(node0);
   expect(socketsOfNode0[5].node).toStrictEqual(node0);
   expect(socketsOfNode0[6].node).toStrictEqual(node0);
+  expect(socketsOfNode0[7].node).toStrictEqual(node0);
 });
 
 test('socket.node', () => {
@@ -153,6 +164,7 @@ test('socket.node', () => {
   expect(socketsOfNode0[4].isInputSocket()).toBe(true);
   expect(socketsOfNode0[5].isInputSocket()).toBe(true);
   expect(socketsOfNode0[6].isInputSocket()).toBe(false);
+  expect(socketsOfNode0[7].isInputSocket()).toBe(false);
 });
 
 const standardInputSocket0 = socketsOfNode0[0] as StandardInputSocket;
