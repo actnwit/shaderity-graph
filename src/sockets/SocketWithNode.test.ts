@@ -54,12 +54,21 @@ const varyingInputSocketData0: VaryingInputSocketData = {
   },
 };
 
-const uniformInputSocketData: UniformInputSocketData = {
-  name: 'uniformSocket',
+const uniformInputSocketData0: UniformInputSocketData = {
+  name: 'uniformSocketA',
   direction: SocketDirection.Input,
   uniformData: {
     variableName: 'u_float',
     type: 'float',
+    precision: 'highp',
+  },
+};
+
+const uniformInputSocketData1: UniformInputSocketData = {
+  name: 'uniformSocketB',
+  direction: SocketDirection.Input,
+  uniformData: {
+    type: 'sampler2D',
     precision: 'highp',
   },
 };
@@ -85,7 +94,8 @@ const sockets0 = [
   standardOutputSocketData,
   attributeInputSocketData,
   varyingInputSocketData0,
-  uniformInputSocketData,
+  uniformInputSocketData0,
+  uniformInputSocketData1,
   varyingOutputSocketData,
 ];
 
@@ -104,7 +114,8 @@ test('socket.className', () => {
   expect(socketsOfNode0[2].className).toBe('AttributeInputSocket');
   expect(socketsOfNode0[3].className).toBe('VaryingInputSocket');
   expect(socketsOfNode0[4].className).toBe('UniformInputSocket');
-  expect(socketsOfNode0[5].className).toBe('VaryingOutputSocket');
+  expect(socketsOfNode0[5].className).toBe('UniformInputSocket');
+  expect(socketsOfNode0[6].className).toBe('VaryingOutputSocket');
 });
 
 test('socket.name', () => {
@@ -112,8 +123,9 @@ test('socket.name', () => {
   expect(socketsOfNode0[1].name).toBe('outputSocket');
   expect(socketsOfNode0[2].name).toBe('attributeSocket');
   expect(socketsOfNode0[3].name).toBe('varyingInputSocket0');
-  expect(socketsOfNode0[4].name).toBe('uniformSocket');
-  expect(socketsOfNode0[5].name).toBe('varyingOutputSocket');
+  expect(socketsOfNode0[4].name).toBe('uniformSocketA');
+  expect(socketsOfNode0[5].name).toBe('uniformSocketB');
+  expect(socketsOfNode0[6].name).toBe('varyingOutputSocket');
 });
 
 test('socket.socketType', () => {
@@ -122,7 +134,8 @@ test('socket.socketType', () => {
   expect(socketsOfNode0[2].socketType).toBe('vec4');
   expect(socketsOfNode0[3].socketType).toBe('vec2');
   expect(socketsOfNode0[4].socketType).toBe('float');
-  expect(socketsOfNode0[5].socketType).toBe('vec4');
+  expect(socketsOfNode0[5].socketType).toBe('sampler2D');
+  expect(socketsOfNode0[6].socketType).toBe('vec4');
 });
 
 test('socket.node', () => {
@@ -132,6 +145,7 @@ test('socket.node', () => {
   expect(socketsOfNode0[3].node).toStrictEqual(node0);
   expect(socketsOfNode0[4].node).toStrictEqual(node0);
   expect(socketsOfNode0[5].node).toStrictEqual(node0);
+  expect(socketsOfNode0[6].node).toStrictEqual(node0);
 });
 
 test('socket.node', () => {
@@ -140,7 +154,8 @@ test('socket.node', () => {
   expect(socketsOfNode0[2].isInputSocket()).toBe(true);
   expect(socketsOfNode0[3].isInputSocket()).toBe(true);
   expect(socketsOfNode0[4].isInputSocket()).toBe(true);
-  expect(socketsOfNode0[5].isInputSocket()).toBe(false);
+  expect(socketsOfNode0[5].isInputSocket()).toBe(true);
+  expect(socketsOfNode0[6].isInputSocket()).toBe(false);
 });
 
 const standardInputSocket0 = socketsOfNode0[0] as StandardInputSocket;
@@ -191,16 +206,21 @@ test('varyingInputSocket.interpolationType', () => {
   expect(varyingInputSocket.interpolationType).toBe(undefined);
 });
 
-const uniformInputSocket = socketsOfNode0[4] as UniformInputSocket;
+const uniformInputSocket0 = socketsOfNode0[4] as UniformInputSocket;
 test('uniformInputSocket.variableName', () => {
-  expect(uniformInputSocket.variableName).toBe('u_float');
+  expect(uniformInputSocket0.variableName).toBe('u_float');
 });
 
 test('uniformInputSocket.precision', () => {
-  expect(uniformInputSocket.precision).toBe('highp');
+  expect(uniformInputSocket0.precision).toBe('highp');
 });
 
-const varyingOutputSocket = socketsOfNode0[5] as VaryingOutputSocket;
+const uniformInputSocket1 = socketsOfNode0[5] as UniformInputSocket;
+test('uniformInputSocket.variableName', () => {
+  expect(uniformInputSocket1.variableName).toBe('u_0_uniformSocketB');
+});
+
+const varyingOutputSocket = socketsOfNode0[6] as VaryingOutputSocket;
 test('varyingOutputSocket.variableName', () => {
   expect(varyingOutputSocket.variableName).toBe('v_position');
 });
