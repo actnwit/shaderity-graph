@@ -1,5 +1,6 @@
 import Node from '../node/Node';
 import ShaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
+import {SocketDirection} from '../types/CommonEnum';
 import {
   ShaderityGraphNode,
   ShaderityGraphJson,
@@ -60,7 +61,7 @@ export default class JsonImporter {
       const outputNodeJson = nodesJson[outputNodeId];
 
       for (const socketData of outputNodeJson.socketDataArray) {
-        if (socketData.direction === 'output') {
+        if (socketData.direction === SocketDirection.Output) {
           continue;
         }
 

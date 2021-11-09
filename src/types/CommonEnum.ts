@@ -121,8 +121,8 @@ function getGlslComponentNumber(socketType: SocketTypeEnum): number {
 export type SocketTypeEnum = typeof SocketType[keyof typeof _SocketType];
 
 export const SocketDirection = {
-  Input: 'input',
-  Output: 'output',
+  Input: 'in',
+  Output: 'out',
 } as const;
 
 export type SocketDirectionEnum =

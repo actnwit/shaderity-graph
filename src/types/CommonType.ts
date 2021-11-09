@@ -100,20 +100,20 @@ export interface ShaderStandardOutputData {
 }
 
 export interface StandardInputSocketData extends AbstractSocketData {
-  direction: 'input';
+  direction: 'in';
   shaderData: ShaderStandardInputData;
   socketConnectionData?: SocketConnectionData;
 }
 
 export interface StandardOutputSocketData extends AbstractSocketData {
-  direction: 'output';
+  direction: 'out';
   shaderData: ShaderStandardOutputData;
 }
 
 export type ShaderAttributeData = ShaderAttributeObject;
 
 export interface AttributeInputSocketData extends AbstractSocketData {
-  direction: 'input';
+  direction: 'in';
   attributeData: ShaderAttributeData;
 }
 
@@ -130,13 +130,13 @@ export interface ShaderVaryingOutputData {
 export type ShaderVaryingData = ShaderVaryingOutputData;
 
 export interface VaryingInputSocketData extends AbstractSocketData {
-  direction: 'input';
+  direction: 'in';
   varyingData: ShaderVaryingInputData;
   socketConnectionData?: SocketConnectionData;
 }
 
 export interface VaryingOutputSocketData extends AbstractSocketData {
-  direction: 'output';
+  direction: 'out';
   varyingData: ShaderVaryingOutputData;
 }
 
@@ -147,10 +147,10 @@ export interface ShaderUniformData {
 }
 
 export interface UniformInputSocketData extends AbstractSocketData {
-  direction: 'input';
+  direction: 'in';
   uniformData: ShaderUniformData;
 }
 
 export interface ShaderOutputSocketData extends AbstractSocketData {
-  direction: 'output';
+  direction: 'out';
 }
