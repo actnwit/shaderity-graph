@@ -252,16 +252,18 @@ export default class ShaderGraphResolver {
       const node = sortedNodes[i];
 
       // for non-connected standard input sockets
-      inputValueDefinitions += this.__createInputVariableDefinitions(
-        node,
-        variableNames
-      );
+      inputValueDefinitions +=
+        this.__createInputVariableDefinitionsAndStoreVariableName(
+          node,
+          variableNames
+        );
 
       // for connected sockets
-      variableDeclarations += this.__createOutVariableDeclarations(
-        node,
-        variableNames
-      );
+      variableDeclarations +=
+        this.__createOutVariableDeclarationsAndStoreVariableName(
+          node,
+          variableNames
+        );
 
       this.__addStorageQualifierVariableName(node, variableNames);
       this.__addShaderOutputVariableName(node, variableNames);
@@ -317,7 +319,7 @@ ${functionCalls}
    * @param variableNames array to store the variable names used in each function call of the main function
    * @returns string of variable definitions
    */
-  private static __createInputVariableDefinitions(
+  private static __createInputVariableDefinitionsAndStoreVariableName(
     node: Node,
     variableNames: string[][]
   ): string {
@@ -376,7 +378,7 @@ ${functionCalls}
    * @param variableNames array to store the variable names used in each function call of the main function
    * @returns string of variable declarations
    */
-  private static __createOutVariableDeclarations(
+  private static __createOutVariableDeclarationsAndStoreVariableName(
     node: Node,
     variableNames: string[][]
   ): string {
