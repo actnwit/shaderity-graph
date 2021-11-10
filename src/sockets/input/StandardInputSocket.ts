@@ -1,8 +1,9 @@
-import {SocketTypeEnum} from '../../types/CommonEnum';
+import {SocketType} from '../../types/CommonEnum';
 import {IStandardInputSocket} from '../interface/input/IStandardInputSocket';
 import {IStandardOutputSocket} from '../interface/output/IStandardOutputSocket';
 import {INode} from '../../node/INode';
 import AbstractStandardSocket from '../abstract/AbstractStandardSocket';
+import {ShaderStandardInputData} from '../../types/CommonType';
 
 /**
  * The StandardInputSocket is an input socket that can connect to a StandardOutputSocket.
@@ -22,13 +23,12 @@ export default class StandardInputSocket
   private __defaultValue: number[];
 
   constructor(
-    socketType: SocketTypeEnum,
     node: INode,
     socketName: string,
-    defaultValue: number[]
+    shaderData: ShaderStandardInputData
   ) {
-    super(socketType, node, socketName);
-    this.__defaultValue = defaultValue;
+    super(shaderData.type, node, socketName);
+    this.__defaultValue = this.__getDefaultValue(shaderData);
   }
 
   /**
@@ -63,5 +63,18 @@ export default class StandardInputSocket
 
   _connectSocketWith(socket: IStandardOutputSocket) {
     this._connectedSocket = socket;
+  }
+
+  private __getDefaultValue(shaderData: ShaderStandardInputData) {
+    const type = shaderData.type;
+    const componentNumber = SocketType.getGlslComponentNumber(type);
+
+    let defaultValue = shaderData.defaultValue;
+    if (defaultValue == null) {
+      defaultValue = new Array(componentNumber);
+      defaultValue.fill(0);
+    }
+
+    return defaultValue;
   }
 }
