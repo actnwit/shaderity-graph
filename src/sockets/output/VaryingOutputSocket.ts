@@ -19,7 +19,7 @@ export default class VaryingOutputSocket
 {
   _connectedSockets: IVaryingInputSocket[] = [];
 
-  private __precision: ShaderPrecisionType;
+  private __precision?: ShaderPrecisionType;
   private __interpolationType: ShaderVaryingInterpolationType | undefined;
 
   constructor(
@@ -29,7 +29,7 @@ export default class VaryingOutputSocket
   ) {
     super(node, socketName, varying, `v_${node.id}_${socketName}`);
 
-    this.__precision = varying.precision ?? 'highp';
+    this.__precision = varying.precision;
     this.__interpolationType = varying.interpolationType;
   }
 

@@ -12,5 +12,5 @@ export interface INonStandardInputSocket extends ISocket {
     | ShaderAttributeVarType
     | ShaderVaryingVarType
     | ShaderUniformVarTypeES3;
-  get precision(): ShaderPrecisionType;
+  get precision(): ShaderPrecisionType | undefined;
 }
