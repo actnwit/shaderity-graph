@@ -97,6 +97,7 @@ export interface ShaderStandardInputData {
 
 export interface ShaderStandardOutputData {
   type: SocketTypeEnum;
+  precision?: ShaderPrecisionType;
 }
 
 export interface StandardInputSocketData extends AbstractSocketData {
