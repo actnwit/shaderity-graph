@@ -372,7 +372,7 @@ Data of the shader variable taken as input
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
 |type|`string`|GLSL type of data to be input on this socket|✅ Yes|
-|defaultValue|`number[1-16]`|Value to take as input when this socket is not connected to any socket|✅ Yes|
+|defaultValue|`number[0-16]`|Value to take as input when this socket is not connected to any socket|No|
 
 ### ShaderStandardInputData.type ✅
 
@@ -400,11 +400,12 @@ GLSL type of data to be input on this socket.
 
 <br>
 
- ### ShaderStandardInputData.defaultValue ✅
+ ### ShaderStandardInputData.defaultValue
 
 Value to take as input when this socket is not connected to any socket.
+If this property is omitted, the default value is 0 for all elements.
 
-- Type: `number[1-16]`
+- Type: `number[0-16]`
 
 - Required: Yes
 
