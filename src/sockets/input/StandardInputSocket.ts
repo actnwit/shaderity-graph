@@ -73,6 +73,12 @@ export default class StandardInputSocket
     if (defaultValue == null) {
       defaultValue = new Array(componentNumber);
       defaultValue.fill(0);
+    } else {
+      if (defaultValue.length !== componentNumber) {
+        console.warn(
+          `StandardInputSocket.__getDefaultValue: defaultValue.length is not match to type ${type}`
+        );
+      }
     }
 
     return defaultValue;
