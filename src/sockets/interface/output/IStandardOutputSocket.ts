@@ -1,6 +1,7 @@
 import {INode} from '../../../node/INode';
 import {IStandardSocket} from '../IStandardSocket';
 import {IStandardInputSocket} from '../input/IStandardInputSocket';
+import {ShaderPrecisionType} from '../../../types/CommonType';
 
 export interface IStandardOutputSocket extends IStandardSocket {
   _connectedSockets: IStandardInputSocket[];
@@ -9,4 +10,5 @@ export interface IStandardOutputSocket extends IStandardSocket {
 
   get connectedNodes(): INode[];
   get connectedSockets(): IStandardInputSocket[];
+  get precision(): ShaderPrecisionType | undefined;
 }
