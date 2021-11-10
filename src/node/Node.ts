@@ -2,6 +2,7 @@ import {
   ShaderStage,
   ShaderStageEnum,
   SocketDirection,
+  SocketType,
 } from '../types/CommonEnum';
 import {
   NodeData,
@@ -386,11 +387,19 @@ export default class Node implements INode {
       );
     } else {
       const sSocketData = socketData as StandardInputSocketData;
+      const type = sSocketData.shaderData.type;
+      let defaultValue = sSocketData.shaderData.defaultValue;
+      if (defaultValue == null) {
+        const componentNumber = SocketType.getGlslComponentNumber(type);
+        defaultValue = new Array(componentNumber);
+        defaultValue.fill(0);
+      }
+
       inputSocket = new StandardInputSocket(
-        sSocketData.shaderData.type,
+        type,
         this,
         socketName,
-        sSocketData.shaderData.defaultValue
+        defaultValue
       );
     }
 
