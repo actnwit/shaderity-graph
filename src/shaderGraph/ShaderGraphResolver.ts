@@ -416,8 +416,10 @@ ${functionCalls}
           variableNames[connectedNodeId][socketIndex] = variableName;
         }
 
+        const precision =
+          sOutputSocket.precision != null ? sOutputSocket.precision + ' ' : '';
         const glslTypeStr = SocketType.getGlslTypeStr(sOutputSocket.socketType);
-        returnStr += `  ${glslTypeStr} ${variableName};\n`;
+        returnStr += `  ${precision}${glslTypeStr} ${variableName};\n`;
       } else {
         // ShaderOutputSocket
       }
