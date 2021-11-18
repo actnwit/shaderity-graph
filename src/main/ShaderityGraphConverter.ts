@@ -1,5 +1,5 @@
 import Node from '../node/Node';
-import {ShaderCodes, ShaderityGraphJson} from '../types/CommonType';
+import {ShaderityObjects, ShaderityGraphJson} from '../types/CommonType';
 import JsonImporter from '../import/JsonImporter';
 import ShaderGraphResolver from '../shaderGraph/ShaderGraphResolver';
 import ShaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
@@ -16,26 +16,26 @@ export default class ShaderityGraphConverter {
   static readonly shaderityGraphVersion = '';
 
   /**
-   * Converts a file of ShaderityGraphJson to a shader code
+   * Converts a file of ShaderityGraphJson to shaderity objects
    * @param src path of the json file
    */
-  public static createShaderCodesFromJsonFile(
+  public static createShaderityObjectsFromJsonFile(
     src: string
-  ): Promise<ShaderCodes> {
+  ): Promise<ShaderityObjects> {
     return fetch(src)
       .then(response => response.json())
       .then((data: ShaderityGraphJson) => {
-        return this.createShaderCodesFromJsonObject(data);
+        return this.createShaderityObjectsFromJsonObject(data);
       });
   }
 
   /**
-   * Converts a ShaderityGraphJson object to a shader code
+   * Converts a ShaderityGraphJson object to shaderity objects
    * @param json object of ShaderityGraphJson
    */
-  public static createShaderCodesFromJsonObject(
+  public static createShaderityObjectsFromJsonObject(
     json: ShaderityGraphJson
-  ): ShaderCodes {
+  ): ShaderityObjects {
     if (json.version !== this.shaderityGraphVersion) {
       console.warn(
         'System.createShaderCodesFromJsonObject: mismatch version between json and system'
@@ -59,7 +59,7 @@ export default class ShaderityGraphConverter {
       );
     }
 
-    const shaderCodes = ShaderGraphResolver.createShaderCodes(
+    const shaderCodes = ShaderGraphResolver.createShaderityObjects(
       json.vertexShaderGlobalData,
       json.fragmentShaderGlobalData
     );

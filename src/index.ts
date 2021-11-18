@@ -9,7 +9,7 @@ import {
   SocketDirectionEnum,
 } from './types/CommonEnum';
 import {
-  ShaderCodes,
+  ShaderityObjects,
   ShaderityGraphJson,
   ShaderityGraphNode,
   ShaderGlobalData,
@@ -42,7 +42,7 @@ export default {
 
 export type {
   ShaderStageEnum,
-  ShaderCodes,
+  ShaderityObjects,
   ShaderityGraphJson,
   ShaderityGraphNode,
   SocketTypeEnum,
