@@ -25,15 +25,19 @@ import AbstractVaryingSocket from './abstract/AbstractVaryingSocket';
 
 const standardInputSocketData0: StandardInputSocketData = {
   socketName: 'inputSocket0',
-  type: SocketType.Vec3,
   direction: SocketDirection.Input,
-  defaultValue: [0, 0, 0],
+  shaderData: {
+    type: SocketType.Vec3,
+    defaultValue: [0, 0, 0],
+  },
 };
 
 const standardOutputSocketData: StandardOutputSocketData = {
   socketName: 'outputSocket',
-  type: SocketType.Vec2,
   direction: SocketDirection.Output,
+  shaderData: {
+    type: SocketType.Vec2,
+  },
 };
 
 const attributeInputSocketData: AttributeInputSocketData = {
@@ -248,9 +252,11 @@ test('varyingOutputSocket.interpolationType', () => {
 
 const standardInputSocketData1: StandardInputSocketData = {
   socketName: 'inputSocket1',
-  type: SocketType.Vec2,
   direction: SocketDirection.Input,
-  defaultValue: [0, 0],
+  shaderData: {
+    type: SocketType.Vec2,
+    defaultValue: [0, 0],
+  },
   // Here, we connect sockets manually
   // socketConnectionData: {
   //   connectedSocketName: 'outputSocket',

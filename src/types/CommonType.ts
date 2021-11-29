@@ -89,16 +89,24 @@ export interface AbstractSocketData {
   extras?: {[key: string]: unknown};
 }
 
-export interface StandardInputSocketData extends AbstractSocketData {
-  direction: 'input';
+export interface ShaderStandardInputData {
   type: SocketTypeEnum;
   defaultValue: number[];
+}
+
+export interface ShaderStandardOutputData {
+  type: SocketTypeEnum;
+}
+
+export interface StandardInputSocketData extends AbstractSocketData {
+  direction: 'input';
+  shaderData: ShaderStandardInputData;
   socketConnectionData?: SocketConnectionData;
 }
 
 export interface StandardOutputSocketData extends AbstractSocketData {
   direction: 'output';
-  type: SocketTypeEnum;
+  shaderData: ShaderStandardOutputData;
 }
 
 export type ShaderAttributeData = ShaderAttributeObject;

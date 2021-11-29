@@ -7,6 +7,7 @@
     - [NodeData](#nodedata)
     - [AbstractSocketData](#abstractsocketdata)
       - [StandardInputSocketData](#standardinputsocketdata)
+        - [ShaderStandardInputData](#shaderstandardinputdata)
         - [SocketConnectionData](#socketconnectiondata)
       - [AttributeInputSocketData](#attributeinputsocketdata)
         - [ShaderAttributeData](#shaderattributedata)
@@ -16,6 +17,7 @@
       - [UniformInputSocketData](#uniforminputsocketdata)
         - [ShaderUniformData](#shaderuniformdata)
       - [StandardOutputSocketData](#standardoutputsocketdata)
+        - [ShaderStandardOutputData](#shaderstandardoutputdata)
       - [VaryingOutputSocketData](#varyingoutputsocketdata)
         - [ShaderVaryingOutputData](#shadervaryingoutputdata)
       - [ShaderOutputSocketData](#shaderoutputsocketdata)
@@ -98,7 +100,7 @@ Functions corresponding to each node.
 
 Application-specific data.
 
-- Type: `Object`
+- Type: `Object` 
 
 - Required: No
 
@@ -108,7 +110,15 @@ Application-specific data.
 
 ## ShaderityGraphNode
 
-Data of one node
+Data of one node. A node has sockets.
+<figure>
+  <img src='./node_and_socket.png' width=600 alt="node and socket"></img>
+  <figcaption>node and socket</figcaption>
+</figure>
+
+All nodes exchange data through sockets except for the followings
+1. Get global constant data
+2. Assign values to built-in variables other than gl_Position and gl_FragColor(See. [ShaderOutputSocketData](#shaderoutputsocketdata))
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
@@ -219,11 +229,16 @@ In shaderity graph, all nodes input and output data through sockets. The followi
 - [ShaderOutputSocketData](#shaderoutputsocketdata) (3)
 
 Note:
-1. Normally, type 2 and 3 are not shown in the GUI.
+1. Normally, type 2 and 3 are not shown in the GUI (See the following figure 'hidden socket' )
 2. The attribute input socket only works with a vertex shader.
 3. The varying input socket only works with a fragment shader.
 4. The varying output socket only works with a vertex shader.
 5. There is only one shader output socket for each shader.
+
+<figure>
+  <img src='./hidden_socket.png' width=600 alt="hidden socket"></img>
+  <figcaption>hidden socket</figcaption>
+</figure>
 
 AbstractSocketData is an abstract object for convenience to group these objects together.
 All concrete objects have the following properties:
@@ -278,8 +293,7 @@ Data for a socket that can be connected to a single StandardOutputSocket.
 |:--|:--|:--|:--|
 |socketName|`string`|Name of this socket|✅ Yes|
 |direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
-|type|`string`|GLSL type of data to be input on this socket|✅ Yes|
-|defaultValue|`number[1-16]`|Value to take as input when this socket is not connected to any socket|✅ Yes|
+|shaderData|`Object`|Data of the shader variable taken as input|✅ Yes|
 |socketConnectionData|`Object`|Data of the connected output socket|No|
 |extras|`Object`|Application-specific data|No|
 
@@ -308,7 +322,46 @@ This property must be set `input`. See [AbstractSocketData.direction](#abstracts
 
 <br>
 
-### StandardInputSocketData.type ✅
+### StandardInputSocketData.shaderData ✅
+
+Data of the input variable.
+
+- Type:  `Object` ([ShaderStandardInputData](#shaderstandardinputdata))
+
+- Required: No
+
+<br>
+
+### StandardInputSocketData.socketConnectionData
+
+Data of the connected output socket. If it is not connected to an output socket, the value is undefined.
+
+- Type:  `Object` ([SocketConnectionData](#socketconnectiondata))
+
+- Required: No
+
+<br>
+
+### StandardInputSocketData.extras
+
+Application-specific data.
+
+- Type: `Object`
+
+- Required: No
+
+<br>
+
+## ShaderStandardInputData
+
+Data of the shader variable taken as input
+
+|Name|Type|Description|Required|
+|:--|:--|:--|:--|
+|type|`string`|GLSL type of data to be input on this socket|✅ Yes|
+|defaultValue|`number[1-16]`|Value to take as input when this socket is not connected to any socket|✅ Yes|
+
+### ShaderStandardInputData.type ✅
 
 GLSL type of data to be input on this socket.
 
@@ -334,33 +387,13 @@ GLSL type of data to be input on this socket.
 
 <br>
 
- ### StandardInputSocketData.defaultValue ✅
+ ### ShaderStandardInputData.defaultValue ✅
 
 Value to take as input when this socket is not connected to any socket.
 
 - Type: `number[1-16]`
 
 - Required: Yes
-
-<br>
-
-### StandardInputSocketData.socketConnectionData
-
-Data of the connected output socket. If it is not connected to an output socket, the value is undefined.
-
-- Type: `Object`
-
-- Required: No
-
-<br>
-
-### StandardInputSocketData.extras
-
-Application-specific data.
-
-- Type: `Object`
-
-- Required: No
 
 <br>
 
@@ -591,7 +624,7 @@ Data of varying variables taken as input
 
 Data of the connected output socket.
 
-- Type: `Object`
+- Type:  `Object` ([SocketConnectionData](#socketconnectiondata))
 
 - Required: No
 
@@ -803,7 +836,7 @@ Data for a socket that can be connected to a multiple StandardInputSocket.
 |:--|:--|:--|:--|
 |socketName|`string`|Name of this socket|✅ Yes|
 |direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
-|type|`string`|GLSL type of data to be output on this socket|✅ Yes|
+|shaderData|`Object`|Data of the shader variable taken as output|✅ Yes|
 |extras|`Object`|Application-specific data|No|
 
 <br>
@@ -831,6 +864,37 @@ This property must be set `output`. See [AbstractSocketData.direction](#abstract
 
 <br>
 
+### StandardOutputSocketData.shaderData ✅
+
+Data of the output variable.
+
+- Type:  `Object` ([StandardOutputSocketData](#standardoutputsocketdata))
+
+- Required: No
+
+<br>
+
+### StandardOutputSocketData.extras
+
+Application-specific data.
+
+- Type: `Object`
+
+- Required: No
+
+<br>
+
+
+## StandardOutputSocketData
+
+Data of the shader variable taken as output
+
+|Name|Type|Description|Required|
+|:--|:--|:--|:--|
+|type|`string`|GLSL type of data to be output on this socket|✅ Yes|
+
+<br>
+
 ### StandardOutputSocketData.type ✅
 
 GLSL type of data to be output on this socket.
@@ -854,16 +918,6 @@ GLSL type of data to be output on this socket.
   - `mat4`
   - `sampler2D`
   - `samplerCube`
-
-<br>
-
-### StandardOutputSocketData.extras
-
-Application-specific data.
-
-- Type: `Object`
-
-- Required: No
 
 <br>
 
@@ -992,7 +1046,7 @@ Interpolation type of the varying variable(for GLSL ES3.0)
 
 
 ## ShaderOutputSocketData
-Output data to gl_Position, gl_FragColor (or variables for color output of fragment shader). The type is fixed at Vec4. The argument corresponding to this socket in shaderFunctionData.code must be of type `out vec4`.
+Output data to gl_Position, gl_FragColor (or variables for color output of fragment shader). Assigning values to other built-in variables, such as gl_PointSize, should be done within the node's function.
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
