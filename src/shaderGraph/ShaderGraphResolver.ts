@@ -1,9 +1,6 @@
 import Node from '../node/Node';
-import {
-  VertexShaderGlobalData,
-  FragmentShaderGlobalData,
-} from '../types/CommonType';
-import {SocketType} from '../types/CommonEnum';
+import {ShaderGlobalData} from '../types/CommonType';
+import {ShaderStage, SocketType} from '../types/CommonEnum';
 import Shaderity, {
   ShaderStageStr,
   ShaderityObjectCreator,
@@ -29,8 +26,8 @@ export default class ShaderGraphResolver {
    * @returns shader codes of vertex and fragment shader
    */
   static createShaderCodes(
-    vertexShaderGlobalData?: VertexShaderGlobalData,
-    fragmentShaderGlobalData?: FragmentShaderGlobalData
+    vertexShaderGlobalData?: ShaderGlobalData,
+    fragmentShaderGlobalData?: ShaderGlobalData
   ) {
     const sortedVertexNode = NodeSorter.sortTopologically(Node.vertexNodes);
     const sortedFragmentNode = NodeSorter.sortTopologically(Node.fragmentNodes);
@@ -64,7 +61,7 @@ export default class ShaderGraphResolver {
   private static __createShaderCode(
     sortedNodes: Node[],
     shaderStage: ShaderStageStr,
-    globalData?: VertexShaderGlobalData
+    globalData?: ShaderGlobalData
   ): string {
     const shaderityObjectCreator =
       Shaderity.createShaderityObjectCreator(shaderStage);
@@ -103,7 +100,7 @@ export default class ShaderGraphResolver {
    */
   private static __addGlobalDataToShaderityObjectCreator(
     shaderityObjectCreator: ShaderityObjectCreator,
-    globalData: VertexShaderGlobalData | FragmentShaderGlobalData
+    globalData: ShaderGlobalData | ShaderGlobalData
   ) {
     if (globalData.defineDirectives != null) {
       for (let i = 0; i < globalData.defineDirectives.length; i++) {
@@ -125,12 +122,6 @@ export default class ShaderGraphResolver {
           shaderConstantValueObject.values
         );
       }
-    }
-
-    const outputVariableName = (globalData as FragmentShaderGlobalData)
-      .outputVariableName;
-    if (outputVariableName != null) {
-      shaderityObjectCreator.updateOutputColorVariableName(outputVariableName);
     }
   }
 
@@ -248,6 +239,7 @@ export default class ShaderGraphResolver {
    * @returns shader code of main function
    */
   private static __createMainFunctionCode(sortedNodes: Node[]) {
+    // stock variable names to be used as arguments in each node's function call
     // usage: variableNames[node.id][index of socket] = variableName;
     const variableNames: Array<Array<string>> =
       this.__initializeVariableNames(sortedNodes);
@@ -270,6 +262,7 @@ export default class ShaderGraphResolver {
       );
 
       this.__addStorageQualifierVariableName(node, variableNames);
+      this.__addShaderOutputVariableName(node, variableNames);
     }
 
     let functionCalls = '';
@@ -398,7 +391,7 @@ ${functionCalls}
       if (socket.className === 'VaryingOutputSocket') {
         const vOutputSocket = socket as VaryingOutputSocket;
         variableName = vOutputSocket.variableName;
-      } else {
+      } else if (socket.className === 'StandardOutputSocket') {
         const sOutputSocket = socket as StandardOutputSocket;
         const outputNodes = sOutputSocket.connectedNodes;
 
@@ -413,6 +406,9 @@ ${functionCalls}
           // const inputSocketName = inputSockets[j].socketName;
           // returnStr += `_node${connectedNode.id}_${inputSocketName}`;
         }
+      } else {
+        // ShaderOutputSocket
+        continue;
       }
 
       const outputSocket = socket as StandardOutputSocket | VaryingOutputSocket;
@@ -422,20 +418,18 @@ ${functionCalls}
       // set variable name corresponding to output socket
       variableNames[node.id][i] = variableName;
 
-      if (socket.className === 'VaryingOutputSocket') {
-        // VaryingInputSocket is present in the other shader
-        continue;
-      }
+      // VaryingInputSocket is present in the other shader stage
+      if (socket.className === 'StandardOutputSocket') {
+        // set variable name corresponding to input sockets
+        const sInputSockets = outputSocket.connectedSockets;
+        for (let j = 0; j < sInputSockets.length; j++) {
+          const sInputSocket = sInputSockets[j];
+          const outputNode = sInputSocket.node;
+          const connectedNodeId = outputNode.id;
+          const socketIndex = outputNode._sockets.indexOf(sInputSocket);
 
-      // set variable name corresponding to input sockets
-      const sInputSockets = outputSocket.connectedSockets;
-      for (let j = 0; j < sInputSockets.length; j++) {
-        const sInputSocket = sInputSockets[j];
-        const outputNode = sInputSocket.node;
-        const connectedNodeId = outputNode.id;
-        const socketIndex = outputNode._sockets.indexOf(sInputSocket);
-
-        variableNames[connectedNodeId][socketIndex] = variableName;
+          variableNames[connectedNodeId][socketIndex] = variableName;
+        }
       }
     }
 
@@ -497,6 +491,25 @@ ${functionCalls}
       } else if (inputSocket.className === 'UniformInputSocket') {
         const uInputSocket = inputSocket as UniformInputSocket;
         variableNames[nodeId][i] = uInputSocket.variableName;
+      }
+    }
+  }
+
+  private static __addShaderOutputVariableName(
+    node: Node,
+    variableNames: string[][]
+  ): void {
+    const nodeId = node.id;
+
+    const sockets = node._sockets;
+    for (let i = 0; i < sockets.length; i++) {
+      const inputSocket = sockets[i];
+      if (inputSocket.className === 'ShaderOutputSocket') {
+        if (node.shaderStage === ShaderStage.Vertex) {
+          variableNames[nodeId][i] = 'gl_Position';
+        } else {
+          variableNames[nodeId][i] = 'renderTarget0';
+        }
       }
     }
   }

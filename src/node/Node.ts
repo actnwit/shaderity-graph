@@ -12,6 +12,7 @@ import {
   AttributeInputSocketData,
   VaryingOutputSocketData,
   SocketData,
+  ShaderOutputSocketData,
 } from '../types/CommonType';
 import StandardInputSocket from '../sockets/input/StandardInputSocket';
 import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
@@ -24,6 +25,7 @@ import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import {ISocket} from '../sockets/interface/ISocket';
 import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
 import AbstractVaryingSocket from '../sockets/abstract/AbstractVaryingSocket';
+import ShaderOutputSocket from '../sockets/output/ShaderOutputSocket';
 
 /**
  * A node is an object that contains functions to be used in the shader.
@@ -47,6 +49,9 @@ export default class Node implements INode {
 
   protected __id: number;
   protected __sockets: ISocket[] = [];
+
+  private static __existVertexShaderOutputSocket = false;
+  private static __existFragmentShaderOutputSocket = false;
 
   /**
    * Create a new node
@@ -117,6 +122,8 @@ export default class Node implements INode {
    * Remove all created nodes
    */
   static resetNodes() {
+    this.__existVertexShaderOutputSocket = false;
+    this.__existFragmentShaderOutputSocket = false;
     this.__nodes.length = 0;
   }
 
@@ -372,6 +379,10 @@ export default class Node implements INode {
     this.__sockets.push(inputSocket);
   }
 
+  /**
+   * @private
+   * Check for duplicate socket names in the input sockets.
+   */
   private __checkDuplicationOfInputSocket(socketName: string) {
     const existSocketName = this.__sockets.some(
       socket => socket.isInputSocket() && socket.socketName === socketName
@@ -390,7 +401,10 @@ export default class Node implements INode {
    */
 
   private __addOutputSocket(
-    socketData: StandardOutputSocketData | VaryingOutputSocketData
+    socketData:
+      | StandardOutputSocketData
+      | VaryingOutputSocketData
+      | ShaderOutputSocketData
   ) {
     const socketName = socketData.socketName;
 
@@ -412,18 +426,25 @@ export default class Node implements INode {
         socketName,
         vSocketData.varyingData
       );
-    } else {
+    } else if ((socketData as StandardOutputSocketData).type != null) {
       const sSocketData = socketData as StandardOutputSocketData;
       outputSocket = new StandardOutputSocket(
         sSocketData.type,
         this,
         socketName
       );
+    } else {
+      this.__checkUniquenessOfShaderOutputSocket();
+      outputSocket = new ShaderOutputSocket(this, socketName);
     }
 
     this.__sockets.push(outputSocket);
   }
 
+  /**
+   * @private
+   * Check for duplicate socket names in the output sockets.
+   */
   private __checkDuplicationOfOutputSocket(socketName: string) {
     const existSocketName = this.__sockets.some(
       socket => !socket.isInputSocket() && socket.socketName === socketName
@@ -433,6 +454,28 @@ export default class Node implements INode {
       return true;
     } else {
       return false;
+    }
+  }
+
+  /**
+   * @private
+   * Display an error message if there are two or more ShaderOutputSockets in the same shader stage.
+   */
+  private __checkUniquenessOfShaderOutputSocket() {
+    if (this.shaderStage === ShaderStage.Vertex) {
+      if (Node.__existVertexShaderOutputSocket) {
+        console.error(
+          'Node.__addOutputSocket: ShaderOutputSocket must be one in the vertex shader'
+        );
+      }
+      Node.__existVertexShaderOutputSocket = true;
+    } else {
+      if (Node.__existFragmentShaderOutputSocket) {
+        console.error(
+          'Node.__addOutputSocket: ShaderOutputSocket must be one in the fragment shader'
+        );
+      }
+      Node.__existFragmentShaderOutputSocket = true;
     }
   }
 }
