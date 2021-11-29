@@ -81,7 +81,8 @@ export default class ShaderGraphResolver {
       this.__addNodeDataToShaderityObjectCreator(
         shaderityObjectCreator,
         node,
-        shaderFunctionDataKeys
+        shaderFunctionDataKeys,
+        shaderStage
       );
     }
 
@@ -135,11 +136,13 @@ export default class ShaderGraphResolver {
    * @param shaderityObjectCreator shaderityObjectCreator object of shaderity
    * @param node target node
    * @param shaderFunctionDataKeys array to prevent duplicate function definitions in shader
+   * @param shaderStage  Specify vertex of fragment shader
    */
   private static __addNodeDataToShaderityObjectCreator(
     shaderityObjectCreator: ShaderityObjectCreator,
     node: Node,
-    shaderFunctionDataKeys: string[]
+    shaderFunctionDataKeys: string[],
+    shaderStage: ShaderStageStr
   ) {
     for (const extension of node._extensions) {
       shaderityObjectCreator.addExtension(extension);
@@ -181,8 +184,10 @@ export default class ShaderGraphResolver {
             precision: uInputSocket.precision,
           }
         );
-      } else if (socket.className === 'VaryingInputSocket') {
-        // for fragment shader
+      } else if (
+        socket.className === 'VaryingInputSocket' &&
+        shaderStage === 'fragment'
+      ) {
         const vInputSocket = socket as VaryingInputSocket;
         const vOutputSocket = vInputSocket.connectedSocket as
           | VaryingOutputSocket
@@ -212,8 +217,10 @@ export default class ShaderGraphResolver {
             interpolationType: vOutputSocket.interpolationType,
           }
         );
-      } else if (socket.className === 'VaryingOutputSocket') {
-        // for vertex shader
+      } else if (
+        socket.className === 'VaryingOutputSocket' &&
+        shaderStage === 'vertex'
+      ) {
         const vOutputSocket = socket as VaryingOutputSocket;
 
         shaderityObjectCreator.addVaryingDeclaration(
@@ -244,9 +251,11 @@ export default class ShaderGraphResolver {
    */
   private static __createMainFunctionCode(sortedNodes: Node[]) {
     // stock variable names to be used as arguments in each node's function call
-    // usage: variableNames[node.id][index of socket] = variableName;
-    const variableNames: Array<Array<string>> =
-      this.__initializeVariableNames(sortedNodes);
+    // usage: argumentNameList[node.id][index of socket] = variableName;
+    const argumentNameList: Array<Array<string>> =
+      this.__initializeArgumentNameListOfFunctionsCalledInMainFunction(
+        sortedNodes
+      );
 
     let variableDeclarations = '';
     let inputValueDefinitions = '';
@@ -257,24 +266,24 @@ export default class ShaderGraphResolver {
       inputValueDefinitions +=
         this.__createInputVariableDefinitionsAndStoreVariableName(
           node,
-          variableNames
+          argumentNameList
         );
 
       // for connected sockets
       variableDeclarations +=
         this.__createOutVariableDeclarationsAndStoreVariableName(
           node,
-          variableNames
+          argumentNameList
         );
 
-      this.__addStorageQualifierVariableName(node, variableNames);
-      this.__addShaderOutputVariableName(node, variableNames);
+      this.__addStorageQualifierVariableName(node, argumentNameList);
+      this.__addShaderOutputVariableName(node, argumentNameList);
     }
 
     let functionCalls = '';
     for (let i = 0; i < sortedNodes.length; i++) {
       const node = sortedNodes[i];
-      const argumentNames = variableNames[node.id];
+      const argumentNames = argumentNameList[node.id];
       functionCalls += this.__createShaderGraphFunctionCalls(
         node,
         argumentNames
@@ -296,17 +305,21 @@ ${functionCalls}
    * @param nodes array of nodes
    * @returns array to store the variable names
    */
-  private static __initializeVariableNames(nodes: Node[]) {
-    const variableNames: Array<Array<string>> = new Array(Node.allNodes.length);
-    variableNames.fill(new Array(0));
+  private static __initializeArgumentNameListOfFunctionsCalledInMainFunction(
+    nodes: Node[]
+  ) {
+    const argumentNameList: Array<Array<string>> = new Array(
+      Node.allNodes.length
+    );
+    argumentNameList.fill(new Array(0));
 
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
       const argumentCountOfNodeFunction = node._sockets.length;
-      variableNames[node.id] = new Array(argumentCountOfNodeFunction);
+      argumentNameList[node.id] = new Array(argumentCountOfNodeFunction);
     }
 
-    return variableNames;
+    return argumentNameList;
   }
 
   /**
@@ -315,15 +328,15 @@ ${functionCalls}
    * that is not connected to the output socket.
    * The created variable is initialized with the default value of the socket.
    *
-   * The names of created variables are stored in the variableNames at the position of the corresponding
+   * The names of created variables are stored in the argumentNameList at the position of the corresponding
    * input socket.
    * @param node target node
-   * @param variableNames array to store the variable names used in each function call of the main function
+   * @param argumentNameList array to store the variable names used in each function call of the main function
    * @returns string of variable definitions
    */
   private static __createInputVariableDefinitionsAndStoreVariableName(
     node: Node,
-    variableNames: string[][]
+    argumentNameList: string[][]
   ): string {
     let returnStr = '';
 
@@ -364,7 +377,7 @@ ${functionCalls}
       const variableName = `${sInputSocket.socketName}_${node.id}`;
       returnStr += `  ${glslTypeStr} ${variableName} = ${defaultValue};\n`;
 
-      variableNames[node.id][i] = variableName;
+      argumentNameList[node.id][i] = variableName;
     }
 
     return returnStr;
@@ -374,15 +387,15 @@ ${functionCalls}
    * @private
    * Create string of variable declarations for each output socket.
    *
-   * The name of the created variable is stored in the variableNames at the position of the corresponding
+   * The name of the created variable is stored in the argumentNameList at the position of the corresponding
    * output socket and the connected input sockets.
    * @param node target node
-   * @param variableNames array to store the variable names used in each function call of the main function
+   * @param argumentNameList array to store the variable names used in each function call of the main function
    * @returns string of variable declarations
    */
   private static __createOutVariableDeclarationsAndStoreVariableName(
     node: Node,
-    variableNames: string[][]
+    argumentNameList: string[][]
   ): string {
     let returnStr = '';
 
@@ -395,7 +408,7 @@ ${functionCalls}
 
       if (socket.className === 'VaryingOutputSocket') {
         const vOutputSocket = socket as VaryingOutputSocket;
-        variableNames[node.id][i] = vOutputSocket.variableName;
+        argumentNameList[node.id][i] = vOutputSocket.variableName;
       } else if (socket.className === 'StandardOutputSocket') {
         const sOutputSocket = socket as StandardOutputSocket;
         const outputNodes = sOutputSocket.connectedNodes;
@@ -406,7 +419,7 @@ ${functionCalls}
           variableName += `_node${connectedNode.id}`;
         }
 
-        variableNames[node.id][i] = variableName;
+        argumentNameList[node.id][i] = variableName;
 
         const sInputSockets = sOutputSocket.connectedSockets;
         for (let j = 0; j < sInputSockets.length; j++) {
@@ -415,7 +428,7 @@ ${functionCalls}
           const connectedNodeId = outputNode.id;
           const socketIndex = outputNode._sockets.indexOf(sInputSocket);
 
-          variableNames[connectedNodeId][socketIndex] = variableName;
+          argumentNameList[connectedNodeId][socketIndex] = variableName;
         }
 
         const precision =
@@ -434,7 +447,7 @@ ${functionCalls}
         continue;
       }
 
-      if (variableNames[node.id][i] !== null) {
+      if (argumentNameList[node.id][i] !== null) {
         continue;
       }
 
@@ -448,7 +461,7 @@ ${functionCalls}
         const connectedNodeId = outputNode.id;
         const socketIndex = outputNode._sockets.indexOf(vInputSocket);
 
-        variableNames[connectedNodeId][socketIndex] =
+        argumentNameList[connectedNodeId][socketIndex] =
           vOutputSocket.variableName;
       }
     }
@@ -458,13 +471,13 @@ ${functionCalls}
 
   /**
    * @private
-   * Set the attribute/varying/uniform variable name to variableNames to the corresponding position in the socket
+   * Set the attribute/varying/uniform variable name to argumentNameList to the corresponding position in the socket
    * @param node target node
-   * @param variableNames array to store the variable names used in each function call of the main function
+   * @param argumentNameList array to store the variable names used in each function call of the main function
    */
   private static __addStorageQualifierVariableName(
     node: Node,
-    variableNames: string[][]
+    argumentNameList: string[][]
   ): void {
     const nodeId = node.id;
 
@@ -472,26 +485,23 @@ ${functionCalls}
     for (let i = 0; i < sockets.length; i++) {
       const inputSocket = sockets[i];
 
-      if (inputSocket.className === 'AttributeInputSocket') {
-        const aInputSocket = inputSocket as AttributeInputSocket;
-        const variableName = aInputSocket.variableName;
-
-        variableNames[nodeId][i] = `${variableName}`;
-      } else if (inputSocket.className === 'VaryingInputSocket') {
-        const vInputSocket = inputSocket as VaryingInputSocket;
-        const variableName = vInputSocket.variableName;
-
-        variableNames[nodeId][i] = `${variableName}_${nodeId}`;
-      } else if (inputSocket.className === 'UniformInputSocket') {
-        const uInputSocket = inputSocket as UniformInputSocket;
-        variableNames[nodeId][i] = uInputSocket.variableName;
+      if (
+        inputSocket.className === 'AttributeInputSocket' ||
+        inputSocket.className === 'VaryingInputSocket' ||
+        inputSocket.className === 'UniformInputSocket'
+      ) {
+        const storageQualifierInputSocket = inputSocket as
+          | AttributeInputSocket
+          | VaryingInputSocket
+          | UniformInputSocket;
+        argumentNameList[nodeId][i] = storageQualifierInputSocket.variableName;
       }
     }
   }
 
   private static __addShaderOutputVariableName(
     node: Node,
-    variableNames: string[][]
+    argumentNameList: string[][]
   ): void {
     const nodeId = node.id;
 
@@ -500,9 +510,9 @@ ${functionCalls}
       const inputSocket = sockets[i];
       if (inputSocket.className === 'ShaderOutputSocket') {
         if (node.shaderStage === ShaderStage.Vertex) {
-          variableNames[nodeId][i] = 'gl_Position';
+          argumentNameList[nodeId][i] = 'gl_Position';
         } else {
-          variableNames[nodeId][i] = 'renderTarget0';
+          argumentNameList[nodeId][i] = 'renderTarget0';
         }
       }
     }
@@ -510,9 +520,9 @@ ${functionCalls}
 
   /**
    * @private
-   * Create a function call string based on the variableNames and the functionName of target node
+   * Create a function call string based on the argumentNameList and the functionName of target node
    * @param node target node
-   * @param variableNames array to store the variable names used in each function call of the main function
+   * @param argumentNameList array to store the variable names used in each function call of the main function
    * @returns function call string
    */
   private static __createShaderGraphFunctionCalls(

@@ -1,5 +1,8 @@
 import Node from '../node/Node';
 import StandardInputSocket from '../sockets/input/StandardInputSocket';
+import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
+import {ISocket} from '../sockets/interface/ISocket';
+import {ShaderStage} from '../types/CommonEnum';
 
 /**
  * This class sorts nodes.
@@ -57,12 +60,15 @@ export default class NodeSorter {
 
     for (let i = 0; i < unsortedNodes.length; i++) {
       const node = unsortedNodes[i];
-      for (const inputSocket of node._sockets) {
-        if (inputSocket.className !== 'StandardInputSocket') {
+      for (const socket of node._sockets) {
+        const isTargetSocket =
+          this.__isInputSocketWhoseConnectedOutputIsInSameShader(socket, node);
+        if (!isTargetSocket) {
           continue;
         }
 
-        const inputNode = (inputSocket as StandardInputSocket).connectedNode;
+        const inputNode = (socket as StandardInputSocket | VaryingInputSocket)
+          .connectedNode;
         if (inputNode == null) {
           // non-connected socket
           continue;
@@ -74,6 +80,24 @@ export default class NodeSorter {
       }
     }
     return inputNodeCounts;
+  }
+
+  private static __isInputSocketWhoseConnectedOutputIsInSameShader(
+    inputSocket: ISocket,
+    node: Node
+  ) {
+    if (inputSocket.className === 'StandardInputSocket') {
+      return true;
+    }
+
+    if (
+      node.shaderStage === ShaderStage.Vertex &&
+      inputSocket.className === 'VaryingInputSocket'
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
