@@ -12,57 +12,59 @@ import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
 import NodeSorter from './NodeSorter';
 import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
+import {ShaderityObject} from 'shaderity';
 
 /**
  * This class resolves the created node graph and creates vertex and fragment shaders.
  */
 export default class ShaderGraphResolver {
   /**
-   * Create vertex and fragment shaders from nodes
+   * Create vertex and fragment shaderity objects from nodes
    * @param vertexShaderGlobalData Defining define directives and constant values and
    *                               specifying precision for use in vertex shader
    * @param fragmentShaderGlobalData Defining define directives and constant values and
    *                                 specifying precision for use in fragment shader
-   * @returns shader codes of vertex and fragment shader
+   * @returns shaderity objects of shaders
    */
-  static createShaderCodes(
+  static createShaderityObjects(
     vertexShaderGlobalData?: ShaderGlobalData,
     fragmentShaderGlobalData?: ShaderGlobalData
   ) {
     const sortedVertexNode = NodeSorter.sortTopologically(Node.vertexNodes);
     const sortedFragmentNode = NodeSorter.sortTopologically(Node.fragmentNodes);
 
-    const vertexShaderCode = ShaderGraphResolver.__createShaderCode(
+    const vertexShaderityObject = ShaderGraphResolver.__createShaderityObject(
       sortedVertexNode,
       'vertex',
       vertexShaderGlobalData
     );
 
-    const fragmentShaderCode = ShaderGraphResolver.__createShaderCode(
+    const fragmentShaderityObject = ShaderGraphResolver.__createShaderityObject(
       sortedFragmentNode,
       'fragment',
       fragmentShaderGlobalData
     );
 
     return {
-      vertexShader: vertexShaderCode,
-      fragmentShader: fragmentShaderCode,
+      vertexShaderityObject,
+      fragmentShaderityObject,
     };
   }
 
   /**
    * @private
-   * Create vertex or fragment shader from nodes
+   * Create vertex or fragment shaderity object from nodes
    * @param sortedNodes Topologically sorted nodes used in the shader to be created.
    * @param shaderStage Specify vertex of fragment shader
    * @param globalData Defining define directives and constant values and
    *                   specifying precision for use in the shader
+   * @returns shaderity object
    */
-  private static __createShaderCode(
+  private static __createShaderityObject(
     sortedNodes: Node[],
     shaderStage: ShaderStageStr,
     globalData?: ShaderGlobalData
-  ): string {
+  ): ShaderityObject {
     const shaderityObjectCreator =
       Shaderity.createShaderityObjectCreator(shaderStage);
 
@@ -88,7 +90,7 @@ export default class ShaderGraphResolver {
 
     const shaderityObject = shaderityObjectCreator.createShaderityObject();
 
-    return shaderityObject.code;
+    return shaderityObject;
   }
 
   /**

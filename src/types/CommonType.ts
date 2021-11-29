@@ -1,3 +1,4 @@
+import {ShaderityObject} from 'shaderity';
 import {
   ShaderPrecisionType as _ShaderPrecisionType,
   ShaderAttributeVarType as _ShaderAttributeVarType,
@@ -25,9 +26,9 @@ export type ShaderPrecisionObject = _ShaderPrecisionObject;
 export type ShaderAttributeObject = _ShaderAttributeObject;
 export type ShaderConstantValueObject = _ShaderConstantValueObject;
 
-export interface ShaderCodes {
-  vertexShader: string;
-  fragmentShader: string;
+export interface ShaderityObjects {
+  vertexShaderityObject: ShaderityObject;
+  fragmentShaderityObject: ShaderityObject;
 }
 
 export interface ShaderFunctionData {
