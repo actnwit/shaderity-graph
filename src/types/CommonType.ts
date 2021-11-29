@@ -92,7 +92,7 @@ export interface AbstractSocketData {
 
 export interface ShaderStandardInputData {
   type: SocketTypeEnum;
-  defaultValue: number[];
+  defaultValue?: number[];
 }
 
 export interface ShaderStandardOutputData {

@@ -256,7 +256,6 @@ const standardInputSocketData1: StandardInputSocketData = {
   direction: SocketDirection.Input,
   shaderData: {
     type: SocketType.Vec2,
-    defaultValue: [0, 0],
   },
   // Here, we connect sockets manually
   // socketConnectionData: {
@@ -305,6 +304,10 @@ const socketsOfNode2 = node2._sockets;
 
 const standardInputSocket1 = socketsOfNode1[0] as StandardInputSocket;
 const varyingInputSocket1 = socketsOfNode2[0] as VaryingInputSocket;
+
+test('StandardInputSocket.defaultValue (not specified case)', () => {
+  expect(standardInputSocket1.defaultValue).toStrictEqual([0, 0]);
+});
 
 test('AbstractStandardSocket.connectSockets', () => {
   AbstractStandardSocket.connectSockets(
