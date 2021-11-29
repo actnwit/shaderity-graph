@@ -257,7 +257,7 @@ export default class ShaderGraphResolver {
     for (let i = 0; i < sortedNodes.length; i++) {
       const node = sortedNodes[i];
 
-      // for non-connected input sockets
+      // for non-connected standard input sockets
       inputValueDefinitions += this.__createInputVariableDefinitions(
         node,
         variableNames
@@ -334,7 +334,11 @@ ${functionCalls}
       if (socket.className !== 'StandardInputSocket') {
         continue;
       }
+
       const sInputSocket = socket as StandardInputSocket;
+      if (sInputSocket.connectedSocket != null) {
+        continue;
+      }
 
       const socketType = sInputSocket.socketType;
       const glslComponentNumber = SocketType.getGlslComponentNumber(socketType);
