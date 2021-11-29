@@ -11,11 +11,12 @@ import {
   VaryingInputSocketData,
   AttributeInputSocketData,
   VaryingOutputSocketData,
+  SocketData,
 } from '../types/CommonType';
 import StandardInputSocket from '../sockets/input/StandardInputSocket';
 import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
 import {INode} from './INode';
-import ShaderFunctionCodeRepository from './ShaderFunctionCodeRepository';
+import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
 import AbstractStandardSocket from '../sockets/abstract/AbstractStandardSocket';
 import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
@@ -53,17 +54,7 @@ export default class Node implements INode {
    * @param socketDataArray define sockets. The order of the socketData must match the order of
    *                        the arguments of the node's shader function.
    */
-  constructor(
-    nodeData: NodeData,
-    socketDataArray: (
-      | StandardInputSocketData
-      | StandardOutputSocketData
-      | AttributeInputSocketData
-      | VaryingInputSocketData
-      | VaryingOutputSocketData
-      | UniformInputSocketData
-    )[]
-  ) {
+  constructor(nodeData: NodeData, socketDataArray: SocketData[]) {
     this.__shaderFunctionName = nodeData.shaderFunctionName;
     this.__shaderStage = nodeData.shaderStage;
 
@@ -76,13 +67,13 @@ export default class Node implements INode {
       }
     }
 
-    const existShaderFunctionCode =
-      ShaderFunctionCodeRepository.existShaderFunctionCode(
+    const existShaderFunctionData =
+      ShaderFunctionDataRepository.existShaderFunctionData(
         this.__shaderFunctionName
       );
-    if (!existShaderFunctionCode) {
+    if (!existShaderFunctionData) {
       console.warn(
-        `Node: function ${this.__shaderFunctionName} is not found in ShaderFunctionCodeRepository`
+        `Node: function ${this.__shaderFunctionName} is not found in ShaderFunctionDataRepository`
       );
     }
 
@@ -189,14 +180,13 @@ export default class Node implements INode {
   }
 
   /**
-   * Get the corresponding function of this node from ShaderFunctionCodeRepository
+   * Get the corresponding function of this node from ShaderFunctionDataRepository
    */
   get shaderCode() {
     const shaderCode =
-      ShaderFunctionCodeRepository.getShaderFunctionCode(
+      ShaderFunctionDataRepository.getShaderFunctionData(
         this.__shaderFunctionName
-      )?.shaderFunctionCode ??
-      `// function name ${this.__shaderFunctionName} is not found`;
+      )?.code ?? `// function name ${this.__shaderFunctionName} is not found`;
 
     return shaderCode;
   }
@@ -221,7 +211,7 @@ export default class Node implements INode {
    */
   get _extensions() {
     const extensions =
-      ShaderFunctionCodeRepository.getShaderFunctionCode(
+      ShaderFunctionDataRepository.getShaderFunctionData(
         this.__shaderFunctionName
       )?.extensions ?? [];
 

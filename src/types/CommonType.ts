@@ -34,14 +34,14 @@ export interface ShaderCodes {
   fragmentShader: string;
 }
 
-export interface ShaderFunctionCode {
-  shaderFunctionCode: string;
+export interface ShaderFunctionData {
+  code: string;
   extensions?: string[];
   extras?: {[key: string]: unknown};
 }
 
-export interface ShaderFunctionCodeObject {
-  [shaderFunctionName: string]: ShaderFunctionCode;
+export interface ShaderFunctions {
+  [shaderFunctionName: string]: ShaderFunctionData;
 }
 
 export interface ShaderityGraphJson {
@@ -49,20 +49,21 @@ export interface ShaderityGraphJson {
   shaderityGraphNodes: ShaderityGraphNode[];
   vertexShaderGlobalData?: VertexShaderGlobalData;
   fragmentShaderGlobalData?: FragmentShaderGlobalData;
-  shaderFunctionCodeObject: ShaderFunctionCodeObject;
+  shaderFunctions: ShaderFunctions;
   extras?: {[key: string]: unknown};
 }
 
+export type SocketData =
+  | StandardInputSocketData
+  | AttributeInputSocketData
+  | VaryingInputSocketData
+  | UniformInputSocketData
+  | StandardOutputSocketData
+  | VaryingOutputSocketData;
+
 export interface ShaderityGraphNode {
   nodeData: NodeData;
-  socketDataArray: (
-    | StandardInputSocketData
-    | AttributeInputSocketData
-    | VaryingInputSocketData
-    | UniformInputSocketData
-    | StandardOutputSocketData
-    | VaryingOutputSocketData
-  )[]; // the order must be the order of the function arguments for this node
+  socketDataArray: SocketData[]; // the order must be the order of the function arguments for this node
   extras?: {[key: string]: unknown};
 }
 
