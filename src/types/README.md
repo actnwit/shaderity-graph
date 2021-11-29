@@ -244,9 +244,10 @@ In shaderity graph, all nodes input and output data through sockets. The followi
 Note:
 1. Normally, type 2 and 3 are not shown in the GUI (See the following figure 'hidden socket' )
 2. The attribute input socket only works with a vertex shader.
-3. The varying input socket only works with a fragment shader.
-4. The varying output socket only works with a vertex shader.
-5. There is only one shader output socket for each shader.
+3. The varying output socket only works with a vertex shader.
+4. There is only one shader output socket for each shader.
+5. When connecting sockets of nodes of the same shader, use standard input socket and standard output socket.
+6. Suppose that the output socket of a vertex shader node is connected to one or more input sockets. If any of the connected input sockets are sockets of fragment shader nodes, all the connected sockets must be varying input sockets or varying output sockets.
 
 <figure>
   <img src='./hidden_socket.png' width=600 alt="hidden socket"></img>
@@ -588,9 +589,7 @@ Location of the attribute variable(for GLSL ES3.0)
 
 ## VaryingInputSocketData
 
-Data for a socket that takes an varying variable as input
-Only fragment shader nodes can have this socket.
-
+Data for a socket that takes an varying variable as input.
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
 |socketName|`string`|Name of this socket|✅ Yes|
