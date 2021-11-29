@@ -18,14 +18,14 @@ export default class UniformInputSocket
 {
   private __variableName: string;
   private __type: ShaderUniformVarTypeES3;
-  private __precision: ShaderPrecisionType;
+  private __precision?: ShaderPrecisionType;
 
   constructor(node: INode, socketName: string, uniform: ShaderUniformData) {
     super(node, socketName);
 
     this.__variableName = uniform.variableName ?? `u_${node.id}_${socketName}`;
     this.__type = uniform.type;
-    this.__precision = uniform.precision ?? 'highp';
+    this.__precision = uniform.precision;
   }
 
   /**

@@ -13,7 +13,7 @@ export interface IVaryingOutputSocket extends ISocket {
   get className(): 'VaryingOutputSocket';
   get variableName(): string;
   get socketType(): ShaderVaryingVarType;
-  get precision(): ShaderPrecisionType;
+  get precision(): ShaderPrecisionType | undefined;
   get interpolationType(): ShaderVaryingInterpolationType | undefined;
   get connectedNodes(): INode[];
   get connectedSockets(): IVaryingInputSocket[];

@@ -19,7 +19,7 @@ export default class AttributeInputSocket
 {
   private __variableName: string;
   private __type: ShaderAttributeVarType;
-  private __precision: ShaderPrecisionType;
+  private __precision?: ShaderPrecisionType;
   private __location: number | undefined;
 
   constructor(node: INode, socketName: string, attribute: ShaderAttributeData) {
@@ -27,7 +27,7 @@ export default class AttributeInputSocket
 
     this.__variableName = attribute.variableName;
     this.__type = attribute.type;
-    this.__precision = attribute.precision ?? 'highp';
+    this.__precision = attribute.precision;
     this.__location = attribute.location;
   }
 

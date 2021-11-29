@@ -85,7 +85,7 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
   /**
    * Get the precision of varying variable
    */
-  abstract get precision(): ShaderPrecisionType;
+  abstract get precision(): ShaderPrecisionType | undefined;
 
   /**
    * Connect this socket and the argument socket

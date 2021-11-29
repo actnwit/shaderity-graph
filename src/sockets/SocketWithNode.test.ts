@@ -200,7 +200,7 @@ test('attributeInputSocket.variableName', () => {
 });
 
 test('attributeInputSocket.precision', () => {
-  expect(attributeInputSocket.precision).toBe('highp');
+  expect(attributeInputSocket.precision).toBe(undefined);
 });
 
 test('attributeInputSocket.location', () => {
