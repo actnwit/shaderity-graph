@@ -11,6 +11,17 @@ import {
   ShaderCodes,
   ShaderityGraphJson,
   ShaderityGraphNode,
+  VertexShaderGlobalData,
+  FragmentShaderGlobalData,
+  ShaderFunctionCode,
+  ShaderFunctionCodeObject,
+  NodeData,
+  ConnectableInputSocketData,
+  ConnectableOutputSocketData,
+  AttributeInputSocketData,
+  VaryingInputSocketData,
+  UniformInputSocketData,
+  SocketConnectionData,
 } from './types/CommonType';
 
 export default {
@@ -28,4 +39,15 @@ export type {
   ShaderityGraphNode,
   SocketTypeEnum,
   SocketDirectionEnum,
+  VertexShaderGlobalData,
+  FragmentShaderGlobalData,
+  ShaderFunctionCode,
+  ShaderFunctionCodeObject,
+  NodeData,
+  ConnectableInputSocketData,
+  ConnectableOutputSocketData,
+  AttributeInputSocketData,
+  VaryingInputSocketData,
+  UniformInputSocketData,
+  SocketConnectionData,
 };
