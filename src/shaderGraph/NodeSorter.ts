@@ -1,5 +1,5 @@
 import Node from '../node/Node';
-import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
+import StandardInputSocket from '../sockets/input/StandardInputSocket';
 
 /**
  * This class sorts nodes.
@@ -58,11 +58,11 @@ export default class NodeSorter {
     for (let i = 0; i < unsortedNodes.length; i++) {
       const node = unsortedNodes[i];
       for (const inputSocket of node._sockets) {
-        if (inputSocket.className !== 'ConnectableInputSocket') {
+        if (inputSocket.className !== 'StandardInputSocket') {
           continue;
         }
 
-        const inputNode = (inputSocket as ConnectableInputSocket).connectedNode;
+        const inputNode = (inputSocket as StandardInputSocket).connectedNode;
         if (inputNode == null) {
           // non-connected socket
           continue;

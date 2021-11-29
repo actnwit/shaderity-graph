@@ -5,21 +5,24 @@ import {
 } from '../types/CommonEnum';
 import {
   NodeData,
-  ConnectableInputSocketData,
-  ConnectableOutputSocketData,
+  StandardInputSocketData,
+  StandardOutputSocketData,
   UniformInputSocketData,
   VaryingInputSocketData,
   AttributeInputSocketData,
+  VaryingOutputSocketData,
 } from '../types/CommonType';
-import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
-import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
+import StandardInputSocket from '../sockets/input/StandardInputSocket';
+import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
 import {INode} from './INode';
 import ShaderFunctionCodeRepository from './ShaderFunctionCodeRepository';
-import AbstractConnectableSocket from '../sockets/AbstractConnectableSocket';
+import AbstractStandardSocket from '../sockets/abstract/AbstractStandardSocket';
 import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
-import {ISocket} from '../sockets/ISocket';
+import {ISocket} from '../sockets/interface/ISocket';
+import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
+import AbstractVaryingSocket from '../sockets/abstract/AbstractVaryingSocket';
 
 /**
  * A node is an object that contains functions to be used in the shader.
@@ -27,11 +30,11 @@ import {ISocket} from '../sockets/ISocket';
  * The sockets corresponds to a function argument of a node.
  *
  * The node graph which is the collection of connected nodes is transformed into a shader by
- * calling the node functions sequentially. Nodes are connected to each other via connectable
+ * calling the node functions sequentially. Nodes are connected to each other via standard
  * sockets, and data can be passed between them.
  *
  * Note: Data of attribute/varying/uniform variable must be passed to a node through a
- *       non-connectable socket such as AttributeInputSocket/VaryingInputSocket/UniformInputSocket.
+ *       non-standard socket such as AttributeInputSocket/VaryingInputSocket/UniformInputSocket.
  *       Do not write these variables directly into the function of each node.
  *       They must be specified in the function arguments.
  */
@@ -53,10 +56,11 @@ export default class Node implements INode {
   constructor(
     nodeData: NodeData,
     socketDataArray: (
-      | ConnectableInputSocketData
-      | ConnectableOutputSocketData
+      | StandardInputSocketData
+      | StandardOutputSocketData
       | AttributeInputSocketData
       | VaryingInputSocketData
+      | VaryingOutputSocketData
       | UniformInputSocketData
     )[]
   ) {
@@ -66,15 +70,9 @@ export default class Node implements INode {
     for (let i = 0; i < socketDataArray.length; i++) {
       const socketData = socketDataArray[i];
       if (socketData.direction === SocketDirection.Input) {
-        this.__addInputSocket(
-          socketData as
-            | ConnectableInputSocketData
-            | AttributeInputSocketData
-            | VaryingInputSocketData
-            | UniformInputSocketData
-        );
+        this.__addInputSocket(socketData);
       } else {
-        this.__addOutputSocket(socketData as ConnectableOutputSocketData);
+        this.__addOutputSocket(socketData);
       }
     }
 
@@ -164,17 +162,23 @@ export default class Node implements INode {
       return;
     }
 
-    if (inputSocket.className !== 'ConnectableInputSocket') {
-      console.error(
-        'Node.connectNodes: the input socket is non-connectable socket'
-      );
+    if (
+      inputSocket.className === 'StandardInputSocket' &&
+      outputSocket.className === 'StandardOutputSocket'
+    ) {
+      AbstractStandardSocket.connectSockets(inputSocket, outputSocket);
       return;
     }
 
-    AbstractConnectableSocket.connectSockets(
-      inputSocket as ConnectableInputSocket,
-      outputSocket
-    );
+    if (
+      inputSocket.className === 'VaryingInputSocket' &&
+      outputSocket.className === 'VaryingOutputSocket'
+    ) {
+      AbstractVaryingSocket.connectSockets(inputSocket, outputSocket);
+      return;
+    }
+
+    console.error('Node.connectNodes: the input socket is non-standard socket');
   }
 
   /**
@@ -241,13 +245,15 @@ export default class Node implements INode {
       return undefined;
     }
 
-    if (targetSocket.className !== 'ConnectableInputSocket') {
+    if (
+      targetSocket.className === 'AttributeInputSocket' ||
+      targetSocket.className === 'UniformInputSocket'
+    ) {
       // non-connectable socket cannot connect another node
       return undefined;
     }
 
-    const cInputSocket = targetSocket as ConnectableInputSocket;
-    const connectedNode = cInputSocket.connectedNode;
+    const connectedNode = targetSocket.connectedNode;
     return connectedNode;
   }
 
@@ -272,7 +278,7 @@ export default class Node implements INode {
     const resultSocket = this.__sockets.find(
       socket => socket.isInputSocket() && socket.name === socketName
     ) as
-      | ConnectableInputSocket
+      | StandardInputSocket
       | AttributeInputSocket
       | VaryingInputSocket
       | UniformInputSocket;
@@ -294,7 +300,7 @@ export default class Node implements INode {
   private __getOutputSocket(socketName: string) {
     const resultSocket = this.__sockets.find(
       socket => !socket.isInputSocket() && socket.name === socketName
-    ) as ConnectableOutputSocket;
+    ) as StandardOutputSocket | VaryingOutputSocket;
 
     if (resultSocket == null) {
       console.error(
@@ -312,7 +318,7 @@ export default class Node implements INode {
    */
   private __addInputSocket(
     socketData:
-      | ConnectableInputSocketData
+      | StandardInputSocketData
       | AttributeInputSocketData
       | VaryingInputSocketData
       | UniformInputSocketData
@@ -352,12 +358,12 @@ export default class Node implements INode {
         uSocketData.uniformData
       );
     } else {
-      const cSocketData = socketData as ConnectableInputSocketData;
-      inputSocket = new ConnectableInputSocket(
-        cSocketData.type,
+      const sSocketData = socketData as StandardInputSocketData;
+      inputSocket = new StandardInputSocket(
+        sSocketData.type,
         this,
         socketName,
-        cSocketData.defaultValue
+        sSocketData.defaultValue
       );
     }
 
@@ -381,7 +387,9 @@ export default class Node implements INode {
    * Add output socket of this node to connect another node
    */
 
-  private __addOutputSocket(socketData: ConnectableOutputSocketData) {
+  private __addOutputSocket(
+    socketData: StandardOutputSocketData | VaryingOutputSocketData
+  ) {
     const socketName = socketData.name;
 
     const duplicateOutputSocket =
@@ -394,11 +402,23 @@ export default class Node implements INode {
       return;
     }
 
-    const outputSocket = new ConnectableOutputSocket(
-      socketData.type,
-      this,
-      socketName
-    );
+    let outputSocket;
+    if ((socketData as VaryingOutputSocketData).varyingData != null) {
+      const vSocketData = socketData as VaryingOutputSocketData;
+      outputSocket = new VaryingOutputSocket(
+        this,
+        socketName,
+        vSocketData.varyingData
+      );
+    } else {
+      const sSocketData = socketData as StandardOutputSocketData;
+      outputSocket = new StandardOutputSocket(
+        sSocketData.type,
+        this,
+        socketName
+      );
+    }
+
     this.__sockets.push(outputSocket);
   }
 

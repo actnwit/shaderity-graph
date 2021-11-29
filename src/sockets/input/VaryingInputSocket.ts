@@ -1,69 +1,50 @@
-import AbstractSocket from '../AbstractSocket';
-import {SocketClassName} from '../ISocket';
 import {INode} from '../../node/INode';
-import {
-  ShaderPrecisionType,
-  ShaderVaryingInterpolationType,
-  ShaderVaryingObject,
-  ShaderVaryingVarType,
-} from '../../types/CommonType';
-import {INonConnectableInputSocket} from './INonConnectableInputSocket';
+import {ShaderVaryingObject} from '../../types/CommonType';
+import AbstractVaryingSocket from '../abstract/AbstractVaryingSocket';
+import {IVaryingOutputSocket} from '../interface/output/IVaryingOutputSocket';
+import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
 
 /**
  * The VaryingInputSocket is an input socket that receives an varying variable.
  * If the function corresponding to a node uses an varying variable,
  * the function must use this socket to receive the variable as an argument.
+ * This socket can connects with VaryingOutputSockets.
+ * This socket can be used only with fragment shader nodes.
  */
 export default class VaryingInputSocket
-  extends AbstractSocket
-  implements INonConnectableInputSocket
+  extends AbstractVaryingSocket
+  implements IVaryingInputSocket
 {
-  private __variableName: string;
-  private __type: ShaderVaryingVarType;
-  private __precision: ShaderPrecisionType;
-  private __interpolationType: ShaderVaryingInterpolationType | undefined;
+  _connectedSocket: IVaryingOutputSocket | undefined = undefined;
 
   constructor(node: INode, socketName: string, varying: ShaderVaryingObject) {
-    super(node, socketName);
-
-    this.__variableName = varying.variableName;
-    this.__type = varying.type;
-    this.__precision = varying.precision ?? 'highp';
-    this.__interpolationType = varying.interpolationType;
+    super(node, socketName, varying);
   }
 
   /**
    * Get the class name of this socket
    */
-  get className(): SocketClassName {
+  get className(): 'VaryingInputSocket' {
     return 'VaryingInputSocket';
   }
 
   /**
-   * Get the varying variable name
+   * Get the node that has the socket connected to this socket
+   * @returns connected node or undefined
    */
-  get variableName() {
-    return this.__variableName;
+  get connectedNode() {
+    return this._connectedSocket?.node;
   }
 
   /**
-   * Get the glsl type of varying variable
+   * Get the socket that is connected to this socket
+   * @returns connected socket or undefined
    */
-  get socketType() {
-    return this.__type;
+  get connectedSocket() {
+    return this._connectedSocket;
   }
 
-  /**
-   * Get the precision of varying variable
-   */
-  get precision() {
-    return this.__precision;
-  }
-
-  /**
-   * Get the interpolationType of varying variable(for GLSL ES3.0)
-   */
-  get interpolationType() {
-    return this.__interpolationType;
+  _connectSocketWith(socket: IVaryingOutputSocket) {
+    this._connectedSocket = socket;
   }
 }

@@ -1,15 +1,14 @@
-import {INode} from '../node/INode';
-import {SocketTypeEnum} from '../types/CommonEnum';
+import {INode} from '../../node/INode';
+import {SocketTypeEnum} from '../../types/CommonEnum';
 import AbstractSocket from './AbstractSocket';
-import {IConnectableInputSocket} from './input/IConnectableInputSocket';
-import {ISocket, SocketClassName} from './ISocket';
-import {IConnectableOutputSocket} from './output/IConnectableOutputSocket';
+import {IStandardInputSocket} from '../interface/input/IStandardInputSocket';
+import {IStandardOutputSocket} from '../interface/output/IStandardOutputSocket';
 
 /**
- * The roll of connectable sockets are connecting nodes.
+ * The roll of standard sockets are connecting nodes.
  * The user can connect sockets by Node.connectNodes method.
  */
-export default abstract class AbstractConnectableSocket extends AbstractSocket {
+export default abstract class AbstractStandardSocket extends AbstractSocket {
   private __socketType: SocketTypeEnum;
 
   constructor(socketType: SocketTypeEnum, node: INode, socketName: string) {
@@ -23,8 +22,8 @@ export default abstract class AbstractConnectableSocket extends AbstractSocket {
    * @param outputSocket output socket contained in the input node
    */
   static connectSockets(
-    inputSocket: IConnectableInputSocket,
-    outputSocket: IConnectableOutputSocket
+    inputSocket: IStandardInputSocket,
+    outputSocket: IStandardOutputSocket
   ) {
     if (inputSocket.socketType === outputSocket.socketType) {
       inputSocket._connectSocketWith(outputSocket);
@@ -44,11 +43,13 @@ export default abstract class AbstractConnectableSocket extends AbstractSocket {
   /**
    * Get the class name of this socket
    */
-  abstract get className(): SocketClassName;
+  abstract get className(): 'StandardInputSocket' | 'StandardOutputSocket';
 
   /**
    * Connect this socket and the argument socket
    * @param socket The socket to connect to
    */
-  abstract _connectSocketWith(socket: ISocket): void;
+  abstract _connectSocketWith(
+    socket: IStandardInputSocket | IStandardOutputSocket
+  ): void;
 }

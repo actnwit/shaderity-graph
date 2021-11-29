@@ -1,21 +1,21 @@
-import AbstractSocket from '../AbstractSocket';
-import {SocketClassName} from '../ISocket';
+import AbstractSocket from '../abstract/AbstractSocket';
 import {INode} from '../../node/INode';
 import {
   ShaderAttributeObject,
   ShaderAttributeVarType,
   ShaderPrecisionType,
 } from '../../types/CommonType';
-import {INonConnectableInputSocket} from './INonConnectableInputSocket';
+import {INonStandardInputSocket} from '../interface/input/INonStandardInputSocket';
 
 /**
  * The AttributeInputSocket is an input socket that receives an attribute variable.
  * If the function corresponding to a node uses an attribute variable,
  * the function must use this socket to receive the variable as an argument.
+ * This socket can be used only with vertex shader nodes.
  */
 export default class AttributeInputSocket
   extends AbstractSocket
-  implements INonConnectableInputSocket
+  implements INonStandardInputSocket
 {
   private __variableName: string;
   private __type: ShaderAttributeVarType;
@@ -38,7 +38,7 @@ export default class AttributeInputSocket
   /**
    * Get the class name of this socket
    */
-  get className(): SocketClassName {
+  get className(): 'AttributeInputSocket' {
     return 'AttributeInputSocket';
   }
 

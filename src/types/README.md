@@ -6,16 +6,21 @@
   - [ShaderityGraphNode](#shaderitygraphnode)
     - [NodeData](#nodedata)
     - [AbstractSocketData](#abstractsocketdata)
-      - [ConnectableInputSocketData](#connectableinputsocketdata)
+      - [StandardInputSocketData](#standardinputsocketdata)
         - [SocketConnectionData](#socketconnectiondata)
-      - [ConnectableOutputSocketData](#connectableoutputsocketdata)
       - [AttributeInputSocketData](#attributeinputsocketdata)
         - [ShaderAttributeObject](#shaderattributeobject)
       - [VaryingInputSocketData](#varyinginputsocketdata)
         - [ShaderVaryingObject](#shadervaryingobject)
+        - [SocketConnectionData](#socketconnectiondata)
       - [UniformInputSocketData](#uniforminputsocketdata)
-        - [UniformInputSocketData](#uniforminputsocketdata)
+        - [ShaderUniformObject](#shaderuniformobject)
+      - [StandardOutputSocketData](#standardoutputsocketdata)
+      - [VaryingOutputSocketData](#varyingoutputsocketdata)
+        - [ShaderVaryingObject](#shadervaryingobject)
   - [VertexShaderGlobalData](#vertexshaderglobaldata)
+    - [ShaderPrecisionObject](#shaderprecisionobject)
+    - [ShaderConstantValueObject](#shaderconstantvalueobject)
   - [FragmentShaderGlobalData](#fragmentshaderglobaldata)
     - [ShaderPrecisionObject](#shaderprecisionobject)
     - [ShaderConstantValueObject](#shaderconstantvalueobject)
@@ -206,8 +211,8 @@ All nodes input and output data through sockets. There are two ways to input and
 3. passing output of varying variables (TODO)
 
 AbstractSocketData is an abstract object for convenience to group several objects together. The concrete objects are
-[ConnectableInputSocketData](#connectableinputsocketdata),
-[ConnectableOutputSocketData](#connectableoutputsocketdata),
+[StandardInputSocketData](#standardinputsocketdata),
+[StandardOutputSocketData](#standardoutputsocketdata),
 [AttributeInputSocketData](#attributeinputsocketdata),
 [VaryingInputSocketData](#varyinginputsocketdata), and
 [UniformInputSocketData](#uniforminputsocketdata).
@@ -256,9 +261,9 @@ Application-specific data.
 
 <br>
 
-## ConnectableInputSocketData
+## StandardInputSocketData
 
-Data for a socket that can be connected to a single ConnectableOutputSocket.
+Data for a socket that can be connected to a single StandardOutputSocket.
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
@@ -271,7 +276,7 @@ Data for a socket that can be connected to a single ConnectableOutputSocket.
 
 <br>
 
-### ConnectableInputSocketData.name ✅
+### StandardInputSocketData.name ✅
 
 Name of this socket.
 
@@ -281,7 +286,7 @@ Name of this socket.
 
 <br>
 
-### ConnectableInputSocketData.direction ✅
+### StandardInputSocketData.direction ✅
 
 This property must be set `input`. See [AbstractSocketData.direction](#abstractsocketdatadirection) for detail.
 
@@ -294,7 +299,7 @@ This property must be set `input`. See [AbstractSocketData.direction](#abstracts
 
 <br>
 
-### ConnectableInputSocketData.type ✅
+### StandardInputSocketData.type ✅
 
 GLSL type of data to be input on this socket.
 
@@ -320,7 +325,7 @@ GLSL type of data to be input on this socket.
 
 <br>
 
- ### ConnectableInputSocketData.defaultValue ✅
+ ### StandardInputSocketData.defaultValue ✅
 
 Value to take as input when this socket is not connected to any socket.
 
@@ -330,7 +335,7 @@ Value to take as input when this socket is not connected to any socket.
 
 <br>
 
-### ConnectableInputSocketData.socketConnectionData
+### StandardInputSocketData.socketConnectionData
 
 Data of the connected output socket. If it is not connected to an output socket, the value is undefined.
 
@@ -340,7 +345,7 @@ Data of the connected output socket. If it is not connected to an output socket,
 
 <br>
 
-### ConnectableInputSocketData.extras
+### StandardInputSocketData.extras
 
 Application-specific data.
 
@@ -382,7 +387,7 @@ Node id of the node that has the connected socket. See [ShaderityGraphJson.shade
 
 <br>
 
-### ConnectableInputSocketData.extras
+### StandardInputSocketData.extras
 
 Application-specific data.
 
@@ -392,81 +397,11 @@ Application-specific data.
 
 <br>
 
-## ConnectableOutputSocketData
-
-Data for a socket that can be connected to a multiple ConnectableInputSocket.
-
-|Name|Type|Description|Required|
-|:--|:--|:--|:--|
-|name|`string`|Name of this socket|✅ Yes|
-|direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
-|type|`string`|GLSL type of data to be output on this socket|✅ Yes|
-|extras|`Object`|Application-specific data|No|
-
-<br>
-
-### ConnectableOutputSocketData.name ✅
-
-Name of this socket.
-
-- Type: `string`
-
-- Required: Yes
-
-<br>
-
-### ConnectableOutputSocketData.direction ✅
-
-This property must be set `output`. See [AbstractSocketData.direction](#abstractsocketdatadirection) for detail.
-
-- Type: `string`
-
-- Required: Yes
-
-- Allowed values
-  - `output`: This socket receives data.
-
-<br>
-
-### ConnectableOutputSocketData.type ✅
-
-GLSL type of data to be output on this socket.
-
-- Type: `string`
-
-- Required: Yes
-
-- Allowed values
-  - `bool`
-  - `int`
-  - `float`
-  - `vec2`
-  - `vec3`
-  - `vec4`
-  - `ivec2`
-  - `ivec3`
-  - `ivec4`
-  - `mat2`
-  - `mat3`
-  - `mat4`
-  - `sampler2D`
-  - `samplerCube`
-
-<br>
-
-### ConnectableOutputSocketData.extras
-
-Application-specific data.
-
-- Type: `Object`
-
-- Required: No
-
-<br>
 
 ## AttributeInputSocketData
 
 Data for a socket that takes an attribute variable as input
+Only vertex shader nodes can have this socket.
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
@@ -594,6 +529,7 @@ Location of the attribute variable(for GLSL ES3.0)
 ## VaryingInputSocketData
 
 Data for a socket that takes an varying variable as input
+Only fragment shader nodes can have this socket.
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
@@ -874,6 +810,135 @@ Precision of the uniform variable
 
 ***
 
+## StandardOutputSocketData
+
+Data for a socket that can be connected to a multiple StandardInputSocket.
+
+|Name|Type|Description|Required|
+|:--|:--|:--|:--|
+|name|`string`|Name of this socket|✅ Yes|
+|direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
+|type|`string`|GLSL type of data to be output on this socket|✅ Yes|
+|extras|`Object`|Application-specific data|No|
+
+<br>
+
+### StandardOutputSocketData.name ✅
+
+Name of this socket.
+
+- Type: `string`
+
+- Required: Yes
+
+<br>
+
+### StandardOutputSocketData.direction ✅
+
+This property must be set `output`. See [AbstractSocketData.direction](#abstractsocketdatadirection) for detail.
+
+- Type: `string`
+
+- Required: Yes
+
+- Allowed values
+  - `output`: This socket receives data.
+
+<br>
+
+### StandardOutputSocketData.type ✅
+
+GLSL type of data to be output on this socket.
+
+- Type: `string`
+
+- Required: Yes
+
+- Allowed values
+  - `bool`
+  - `int`
+  - `float`
+  - `vec2`
+  - `vec3`
+  - `vec4`
+  - `ivec2`
+  - `ivec3`
+  - `ivec4`
+  - `mat2`
+  - `mat3`
+  - `mat4`
+  - `sampler2D`
+  - `samplerCube`
+
+<br>
+
+### StandardOutputSocketData.extras
+
+Application-specific data.
+
+- Type: `Object`
+
+- Required: No
+
+<br>
+
+## VaryingOutputSocketData
+
+Data for a socket that takes an varying variable as output.
+Only vertex shader nodes can have this socket.
+
+|Name|Type|Description|Required|
+|:--|:--|:--|:--|
+|name|`string`|Name of this socket|✅ Yes|
+|direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
+|varyingData|`Object`|Data of the varying variable taken as output|✅ Yes|
+|extras|`Object`|Application-specific data|No|
+
+<br>
+
+### VaryingOutputSocketData.name ✅
+
+Name of this socket.
+
+- Type: `string`
+
+- Required: Yes
+
+<br>
+
+### VaryingOutputSocketData.direction ✅
+
+This property must be set `output`. See [AbstractSocketData.direction](#abstractsocketdatadirection) for detail.
+
+- Type: `string`
+
+- Required: Yes
+
+- Allowed values
+  - `output`: This socket passes data.
+
+<br>
+
+### VaryingOutputSocketData.varyingData ✅
+
+Data of varying variables taken as output
+
+- Type: `Object` ([ShaderVaryingObject](#shadervaryingobject))
+
+- Required: Yes
+
+<br>
+
+### VaryingOutputSocketData.extras
+
+Application-specific data.
+
+- Type: `Object`
+
+- Required: No
+
+<br>
+
 ## VertexShaderGlobalData
 
 Data to be set in the vertex shader
@@ -929,73 +994,6 @@ Application-specific data.
 
 ***
 
-## fragmentShaderGlobalData
-
-Data to be set in the fragment shader
-
-|Name|Type|Description|Required|
-|:--|:--|:--|:--|
-|defineDirectives|`string[0-*]`|Define directives used in the fragment shader|No|
-|precision|`Object`|Precision of each type in the fragment shader|No|
-|constantValues|`Object`|Constant values used in the fragment shader|No|
-|outputVariableName|`string`|Variable name for assigning the vec4 of the fragment shader output|No|
-|extras|`Object`|Application-specific data|No|
-
-<br>
-
-### fragmentShaderGlobalData.defineDirectives
-
-Define directives used in the fragment shader.
-
-- Type: `string[0-*]`
-
-- Required: No
-
-<br>
-
-### fragmentShaderGlobalData.precision
-
-Default precision of each type in the fragment shader
-
-- Type: `Object` ([ShaderPrecisionObject](#shaderprecisionobject))
-
-- Required: No
-
-<br>
-
-### fragmentShaderGlobalData.constantValues
-
-Constant values used in the fragment shader
-
-- Type: `Object[0-*]` ([ShaderConstantValueObject](#shaderconstantvalueobject))
-
-- Required: No
-
-<br>
-
-### fragmentShaderGlobalData.outputVariableName
-
-Variable name for assigning the vec4 of the fragment shader output
-TODO: Prepare a socket for the output of the fragment shader and remove this property
-
-- Type: `string`
-
-- Required: No
-
-<br>
-
-### fragmentShaderGlobalData.extras
-
-Application-specific data.
-
-- Type: `Object`
-
-- Required: No
-
-<br>
-
-***
-
 ## ShaderPrecisionObject
 
 Specifies the default value of the precision for a particular type of shader
@@ -1019,8 +1017,6 @@ Specifies the default value of the precision for a particular type of shader
 |sampler2DShadow|`string`|Default precision of sampler2DShadow type|No|
 |samplerCubeShadow|`string`|Default precision of samplerCubeShadow type|No|
 |sampler2DArrayShadow|`string`|Default precision of sampler2DArrayShadow type|No|
-
-
 
 - Type: `string`
 
@@ -1117,6 +1113,73 @@ Constant value to assign to a constant variable
 - Type: `number[1-16]`
 
 - Required: Yes
+
+<br>
+
+***
+
+## fragmentShaderGlobalData
+
+Data to be set in the fragment shader
+
+|Name|Type|Description|Required|
+|:--|:--|:--|:--|
+|defineDirectives|`string[0-*]`|Define directives used in the fragment shader|No|
+|precision|`Object`|Precision of each type in the fragment shader|No|
+|constantValues|`Object`|Constant values used in the fragment shader|No|
+|outputVariableName|`string`|Variable name for assigning the vec4 of the fragment shader output|No|
+|extras|`Object`|Application-specific data|No|
+
+<br>
+
+### fragmentShaderGlobalData.defineDirectives
+
+Define directives used in the fragment shader.
+
+- Type: `string[0-*]`
+
+- Required: No
+
+<br>
+
+### fragmentShaderGlobalData.precision
+
+Default precision of each type in the fragment shader
+
+- Type: `Object` ([ShaderPrecisionObject](#shaderprecisionobject))
+
+- Required: No
+
+<br>
+
+### fragmentShaderGlobalData.constantValues
+
+Constant values used in the fragment shader
+
+- Type: `Object[0-*]` ([ShaderConstantValueObject](#shaderconstantvalueobject))
+
+- Required: No
+
+<br>
+
+### fragmentShaderGlobalData.outputVariableName
+
+Variable name for assigning the vec4 of the fragment shader output
+TODO: Prepare a socket for the output of the fragment shader and remove this property
+
+- Type: `string`
+
+- Required: No
+
+<br>
+
+### fragmentShaderGlobalData.extras
+
+Application-specific data.
+
+- Type: `Object`
+
+- Required: No
 
 <br>
 

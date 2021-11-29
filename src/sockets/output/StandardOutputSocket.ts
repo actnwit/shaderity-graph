@@ -1,19 +1,18 @@
 import {SocketTypeEnum} from '../../types/CommonEnum';
-import {SocketClassName} from '../ISocket';
-import {IConnectableOutputSocket} from './IConnectableOutputSocket';
-import {IConnectableInputSocket} from '../input/IConnectableInputSocket';
+import {IStandardOutputSocket} from '../interface/output/IStandardOutputSocket';
+import {IStandardInputSocket} from '../interface/input/IStandardInputSocket';
 import {INode} from '../../node/INode';
-import AbstractConnectableSocket from '../AbstractConnectableSocket';
+import AbstractStandardSocket from '../abstract/AbstractStandardSocket';
 
 /**
- * The ConnectableOutputSocket is an output socket that can connect to ConnectableInputSockets.
- * This socket can connect to multiple ConnectableInputSockets.
+ * The StandardOutputSocket is an output socket that can connect to StandardInputSockets.
+ * This socket can connect to multiple StandardInputSockets.
  */
-export default class ConnectableOutputSocket
-  extends AbstractConnectableSocket
-  implements IConnectableOutputSocket
+export default class StandardOutputSocket
+  extends AbstractStandardSocket
+  implements IStandardOutputSocket
 {
-  _connectedSockets: IConnectableInputSocket[] = [];
+  _connectedSockets: IStandardInputSocket[] = [];
 
   constructor(socketType: SocketTypeEnum, node: INode, socketName: string) {
     super(socketType, node, socketName);
@@ -22,8 +21,8 @@ export default class ConnectableOutputSocket
   /**
    * Get the class name of this socket
    */
-  get className(): SocketClassName {
-    return 'ConnectableOutputSocket';
+  get className(): 'StandardOutputSocket' {
+    return 'StandardOutputSocket';
   }
 
   /**
@@ -48,10 +47,10 @@ export default class ConnectableOutputSocket
   }
 
   /**
-   * Connect this socket and a connectable input socket
+   * Connect this socket and a standard input socket
    * @param socket The socket to connect to
    */
-  _connectSocketWith(socket: IConnectableInputSocket) {
+  _connectSocketWith(socket: IStandardInputSocket) {
     this._connectedSockets.push(socket);
   }
 }

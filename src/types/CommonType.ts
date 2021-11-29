@@ -56,11 +56,12 @@ export interface ShaderityGraphJson {
 export interface ShaderityGraphNode {
   nodeData: NodeData;
   socketDataArray: (
-    | ConnectableInputSocketData
-    | ConnectableOutputSocketData
+    | StandardInputSocketData
     | AttributeInputSocketData
     | VaryingInputSocketData
     | UniformInputSocketData
+    | StandardOutputSocketData
+    | VaryingOutputSocketData
   )[]; // the order must be the order of the function arguments for this node
   extras?: {[key: string]: unknown};
 }
@@ -94,14 +95,14 @@ export interface AbstractSocketData {
   extras?: {[key: string]: unknown};
 }
 
-export interface ConnectableInputSocketData extends AbstractSocketData {
+export interface StandardInputSocketData extends AbstractSocketData {
   direction: 'input';
   type: SocketTypeEnum;
   defaultValue: number[];
   socketConnectionData?: SocketConnectionData;
 }
 
-export interface ConnectableOutputSocketData extends AbstractSocketData {
+export interface StandardOutputSocketData extends AbstractSocketData {
   direction: 'output';
   type: SocketTypeEnum;
 }
@@ -113,6 +114,12 @@ export interface AttributeInputSocketData extends AbstractSocketData {
 
 export interface VaryingInputSocketData extends AbstractSocketData {
   direction: 'input';
+  varyingData: ShaderVaryingObject;
+  socketConnectionData?: SocketConnectionData;
+}
+
+export interface VaryingOutputSocketData extends AbstractSocketData {
+  direction: 'output';
   varyingData: ShaderVaryingObject;
 }
 

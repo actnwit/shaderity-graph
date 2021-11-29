@@ -8,12 +8,13 @@ import Shaderity, {
   ShaderStageStr,
   ShaderityObjectCreator,
 } from 'shaderity/dist/esm';
-import ConnectableInputSocket from '../sockets/input/ConnectableInputSocket';
+import StandardInputSocket from '../sockets/input/StandardInputSocket';
 import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
-import ConnectableOutputSocket from '../sockets/output/ConnectableOutputSocket';
+import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
 import NodeSorter from './NodeSorter';
+import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
 
 /**
  * This class resolves the created node graph and creates vertex and fragment shaders.
@@ -136,6 +137,8 @@ export default class ShaderGraphResolver {
   /**
    * @private
    * Set data of a node to shaderityObjectCreator
+   * This supports declaration of attribute, varying and uniform variables and
+   * definition of extensions and functions in shader
    * @param shaderityObjectCreator shaderityObjectCreator object of shaderity
    * @param node target node
    * @param functionNames array to prevent duplicate function definitions in shader
@@ -148,6 +151,8 @@ export default class ShaderGraphResolver {
     for (const extension of node._extensions) {
       shaderityObjectCreator.addExtension(extension);
     }
+
+    const varyingOutputSockets: VaryingOutputSocket[] = [];
 
     const sockets = node._sockets;
     for (let i = 0; i < sockets.length; i++) {
@@ -164,17 +169,6 @@ export default class ShaderGraphResolver {
             location: aInputSocket.location,
           }
         );
-      } else if (socket.className === 'VaryingInputSocket') {
-        const vInputSocket = socket as VaryingInputSocket;
-
-        shaderityObjectCreator.addVaryingDeclaration(
-          `${vInputSocket.variableName}_${node.id}`,
-          vInputSocket.socketType,
-          {
-            precision: vInputSocket.precision,
-            interpolationType: vInputSocket.interpolationType,
-          }
-        );
       } else if (socket.className === 'UniformInputSocket') {
         const uInputSocket = socket as UniformInputSocket;
 
@@ -185,6 +179,53 @@ export default class ShaderGraphResolver {
             precision: uInputSocket.precision,
           }
         );
+      } else if (socket.className === 'VaryingInputSocket') {
+        // for fragment shader
+        const vInputSocket = socket as VaryingInputSocket;
+        const vOutputSocket = vInputSocket.connectedSocket as
+          | VaryingOutputSocket
+          | undefined;
+        if (vOutputSocket == null) {
+          console.error(
+            `ShaderGraphResolver.__addNodeDataToShaderityObjectCreator: variableInputSocket ${vInputSocket.name} does not connected to variableOutputSocket`
+          );
+          continue;
+        }
+
+        const alreadyDeclared = varyingOutputSockets.some(
+          elem => elem === vOutputSocket
+        );
+
+        if (alreadyDeclared) {
+          continue;
+        } else {
+          varyingOutputSockets.push(vOutputSocket);
+        }
+
+        const variableName = this.__createVaryingVariableName(vOutputSocket);
+
+        shaderityObjectCreator.addVaryingDeclaration(
+          variableName,
+          vOutputSocket.socketType,
+          {
+            precision: vOutputSocket.precision,
+            interpolationType: vOutputSocket.interpolationType,
+          }
+        );
+      } else if (socket.className === 'VaryingOutputSocket') {
+        // for vertex shader
+        const vOutputSocket = socket as VaryingOutputSocket;
+
+        const variableName = this.__createVaryingVariableName(vOutputSocket);
+
+        shaderityObjectCreator.addVaryingDeclaration(
+          variableName,
+          vOutputSocket.socketType,
+          {
+            precision: vOutputSocket.precision,
+            interpolationType: vOutputSocket.interpolationType,
+          }
+        );
       }
     }
 
@@ -193,6 +234,25 @@ export default class ShaderGraphResolver {
       functionNames.push(node.functionName);
       shaderityObjectCreator.addFunctionDefinition(node.shaderCode);
     }
+  }
+
+  /**
+   * @private
+   * Create varying variable name from varying output socket
+   * @param vOutputSocket varying output socket
+   */
+  private static __createVaryingVariableName(
+    vOutputSocket: VaryingOutputSocket
+  ) {
+    const outputNodes = vOutputSocket.connectedNodes;
+
+    let variableName = `${vOutputSocket.variableName}_node${vOutputSocket.node.id}_${vOutputSocket.name}_to`;
+    for (let j = 0; j < outputNodes.length; j++) {
+      const connectedNode = outputNodes[j];
+      variableName += `_node${connectedNode.id}`;
+    }
+
+    return variableName;
   }
 
   /**
@@ -252,7 +312,9 @@ ${functionCalls}
    * @returns array to store the variable names
    */
   private static __initializeVariableNames(nodes: Node[]) {
-    const variableNames: Array<Array<string>> = new Array(nodes.length);
+    const variableNames: Array<Array<string>> = new Array(Node.allNodes.length);
+    variableNames.fill(new Array(0));
+
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
       const argumentCountOfNodeFunction = node._sockets.length;
@@ -264,7 +326,7 @@ ${functionCalls}
 
   /**
    * @private
-   * Create a string of variable definitions corresponding to the connectable input socket
+   * Create a string of variable definitions corresponding to the standard input socket
    * that is not connected to the output socket.
    * The created variable is initialized with the default value of the socket.
    *
@@ -283,12 +345,12 @@ ${functionCalls}
     const sockets = node._sockets;
     for (let i = 0; i < sockets.length; i++) {
       const socket = sockets[i];
-      if (socket.className !== 'ConnectableInputSocket') {
+      if (socket.className !== 'StandardInputSocket') {
         continue;
       }
-      const cInputSocket = socket as ConnectableInputSocket;
+      const sInputSocket = socket as StandardInputSocket;
 
-      const socketType = cInputSocket.socketType;
+      const socketType = sInputSocket.socketType;
       const glslComponentNumber = SocketType.getGlslComponentNumber(socketType);
 
       if (glslComponentNumber === 0) {
@@ -296,7 +358,7 @@ ${functionCalls}
         console.error(message);
 
         return `  // ${message}\n`;
-      } else if (cInputSocket.defaultValue.length !== glslComponentNumber) {
+      } else if (sInputSocket.defaultValue.length !== glslComponentNumber) {
         console.warn(
           'ShaderGraphResolver.__getInputVariableDefinitions: defaultValue.length is invalid'
         );
@@ -306,11 +368,11 @@ ${functionCalls}
 
       let defaultValue = glslTypeStr + '(';
       for (let j = 0; j < glslComponentNumber; j++) {
-        defaultValue += cInputSocket.defaultValue[j] + ', ';
+        defaultValue += sInputSocket.defaultValue[j] + ', ';
       }
       defaultValue = defaultValue.replace(/,\s$/, ')');
 
-      const variableName = `${cInputSocket.name}_${node.id}`;
+      const variableName = `${sInputSocket.name}_${node.id}`;
       returnStr += `  ${glslTypeStr} ${variableName} = ${defaultValue};\n`;
 
       variableNames[node.id][i] = variableName;
@@ -342,29 +404,75 @@ ${functionCalls}
         continue;
       }
 
-      const outputSocket = socket as ConnectableOutputSocket;
-      const outputNodes = outputSocket.connectedNodes;
-
-      // for debugging
-      // const inputSockets = outputSocket.connectedSockets;
-
-      let variableName = `node${node.id}_${outputSocket.name}_to`;
-      for (let j = 0; j < outputNodes.length; j++) {
-        const connectedNode = outputNodes[j];
-        variableName += `_node${connectedNode.id}`;
+      let variableName: string;
+      if (socket.className === 'VaryingOutputSocket') {
+        variableName = this.__createVaryingVariableName(
+          socket as VaryingOutputSocket
+        );
+      } else {
+        const outputSocket = socket as StandardOutputSocket;
+        const outputNodes = outputSocket.connectedNodes;
 
         // for debugging
-        // const inputSocketName = inputSockets[j].name;
-        // returnStr += `_node${connectedNode.id}_${inputSocketName}`;
+        // const inputSockets = outputSocket.connectedSockets;
+        variableName = `node${node.id}_${outputSocket.name}_to`;
+        for (let j = 0; j < outputNodes.length; j++) {
+          const connectedNode = outputNodes[j];
+          variableName += `_node${connectedNode.id}`;
+
+          // for debugging
+          // const inputSocketName = inputSockets[j].name;
+          // returnStr += `_node${connectedNode.id}_${inputSocketName}`;
+        }
       }
 
+      const outputSocket = socket as StandardOutputSocket | VaryingOutputSocket;
       const glslTypeStr = SocketType.getGlslTypeStr(outputSocket.socketType);
       returnStr += `  ${glslTypeStr} ${variableName};\n`;
 
-      variableNames[node.id][i] = variableName; // set variable name corresponding to output socket
-      for (let j = 0; j < outputNodes.length; j++) {
-        const connectedNodeId = outputNodes[j].id;
-        variableNames[connectedNodeId][j] = variableName; // set variable name corresponding to input sockets
+      // set variable name corresponding to output socket
+      variableNames[node.id][i] = variableName;
+
+      if (socket.className === 'VaryingOutputSocket') {
+        // VaryingInputSocket is present in the other shader
+        continue;
+      }
+
+      // set variable name corresponding to input sockets
+      const sInputSockets = outputSocket.connectedSockets;
+      for (let j = 0; j < sInputSockets.length; j++) {
+        const sInputSocket = sInputSockets[j];
+        const outputNode = sInputSocket.node;
+        const connectedNodeId = outputNode.id;
+        const socketIndex = outputNode._sockets.indexOf(sInputSocket);
+
+        variableNames[connectedNodeId][socketIndex] = variableName;
+      }
+    }
+
+    // for fragment shader
+    for (let i = 0; i < sockets.length; i++) {
+      const socket = sockets[i];
+      if (socket.className !== 'VaryingInputSocket') {
+        continue;
+      }
+
+      if (variableNames[node.id][i] !== null) {
+        continue;
+      }
+
+      const vInputSocket = socket as VaryingInputSocket;
+      const vOutputSocket = vInputSocket.connectedSocket as VaryingOutputSocket;
+      const variableName = this.__createVaryingVariableName(vOutputSocket);
+
+      const vInputSockets = vOutputSocket.connectedSockets;
+      for (let j = 0; j < vInputSockets.length; j++) {
+        const vInputSocket = vInputSockets[j];
+        const outputNode = vInputSocket.node;
+        const connectedNodeId = outputNode.id;
+        const socketIndex = outputNode._sockets.indexOf(vInputSocket);
+
+        variableNames[connectedNodeId][socketIndex] = variableName;
       }
     }
 

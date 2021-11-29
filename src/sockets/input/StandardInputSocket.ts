@@ -1,19 +1,18 @@
 import {SocketTypeEnum} from '../../types/CommonEnum';
-import {SocketClassName} from '../ISocket';
-import {IConnectableInputSocket} from './IConnectableInputSocket';
-import {IConnectableOutputSocket} from '../output/IConnectableOutputSocket';
+import {IStandardInputSocket} from '../interface/input/IStandardInputSocket';
+import {IStandardOutputSocket} from '../interface/output/IStandardOutputSocket';
 import {INode} from '../../node/INode';
-import AbstractConnectableSocket from '../AbstractConnectableSocket';
+import AbstractStandardSocket from '../abstract/AbstractStandardSocket';
 
 /**
- * The ConnectableInputSocket is an input socket that can connect to a ConnectableOutputSocket.
- * This socket can connect to at most one ConnectableOutputSocket.
+ * The StandardInputSocket is an input socket that can connect to a StandardOutputSocket.
+ * This socket can connect to at most one StandardOutputSocket.
  */
-export default class ConnectableInputSocket
-  extends AbstractConnectableSocket
-  implements IConnectableInputSocket
+export default class StandardInputSocket
+  extends AbstractStandardSocket
+  implements IStandardInputSocket
 {
-  _connectedSocket: IConnectableOutputSocket | undefined = undefined;
+  _connectedSocket: IStandardOutputSocket | undefined = undefined;
 
   /**
    * @private
@@ -42,8 +41,8 @@ export default class ConnectableInputSocket
   /**
    * Get the class name of this socket
    */
-  get className(): SocketClassName {
-    return 'ConnectableInputSocket';
+  get className(): 'StandardInputSocket' {
+    return 'StandardInputSocket';
   }
 
   /**
@@ -62,7 +61,7 @@ export default class ConnectableInputSocket
     return this._connectedSocket;
   }
 
-  _connectSocketWith(socket: IConnectableOutputSocket) {
+  _connectSocketWith(socket: IStandardOutputSocket) {
     this._connectedSocket = socket;
   }
 }

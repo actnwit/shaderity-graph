@@ -1,11 +1,11 @@
-import {INode} from '../node/INode';
-import {SocketTypeEnum} from '../types/CommonEnum';
+import {INode} from '../../node/INode';
+import {SocketTypeEnum} from '../../types/CommonEnum';
 import {
   ShaderAttributeVarType,
   ShaderUniformVarTypeES3,
   ShaderVaryingVarType,
-} from '../types/CommonType';
-import {ISocket, SocketClassName} from './ISocket';
+} from '../../types/CommonType';
+import {ISocket, SocketClassName} from '../interface/ISocket';
 
 /**
  * The roll of the socket is to manage the input and output of each node.
@@ -16,16 +16,19 @@ import {ISocket, SocketClassName} from './ISocket';
  * The parent-child relationship for each class is as follows.
  *
  * AbstractSocket
- *  - AbstractConnectableSocket
- *     - ConnectableInputSocket
- *     - ConnectableOutputSocket
+ *  - AbstractStandardSocket
+ *     - StandardInputSocket
+ *     - StandardOutputSocket
  *  - AttributeInputSocket
- *  - VaryingInputSocket
  *  - UniformInputSocket
+ *  - AbstractVaryingSocket
+ *    - VaryingInputSocket
+ *    - VaryingOutputSocket
  *
- * ConnectableInputSocket can be connected to ConnectableOutputSocket and vice versa.
- * Attribute/Varying/UniformInputSocket is a socket that cannot be connected to other sockets.
- * These non-connectable nodes are usually not visible in the GUI.
+ * StandardInputSocket can be connected to StandardOutputSocket and vice versa.
+ * VaryingInputSocket can be connected to VaryingOutputSocket and vice versa.
+ * Attribute/UniformInputSocket is a socket that cannot be connected to other sockets.
+ * Attribute/UniformInputSocket are usually not visible in the GUI.
  */
 export default abstract class AbstractSocket implements ISocket {
   private __name: string;
@@ -55,7 +58,7 @@ export default abstract class AbstractSocket implements ISocket {
    */
   isInputSocket() {
     if (
-      this.className === 'ConnectableInputSocket' ||
+      this.className === 'StandardInputSocket' ||
       this.className === 'AttributeInputSocket' ||
       this.className === 'VaryingInputSocket' ||
       this.className === 'UniformInputSocket'
