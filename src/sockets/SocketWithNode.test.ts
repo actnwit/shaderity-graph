@@ -37,6 +37,7 @@ const standardOutputSocketData: StandardOutputSocketData = {
   direction: SocketDirection.Output,
   shaderData: {
     type: SocketType.Vec2,
+    precision: 'lowp',
   },
 };
 
@@ -186,6 +187,10 @@ test('StandardInputSocket.defaultValue', () => {
 });
 
 const standardOutputSocket = socketsOfNode0[1] as StandardOutputSocket;
+test('StandardOutputSocket.precision', () => {
+  expect(standardOutputSocket.precision).toBe('lowp');
+});
+
 test('StandardOutputSocket.connectedNodes', () => {
   expect(standardOutputSocket.connectedNodes).toStrictEqual([]);
 });

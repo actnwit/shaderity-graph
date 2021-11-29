@@ -1,8 +1,11 @@
-import {SocketTypeEnum} from '../../types/CommonEnum';
 import {IStandardOutputSocket} from '../interface/output/IStandardOutputSocket';
 import {IStandardInputSocket} from '../interface/input/IStandardInputSocket';
 import {INode} from '../../node/INode';
 import AbstractStandardSocket from '../abstract/AbstractStandardSocket';
+import {
+  ShaderStandardOutputData,
+  ShaderPrecisionType,
+} from '../../types/CommonType';
 
 /**
  * The StandardOutputSocket is an output socket that can connect to StandardInputSockets.
@@ -14,8 +17,15 @@ export default class StandardOutputSocket
 {
   _connectedSockets: IStandardInputSocket[] = [];
 
-  constructor(socketType: SocketTypeEnum, node: INode, socketName: string) {
-    super(socketType, node, socketName);
+  private __precision?: ShaderPrecisionType;
+
+  constructor(
+    node: INode,
+    socketName: string,
+    shaderData: ShaderStandardOutputData
+  ) {
+    super(shaderData.type, node, socketName);
+    this.__precision = shaderData.precision;
   }
 
   /**
@@ -23,6 +33,13 @@ export default class StandardOutputSocket
    */
   get className(): 'StandardOutputSocket' {
     return 'StandardOutputSocket';
+  }
+
+  /**
+   * Get the precision of varying variable
+   */
+  get precision() {
+    return this.__precision;
   }
 
   /**

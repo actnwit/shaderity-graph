@@ -252,16 +252,18 @@ export default class ShaderGraphResolver {
       const node = sortedNodes[i];
 
       // for non-connected standard input sockets
-      inputValueDefinitions += this.__createInputVariableDefinitions(
-        node,
-        variableNames
-      );
+      inputValueDefinitions +=
+        this.__createInputVariableDefinitionsAndStoreVariableName(
+          node,
+          variableNames
+        );
 
       // for connected sockets
-      variableDeclarations += this.__createOutVariableDeclarations(
-        node,
-        variableNames
-      );
+      variableDeclarations +=
+        this.__createOutVariableDeclarationsAndStoreVariableName(
+          node,
+          variableNames
+        );
 
       this.__addStorageQualifierVariableName(node, variableNames);
       this.__addShaderOutputVariableName(node, variableNames);
@@ -317,7 +319,7 @@ ${functionCalls}
    * @param variableNames array to store the variable names used in each function call of the main function
    * @returns string of variable definitions
    */
-  private static __createInputVariableDefinitions(
+  private static __createInputVariableDefinitionsAndStoreVariableName(
     node: Node,
     variableNames: string[][]
   ): string {
@@ -376,7 +378,7 @@ ${functionCalls}
    * @param variableNames array to store the variable names used in each function call of the main function
    * @returns string of variable declarations
    */
-  private static __createOutVariableDeclarations(
+  private static __createOutVariableDeclarationsAndStoreVariableName(
     node: Node,
     variableNames: string[][]
   ): string {
@@ -389,41 +391,22 @@ ${functionCalls}
         continue;
       }
 
-      let variableName: string;
       if (socket.className === 'VaryingOutputSocket') {
         const vOutputSocket = socket as VaryingOutputSocket;
-        variableName = vOutputSocket.variableName;
+        variableNames[node.id][i] = vOutputSocket.variableName;
       } else if (socket.className === 'StandardOutputSocket') {
         const sOutputSocket = socket as StandardOutputSocket;
         const outputNodes = sOutputSocket.connectedNodes;
 
-        // for debugging
-        // const inputSockets = outputSocket.connectedSockets;
-        variableName = `node${node.id}_${sOutputSocket.socketName}_to`;
+        let variableName = `node${node.id}_${sOutputSocket.socketName}_to`;
         for (let j = 0; j < outputNodes.length; j++) {
           const connectedNode = outputNodes[j];
           variableName += `_node${connectedNode.id}`;
-
-          // for debugging
-          // const inputSocketName = inputSockets[j].socketName;
-          // returnStr += `_node${connectedNode.id}_${inputSocketName}`;
         }
-      } else {
-        // ShaderOutputSocket
-        continue;
-      }
 
-      const outputSocket = socket as StandardOutputSocket | VaryingOutputSocket;
-      const glslTypeStr = SocketType.getGlslTypeStr(outputSocket.socketType);
-      returnStr += `  ${glslTypeStr} ${variableName};\n`;
+        variableNames[node.id][i] = variableName;
 
-      // set variable name corresponding to output socket
-      variableNames[node.id][i] = variableName;
-
-      // VaryingInputSocket is present in the other shader stage
-      if (socket.className === 'StandardOutputSocket') {
-        // set variable name corresponding to input sockets
-        const sInputSockets = outputSocket.connectedSockets;
+        const sInputSockets = sOutputSocket.connectedSockets;
         for (let j = 0; j < sInputSockets.length; j++) {
           const sInputSocket = sInputSockets[j];
           const outputNode = sInputSocket.node;
@@ -432,6 +415,13 @@ ${functionCalls}
 
           variableNames[connectedNodeId][socketIndex] = variableName;
         }
+
+        const precision =
+          sOutputSocket.precision != null ? sOutputSocket.precision + ' ' : '';
+        const glslTypeStr = SocketType.getGlslTypeStr(sOutputSocket.socketType);
+        returnStr += `  ${precision}${glslTypeStr} ${variableName};\n`;
+      } else {
+        // ShaderOutputSocket
       }
     }
 

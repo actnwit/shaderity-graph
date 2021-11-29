@@ -447,9 +447,9 @@ export default class Node implements INode {
     } else if ((socketData as StandardOutputSocketData).shaderData != null) {
       const sSocketData = socketData as StandardOutputSocketData;
       outputSocket = new StandardOutputSocket(
-        sSocketData.shaderData.type,
         this,
-        socketName
+        socketName,
+        sSocketData.shaderData
       );
     } else {
       this.__checkUniquenessOfShaderOutputSocket();
