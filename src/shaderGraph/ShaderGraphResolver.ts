@@ -81,7 +81,8 @@ export default class ShaderGraphResolver {
       this.__addNodeDataToShaderityObjectCreator(
         shaderityObjectCreator,
         node,
-        shaderFunctionDataKeys
+        shaderFunctionDataKeys,
+        shaderStage
       );
     }
 
@@ -135,11 +136,13 @@ export default class ShaderGraphResolver {
    * @param shaderityObjectCreator shaderityObjectCreator object of shaderity
    * @param node target node
    * @param shaderFunctionDataKeys array to prevent duplicate function definitions in shader
+   * @param shaderStage  Specify vertex of fragment shader
    */
   private static __addNodeDataToShaderityObjectCreator(
     shaderityObjectCreator: ShaderityObjectCreator,
     node: Node,
-    shaderFunctionDataKeys: string[]
+    shaderFunctionDataKeys: string[],
+    shaderStage: ShaderStageStr
   ) {
     for (const extension of node._extensions) {
       shaderityObjectCreator.addExtension(extension);
@@ -181,8 +184,10 @@ export default class ShaderGraphResolver {
             precision: uInputSocket.precision,
           }
         );
-      } else if (socket.className === 'VaryingInputSocket') {
-        // for fragment shader
+      } else if (
+        socket.className === 'VaryingInputSocket' &&
+        shaderStage === 'fragment'
+      ) {
         const vInputSocket = socket as VaryingInputSocket;
         const vOutputSocket = vInputSocket.connectedSocket as
           | VaryingOutputSocket
@@ -212,8 +217,10 @@ export default class ShaderGraphResolver {
             interpolationType: vOutputSocket.interpolationType,
           }
         );
-      } else if (socket.className === 'VaryingOutputSocket') {
-        // for vertex shader
+      } else if (
+        socket.className === 'VaryingOutputSocket' &&
+        shaderStage === 'vertex'
+      ) {
         const vOutputSocket = socket as VaryingOutputSocket;
 
         shaderityObjectCreator.addVaryingDeclaration(
