@@ -1,5 +1,9 @@
 import {INode} from '../../node/INode';
-import {ShaderVaryingData} from '../../types/CommonType';
+import {
+  ShaderPrecisionType,
+  ShaderVaryingOutputData,
+  ShaderVaryingInterpolationType,
+} from '../../types/CommonType';
 import AbstractVaryingSocket from '../abstract/AbstractVaryingSocket';
 import {IVaryingOutputSocket} from '../interface/output/IVaryingOutputSocket';
 import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
@@ -15,8 +19,18 @@ export default class VaryingOutputSocket
 {
   _connectedSockets: IVaryingInputSocket[] = [];
 
-  constructor(node: INode, socketName: string, varying: ShaderVaryingData) {
+  private __precision: ShaderPrecisionType;
+  private __interpolationType: ShaderVaryingInterpolationType | undefined;
+
+  constructor(
+    node: INode,
+    socketName: string,
+    varying: ShaderVaryingOutputData
+  ) {
     super(node, socketName, varying, `v_${node.id}_${socketName}`);
+
+    this.__precision = varying.precision ?? 'highp';
+    this.__interpolationType = varying.interpolationType;
   }
 
   /**
@@ -24,6 +38,20 @@ export default class VaryingOutputSocket
    */
   get className(): 'VaryingOutputSocket' {
     return 'VaryingOutputSocket';
+  }
+
+  /**
+   * Get the interpolationType of varying variable(for GLSL ES3.0)
+   */
+  get interpolationType() {
+    return this.__interpolationType;
+  }
+
+  /**
+   * Get the precision of varying variable
+   */
+  get precision() {
+    return this.__precision;
   }
 
   /**

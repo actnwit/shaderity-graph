@@ -260,6 +260,19 @@ export default class Node implements INode {
   }
 
   /**
+   * Get variable name corresponding specified socket
+   * Return '' if the socket is not found or is StandardInputSocket
+   * */
+  getVariableNameOfInputSocket(socketName: string) {
+    const socket = this.__getInputSocket(socketName);
+    if (socket == null || socket.className === 'StandardInputSocket') {
+      return '';
+    } else {
+      return socket.variableName;
+    }
+  }
+
+  /**
    * @private
    * Get input socket by socket name
    * */

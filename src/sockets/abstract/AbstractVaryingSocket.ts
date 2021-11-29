@@ -1,9 +1,9 @@
 import {INode} from '../../node/INode';
 import {
-  ShaderPrecisionType,
   ShaderVaryingInterpolationType,
   ShaderVaryingData,
   ShaderVaryingVarType,
+  ShaderPrecisionType,
 } from '../../types/CommonType';
 import AbstractSocket from './AbstractSocket';
 import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
@@ -16,8 +16,6 @@ import {IVaryingOutputSocket} from '../interface/output/IVaryingOutputSocket';
 export default abstract class AbstractVaryingSocket extends AbstractSocket {
   private __variableName: string;
   private __type: ShaderVaryingVarType;
-  private __precision: ShaderPrecisionType;
-  private __interpolationType: ShaderVaryingInterpolationType | undefined;
 
   constructor(
     node: INode,
@@ -29,8 +27,6 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
 
     this.__variableName = variableName;
     this.__type = varying.type;
-    this.__precision = varying.precision ?? 'highp';
-    this.__interpolationType = varying.interpolationType;
   }
 
   /**
@@ -69,20 +65,6 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
   }
 
   /**
-   * Get the precision of varying variable
-   */
-  get precision() {
-    return this.__precision;
-  }
-
-  /**
-   * Get the interpolationType of varying variable(for GLSL ES3.0)
-   */
-  get interpolationType() {
-    return this.__interpolationType;
-  }
-
-  /**
    * @private
    * change variable name of this socket
    */
@@ -94,6 +76,16 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
    * Get the class name of this socket
    */
   abstract get className(): 'VaryingInputSocket' | 'VaryingOutputSocket';
+
+  /**
+   * Get the interpolationType of varying variable(for GLSL ES3.0)
+   */
+  abstract get interpolationType(): ShaderVaryingInterpolationType | undefined;
+
+  /**
+   * Get the precision of varying variable
+   */
+  abstract get precision(): ShaderPrecisionType;
 
   /**
    * Connect this socket and the argument socket

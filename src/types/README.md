@@ -9,15 +9,15 @@
       - [StandardInputSocketData](#standardinputsocketdata)
         - [SocketConnectionData](#socketconnectiondata)
       - [AttributeInputSocketData](#attributeinputsocketdata)
-        - [ShaderAttributeObject](#shaderattributeobject)
+        - [ShaderAttributeData](#shaderattributedata)
       - [VaryingInputSocketData](#varyinginputsocketdata)
-        - [ShaderVaryingObject](#shadervaryingobject)
+        - [ShaderVaryingInputData](#shadervaryinginputdata)
         - [SocketConnectionData](#socketconnectiondata)
       - [UniformInputSocketData](#uniforminputsocketdata)
-        - [ShaderUniformObject](#shaderuniformobject)
+        - [ShaderUniformData](#shaderuniformdata)
       - [StandardOutputSocketData](#standardoutputsocketdata)
       - [VaryingOutputSocketData](#varyingoutputsocketdata)
-        - [ShaderVaryingObject](#shadervaryingobject)
+        - [ShaderVaryingOutputData](#shadervaryingoutputdata)
   - [VertexShaderGlobalData](#vertexshaderglobaldata)
     - [ShaderPrecisionObject](#shaderprecisionobject)
     - [ShaderConstantValueObject](#shaderconstantvalueobject)
@@ -205,31 +205,38 @@ Application-specific data.
 
 ## AbstractSocketData
 
-All nodes input and output data through sockets. There are two ways to input and output data.
+All nodes input and output data through sockets. There are three ways to input and output data.
 1. input/output between nodes
 2. receiving input of attribute/varying/uniform variables
-3. passing output of varying variables (TODO)
+3. passing output of varying variables
+
+Normally, attribute sockets and uniform sockets are not shown in the GUI.
+
 
 AbstractSocketData is an abstract object for convenience to group several objects together. The concrete objects are
 [StandardInputSocketData](#standardinputsocketdata),
 [StandardOutputSocketData](#standardoutputsocketdata),
 [AttributeInputSocketData](#attributeinputsocketdata),
-[VaryingInputSocketData](#varyinginputsocketdata), and
+[VaryingInputSocketData](#varyinginputsocketdata),
+[VaryingOutputSocketData](#varyingoutputsocketdata), and
 [UniformInputSocketData](#uniforminputsocketdata).
+The attribute input socket only works with a vertex shader.
+The varying input socket only works with a fragment shader.
+The varying output socket only works with a vertex shader.
 
-The attribute input socket only works with a vertex shader. The varying input socket only works with a vertex shader. All concrete objects have the following properties in common:
+All concrete objects have the following properties in common:
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|name|`string`|Name of this socket|✅ Yes|
+|socketName|`string`|Name of this socket|✅ Yes|
 |direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
 |extras|`Object`|Application-specific data|No|
 
 <br>
 
-### AbstractSocketData.name ✅
+### AbstractSocketData.socketName ✅
 
-Name of this socket. Mainly used to connect to this socket from other sockets.
+Name of this socket. Mainly used to connect to this socket from other sockets. For sockets in the same node, the AbstractSocketData.socketName must be unique.
 
 - Type: `string`
 
@@ -267,7 +274,7 @@ Data for a socket that can be connected to a single StandardOutputSocket.
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|name|`string`|Name of this socket|✅ Yes|
+|socketName|`string`|Name of this socket|✅ Yes|
 |direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
 |type|`string`|GLSL type of data to be input on this socket|✅ Yes|
 |defaultValue|`number[1-16]`|Value to take as input when this socket is not connected to any socket|✅ Yes|
@@ -276,9 +283,9 @@ Data for a socket that can be connected to a single StandardOutputSocket.
 
 <br>
 
-### StandardInputSocketData.name ✅
+### StandardInputSocketData.socketName ✅
 
-Name of this socket.
+Name of this socket. For sockets in the same node, the AbstractSocketData.socketName must be unique.
 
 - Type: `string`
 
@@ -405,16 +412,16 @@ Only vertex shader nodes can have this socket.
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|name|`string`|Name of this socket|✅ Yes|
+|socketName|`string`|Name of this socket|✅ Yes|
 |direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
 |attributeData|`Object`|Data of the attribute variable taken as input|✅ Yes|
 |extras|`Object`|Application-specific data|No|
 
 <br>
 
-### AttributeInputSocketData.name ✅
+### AttributeInputSocketData.socketName ✅
 
-Name of this socket.
+Name of this socket. For sockets in the same node, the AbstractSocketData.socketName must be unique.
 
 - Type: `string`
 
@@ -439,7 +446,7 @@ This property must be set `input`. See [AbstractSocketData.direction](#abstracts
 
 Data of the attribute variable taken as input
 
-- Type: `Object` ([ShaderAttributeObject](#shaderattributeobject))
+- Type: `Object` ([ShaderAttributeData](#shaderattributedata))
 
 - Required: Yes
 
@@ -455,7 +462,7 @@ Application-specific data.
 
 <br>
 
-## ShaderAttributeObject
+## ShaderAttributeData
 
 Data for attribute variables as input
 
@@ -468,9 +475,13 @@ Data for attribute variables as input
 
 <br>
 
-### ShaderAttributeObject.variableName ✅
+### ShaderAttributeData.variableName ✅
 
 Name of the attribute variable.
+In the generated shaders, this value is used with the 'a_' prefix added.
+If there is an attributeInputSocket with the same ShaderAttributeData.variableName, it will refer to the same attribute variable in the shader.
+The variable name to be written in the shader can be found in the node.getVariableNameOfInputSocket method.
+
 
 - Type: `string`
 
@@ -478,7 +489,7 @@ Name of the attribute variable.
 
 <br>
 
-### ShaderAttributeObject.type ✅
+### ShaderAttributeData.type ✅
 
 GLSL type of the attribute variable
 
@@ -501,7 +512,7 @@ GLSL type of the attribute variable
 
 <br>
 
-### ShaderAttributeObject.precision
+### ShaderAttributeData.precision
 
 Precision of the attribute variable
 
@@ -516,7 +527,7 @@ Precision of the attribute variable
 
 <br>
 
-### ShaderAttributeObject.location
+### ShaderAttributeData.location
 
 Location of the attribute variable(for GLSL ES3.0)
 
@@ -533,16 +544,17 @@ Only fragment shader nodes can have this socket.
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|name|`string`|Name of this socket|✅ Yes|
+|socketName|`string`|Name of this socket|✅ Yes|
 |direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
 |varyingData|`Object`|Data of the varying variable taken as input|✅ Yes|
+|socketConnectionData|`Object`|Data of the connected output socket|✅ Yes|
 |extras|`Object`|Application-specific data|No|
 
 <br>
 
-### VaryingInputSocketData.name ✅
+### VaryingInputSocketData.socketName ✅
 
-Name of this socket.
+Name of this socket. For sockets in the same node, the AbstractSocketData.socketName must be unique.
 
 - Type: `string`
 
@@ -567,9 +579,19 @@ This property must be set `input`. See [AbstractSocketData.direction](#abstracts
 
 Data of varying variables taken as input
 
-- Type: `Object` ([ShaderVaryingObject](#shadervaryingobject))
+- Type: `Object` ([ShaderVaryingInputData](#shadervaryinginputdata))
 
 - Required: Yes
+
+<br>
+
+### VaryingInputSocketData.socketConnectionData ✅
+
+Data of the connected output socket.
+
+- Type: `Object`
+
+- Required: No
 
 <br>
 
@@ -583,33 +605,23 @@ Application-specific data.
 
 <br>
 
+## ShaderVaryingInputData
 
-## ShaderVaryingObject
+Data for varying variables as input.
+The variable name, precision, and interpolation type are the values of the output varying socket to which it is connected.
 
-Data for varying variables as input
+In the created shader, the variable name of this socket is v_(connectedNode.id)_(connectedSocketName), if this socket connects to a varying output socket. If this socket does not connect to a varying output socket, the variable name is `v_non_connected_(node.id)_(socketName).
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|variableName|`string`|Name of the attribute variable|✅ Yes|
 |type|`string`|GLSL type of the varying variable|✅ Yes|
-|precision|`string`|Precision of the varying variable|No|
-|interpolationType|`string`|Interpolation type of the varying variable(for GLSL ES3.0)|No|
 
 <br>
 
-### ShaderVaryingObject.variableName ✅
+### ShaderVaryingInputData.type ✅
 
-Name of the varying variable.
-
-- Type: `string`
-
-- Required: Yes
-
-<br>
-
-### ShaderVaryingObject.type ✅
-
-GLSL type of the varying variable
+GLSL type of the varying variable.
+The main purpose is to verify that the output socket and type match.
 
 - Type: `string`
 
@@ -630,52 +642,22 @@ GLSL type of the varying variable
 
 <br>
 
-### ShaderVaryingObject.precision
-
-Precision of the varying variable
-
-- Type: `string`
-
-- Required: No (default value is `highp`)
-
-- Allowed values
-  - `highp`
-  - `mediump`
-  - `lowp`
-
-<br>
-
-### ShaderVaryingObject.interpolationType
-
-Interpolation type of the varying variable(for GLSL ES3.0)
-
-- Type: `string`
-
-- Required: No
-
-- Allowed values
-  - `flat`
-  - `smooth`
-
-<br>
-
-
 ## UniformInputSocketData
 
 Data for a socket that takes an uniform variable as input
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|name|`string`|Name of this socket|✅ Yes|
+|socketName|`string`|Name of this socket|✅ Yes|
 |direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
 |uniformData|`Object`|Data of the uniform variable taken as input|✅ Yes|
 |extras|`Object`|Application-specific data|No|
 
 <br>
 
-### UniformInputSocketData.name ✅
+### UniformInputSocketData.socketName ✅
 
-Name of this socket.
+Name of this socket. For sockets in the same node, the AbstractSocketData.socketName must be unique.
 
 - Type: `string`
 
@@ -700,7 +682,7 @@ This property must be set `input`. See [AbstractSocketData.direction](#abstracts
 
 Data of uniform variables taken as input
 
-- Type: `Object` ([ShaderUniformObject](#shaderuniformobject))
+- Type: `Object` ([ShaderUniformData](#shaderuniformdata))
 
 - Required: Yes
 
@@ -716,21 +698,24 @@ Application-specific data.
 
 <br>
 
-## ShaderUniformObject
+## ShaderUniformData
 
 Data for uniform variables as input
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|variableName|`string`|Name of the attribute variable|✅ Yes|
+|variableName|`string`|Name of the attribute variable|No|
 |type|`string`|GLSL type of the uniform variable|✅ Yes|
 |precision|`string`|Precision of the uniform variable|No|
 
 <br>
 
-### ShaderUniformObject.variableName ✅
+### ShaderUniformData.variableName
 
 Name of the uniform variable.
+In the generated shaders, this value is used in addition to the 'u_' prefix, the node id, and the socket name.
+If there are uniformInputSockets with the same ShaderUniformData.variableName, they will refer to different uniform variables in the shader.
+The variable name to be written in the shader can be found in the node.getVariableNameOfInputSocket method.
 
 - Type: `string`
 
@@ -738,7 +723,7 @@ Name of the uniform variable.
 
 <br>
 
-### ShaderUniformObject.type ✅
+### ShaderUniformData.type ✅
 
 GLSL type of the uniform variable
 
@@ -793,7 +778,7 @@ GLSL type of the uniform variable
 
 <br>
 
-### ShaderUniformObject.precision
+### ShaderUniformData.precision
 
 Precision of the uniform variable
 
@@ -808,24 +793,22 @@ Precision of the uniform variable
 
 <br>
 
-***
-
 ## StandardOutputSocketData
 
 Data for a socket that can be connected to a multiple StandardInputSocket.
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|name|`string`|Name of this socket|✅ Yes|
+|socketName|`string`|Name of this socket|✅ Yes|
 |direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
 |type|`string`|GLSL type of data to be output on this socket|✅ Yes|
 |extras|`Object`|Application-specific data|No|
 
 <br>
 
-### StandardOutputSocketData.name ✅
+### StandardOutputSocketData.socketName ✅
 
-Name of this socket.
+Name of this socket. For sockets in the same node, the AbstractSocketData.socketName must be unique.
 
 - Type: `string`
 
@@ -889,16 +872,16 @@ Only vertex shader nodes can have this socket.
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|name|`string`|Name of this socket|✅ Yes|
+|socketName|`string`|Name of this socket|✅ Yes|
 |direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
 |varyingData|`Object`|Data of the varying variable taken as output|✅ Yes|
 |extras|`Object`|Application-specific data|No|
 
 <br>
 
-### VaryingOutputSocketData.name ✅
+### VaryingOutputSocketData.socketName ✅
 
-Name of this socket.
+Name of this socket. For sockets in the same node, the AbstractSocketData.socketName must be unique.
 
 - Type: `string`
 
@@ -923,7 +906,7 @@ This property must be set `output`. See [AbstractSocketData.direction](#abstract
 
 Data of varying variables taken as output
 
-- Type: `Object` ([ShaderVaryingObject](#shadervaryingobject))
+- Type: `Object` ([ShaderVaryingOutputData](#shadervaryingoutputdata))
 
 - Required: Yes
 
@@ -938,6 +921,74 @@ Application-specific data.
 - Required: No
 
 <br>
+
+## ShaderVaryingOutputData
+
+Data for varying variables as output.
+
+In the created shader, the variable name of this socket is v_(node.id)_(socketName).
+
+|Name|Type|Description|Required|
+|:--|:--|:--|:--|
+|type|`string`|GLSL type of the varying variable|✅ Yes|
+|precision|`string`|Precision of the varying variable|No|
+|interpolationType|`string`|Interpolation type of the varying variable(for GLSL ES3.0)|No|
+
+<br>
+
+### ShaderVaryingOutputData.type ✅
+
+GLSL type of the varying variable
+
+- Type: `string`
+
+- Required: Yes
+
+- Allowed values
+  - `float`
+  - `vec2`
+  - `vec3`
+  - `vec4`
+  - `int`
+  - `ivec2`
+  - `ivec3`
+  - `ivec4`
+  - `mat2`
+  - `mat3`
+  - `mat4`
+
+<br>
+
+### ShaderVaryingOutputData.precision
+
+Precision of the varying variable
+
+- Type: `string`
+
+- Required: No (default value is `highp`)
+
+- Allowed values
+  - `highp`
+  - `mediump`
+  - `lowp`
+
+<br>
+
+### ShaderVaryingOutputData.interpolationType
+
+Interpolation type of the varying variable(for GLSL ES3.0)
+
+- Type: `string`
+
+- Required: No
+
+- Allowed values
+  - `flat`
+  - `smooth`
+
+<br>
+
+***
 
 ## VertexShaderGlobalData
 
