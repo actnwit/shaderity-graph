@@ -479,19 +479,16 @@ ${functionCalls}
     for (let i = 0; i < sockets.length; i++) {
       const inputSocket = sockets[i];
 
-      if (inputSocket.className === 'AttributeInputSocket') {
-        const aInputSocket = inputSocket as AttributeInputSocket;
-        const variableName = aInputSocket.variableName;
-
-        variableNames[nodeId][i] = `${variableName}`;
-      } else if (inputSocket.className === 'VaryingInputSocket') {
-        const vInputSocket = inputSocket as VaryingInputSocket;
-        const variableName = vInputSocket.variableName;
-
-        variableNames[nodeId][i] = `${variableName}`;
-      } else if (inputSocket.className === 'UniformInputSocket') {
-        const uInputSocket = inputSocket as UniformInputSocket;
-        variableNames[nodeId][i] = uInputSocket.variableName;
+      if (
+        inputSocket.className === 'AttributeInputSocket' ||
+        inputSocket.className === 'VaryingInputSocket' ||
+        inputSocket.className === 'UniformInputSocket'
+      ) {
+        const storageQualifierInputSocket = inputSocket as
+          | AttributeInputSocket
+          | VaryingInputSocket
+          | UniformInputSocket;
+        variableNames[nodeId][i] = storageQualifierInputSocket.variableName;
       }
     }
   }
