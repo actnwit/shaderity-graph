@@ -488,7 +488,7 @@ ${functionCalls}
         const vInputSocket = inputSocket as VaryingInputSocket;
         const variableName = vInputSocket.variableName;
 
-        variableNames[nodeId][i] = `${variableName}_${nodeId}`;
+        variableNames[nodeId][i] = `${variableName}`;
       } else if (inputSocket.className === 'UniformInputSocket') {
         const uInputSocket = inputSocket as UniformInputSocket;
         variableNames[nodeId][i] = uInputSocket.variableName;
