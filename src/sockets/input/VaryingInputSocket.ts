@@ -1,5 +1,5 @@
 import {INode} from '../../node/INode';
-import {ShaderVaryingObject} from '../../types/CommonType';
+import {ShaderVaryingData} from '../../types/CommonType';
 import AbstractVaryingSocket from '../abstract/AbstractVaryingSocket';
 import {IVaryingOutputSocket} from '../interface/output/IVaryingOutputSocket';
 import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
@@ -17,8 +17,13 @@ export default class VaryingInputSocket
 {
   _connectedSocket: IVaryingOutputSocket | undefined = undefined;
 
-  constructor(node: INode, socketName: string, varying: ShaderVaryingObject) {
-    super(node, socketName, varying);
+  constructor(node: INode, socketName: string, varying: ShaderVaryingData) {
+    super(
+      node,
+      socketName,
+      varying,
+      `v_non_connected_${node.id}_${socketName}`
+    );
   }
 
   /**

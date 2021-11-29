@@ -16,7 +16,7 @@ export type SocketClassName =
 
 export interface ISocket {
   get className(): SocketClassName;
-  get name(): string;
+  get socketName(): string;
   get socketType():
     | SocketTypeEnum
     | ShaderAttributeVarType

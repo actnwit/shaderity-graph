@@ -23,20 +23,20 @@ import AbstractVaryingSocket from './abstract/AbstractVaryingSocket';
 // --- test for non-connecting sockets  ---------------------------------------------
 
 const standardInputSocketData0: StandardInputSocketData = {
-  name: 'inputSocket0',
+  socketName: 'inputSocket0',
   type: SocketType.Vec3,
   direction: SocketDirection.Input,
   defaultValue: [0, 0, 0],
 };
 
 const standardOutputSocketData: StandardOutputSocketData = {
-  name: 'outputSocket',
+  socketName: 'outputSocket',
   type: SocketType.Vec2,
   direction: SocketDirection.Output,
 };
 
 const attributeInputSocketData: AttributeInputSocketData = {
-  name: 'attributeSocket',
+  socketName: 'attributeSocket',
   direction: SocketDirection.Input,
   attributeData: {
     variableName: 'a_position',
@@ -45,30 +45,37 @@ const attributeInputSocketData: AttributeInputSocketData = {
 };
 
 const varyingInputSocketData0: VaryingInputSocketData = {
-  name: 'varyingInputSocket0',
+  socketName: 'varyingInputSocket0',
   direction: SocketDirection.Input,
   varyingData: {
-    variableName: 'v_texcoord',
     type: 'vec2',
     precision: 'mediump',
   },
 };
 
-const uniformInputSocketData: UniformInputSocketData = {
-  name: 'uniformSocket',
+const uniformInputSocketData0: UniformInputSocketData = {
+  socketName: 'uniformSocketA',
   direction: SocketDirection.Input,
   uniformData: {
-    variableName: 'u_texcoord',
+    variableName: 'u_float',
     type: 'float',
     precision: 'highp',
   },
 };
 
+const uniformInputSocketData1: UniformInputSocketData = {
+  socketName: 'uniformSocketB',
+  direction: SocketDirection.Input,
+  uniformData: {
+    type: 'sampler2D',
+    precision: 'highp',
+  },
+};
+
 const varyingOutputSocketData: VaryingOutputSocketData = {
-  name: 'varyingOutputSocket',
+  socketName: 'varyingOutputSocket',
   direction: SocketDirection.Output,
   varyingData: {
-    variableName: 'v_position',
     type: 'vec4',
     precision: 'lowp',
     interpolationType: 'flat',
@@ -85,7 +92,8 @@ const sockets0 = [
   standardOutputSocketData,
   attributeInputSocketData,
   varyingInputSocketData0,
-  uniformInputSocketData,
+  uniformInputSocketData0,
+  uniformInputSocketData1,
   varyingOutputSocketData,
 ];
 
@@ -104,16 +112,18 @@ test('socket.className', () => {
   expect(socketsOfNode0[2].className).toBe('AttributeInputSocket');
   expect(socketsOfNode0[3].className).toBe('VaryingInputSocket');
   expect(socketsOfNode0[4].className).toBe('UniformInputSocket');
-  expect(socketsOfNode0[5].className).toBe('VaryingOutputSocket');
+  expect(socketsOfNode0[5].className).toBe('UniformInputSocket');
+  expect(socketsOfNode0[6].className).toBe('VaryingOutputSocket');
 });
 
-test('socket.name', () => {
-  expect(socketsOfNode0[0].name).toBe('inputSocket0');
-  expect(socketsOfNode0[1].name).toBe('outputSocket');
-  expect(socketsOfNode0[2].name).toBe('attributeSocket');
-  expect(socketsOfNode0[3].name).toBe('varyingInputSocket0');
-  expect(socketsOfNode0[4].name).toBe('uniformSocket');
-  expect(socketsOfNode0[5].name).toBe('varyingOutputSocket');
+test('socket.socketName', () => {
+  expect(socketsOfNode0[0].socketName).toBe('inputSocket0');
+  expect(socketsOfNode0[1].socketName).toBe('outputSocket');
+  expect(socketsOfNode0[2].socketName).toBe('attributeSocket');
+  expect(socketsOfNode0[3].socketName).toBe('varyingInputSocket0');
+  expect(socketsOfNode0[4].socketName).toBe('uniformSocketA');
+  expect(socketsOfNode0[5].socketName).toBe('uniformSocketB');
+  expect(socketsOfNode0[6].socketName).toBe('varyingOutputSocket');
 });
 
 test('socket.socketType', () => {
@@ -122,7 +132,8 @@ test('socket.socketType', () => {
   expect(socketsOfNode0[2].socketType).toBe('vec4');
   expect(socketsOfNode0[3].socketType).toBe('vec2');
   expect(socketsOfNode0[4].socketType).toBe('float');
-  expect(socketsOfNode0[5].socketType).toBe('vec4');
+  expect(socketsOfNode0[5].socketType).toBe('sampler2D');
+  expect(socketsOfNode0[6].socketType).toBe('vec4');
 });
 
 test('socket.node', () => {
@@ -132,6 +143,7 @@ test('socket.node', () => {
   expect(socketsOfNode0[3].node).toStrictEqual(node0);
   expect(socketsOfNode0[4].node).toStrictEqual(node0);
   expect(socketsOfNode0[5].node).toStrictEqual(node0);
+  expect(socketsOfNode0[6].node).toStrictEqual(node0);
 });
 
 test('socket.node', () => {
@@ -140,7 +152,8 @@ test('socket.node', () => {
   expect(socketsOfNode0[2].isInputSocket()).toBe(true);
   expect(socketsOfNode0[3].isInputSocket()).toBe(true);
   expect(socketsOfNode0[4].isInputSocket()).toBe(true);
-  expect(socketsOfNode0[5].isInputSocket()).toBe(false);
+  expect(socketsOfNode0[5].isInputSocket()).toBe(true);
+  expect(socketsOfNode0[6].isInputSocket()).toBe(false);
 });
 
 const standardInputSocket0 = socketsOfNode0[0] as StandardInputSocket;
@@ -180,7 +193,9 @@ test('attributeInputSocket.location', () => {
 
 const varyingInputSocket = socketsOfNode0[3] as VaryingInputSocket;
 test('varyingInputSocket.variableName', () => {
-  expect(varyingInputSocket.variableName).toBe('v_texcoord');
+  expect(varyingInputSocket.variableName).toBe(
+    'v_non_connected_0_varyingInputSocket0'
+  );
 });
 
 test('varyingInputSocket.precision', () => {
@@ -191,18 +206,23 @@ test('varyingInputSocket.interpolationType', () => {
   expect(varyingInputSocket.interpolationType).toBe(undefined);
 });
 
-const uniformInputSocket = socketsOfNode0[4] as UniformInputSocket;
+const uniformInputSocket0 = socketsOfNode0[4] as UniformInputSocket;
 test('uniformInputSocket.variableName', () => {
-  expect(uniformInputSocket.variableName).toBe('u_texcoord');
+  expect(uniformInputSocket0.variableName).toBe('u_float');
 });
 
 test('uniformInputSocket.precision', () => {
-  expect(uniformInputSocket.precision).toBe('highp');
+  expect(uniformInputSocket0.precision).toBe('highp');
 });
 
-const varyingOutputSocket = socketsOfNode0[5] as VaryingOutputSocket;
+const uniformInputSocket1 = socketsOfNode0[5] as UniformInputSocket;
+test('uniformInputSocket.variableName', () => {
+  expect(uniformInputSocket1.variableName).toBe('u_0_uniformSocketB');
+});
+
+const varyingOutputSocket = socketsOfNode0[6] as VaryingOutputSocket;
 test('varyingOutputSocket.variableName', () => {
-  expect(varyingOutputSocket.variableName).toBe('v_position');
+  expect(varyingOutputSocket.variableName).toBe('v_0_varyingOutputSocket');
 });
 
 test('varyingOutputSocket.precision', () => {
@@ -216,7 +236,7 @@ test('varyingOutputSocket.interpolationType', () => {
 // --- test for connecting sockets  -------------------------------------------------
 
 const standardInputSocketData1: StandardInputSocketData = {
-  name: 'inputSocket1',
+  socketName: 'inputSocket1',
   type: SocketType.Vec2,
   direction: SocketDirection.Input,
   defaultValue: [0, 0],
@@ -228,10 +248,9 @@ const standardInputSocketData1: StandardInputSocketData = {
 };
 
 const varyingInputSocketData1: VaryingInputSocketData = {
-  name: 'varyingInputSocket1',
+  socketName: 'varyingInputSocket1',
   direction: SocketDirection.Input,
   varyingData: {
-    variableName: 'v_position',
     type: 'vec4',
     precision: 'lowp',
     interpolationType: 'flat',
@@ -291,6 +310,9 @@ test('AbstractVaryingSocket.connectSockets', () => {
     varyingOutputSocket
   );
 
+  expect(varyingInputSocket1.variableName).toStrictEqual(
+    'v_0_varyingOutputSocket'
+  );
   expect(varyingInputSocket1.connectedSocket).toStrictEqual(
     varyingOutputSocket
   );

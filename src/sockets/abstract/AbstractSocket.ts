@@ -42,7 +42,7 @@ export default abstract class AbstractSocket implements ISocket {
   /**
    * Get the socket name
    */
-  get name() {
+  get socketName() {
     return this.__name;
   }
 

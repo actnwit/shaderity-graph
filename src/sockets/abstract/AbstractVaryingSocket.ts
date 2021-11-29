@@ -2,7 +2,7 @@ import {INode} from '../../node/INode';
 import {
   ShaderPrecisionType,
   ShaderVaryingInterpolationType,
-  ShaderVaryingObject,
+  ShaderVaryingData,
   ShaderVaryingVarType,
 } from '../../types/CommonType';
 import AbstractSocket from './AbstractSocket';
@@ -19,10 +19,15 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
   private __precision: ShaderPrecisionType;
   private __interpolationType: ShaderVaryingInterpolationType | undefined;
 
-  constructor(node: INode, socketName: string, varying: ShaderVaryingObject) {
+  constructor(
+    node: INode,
+    socketName: string,
+    varying: ShaderVaryingData,
+    variableName: string
+  ) {
     super(node, socketName);
 
-    this.__variableName = varying.variableName;
+    this.__variableName = variableName;
     this.__type = varying.type;
     this.__precision = varying.precision ?? 'highp';
     this.__interpolationType = varying.interpolationType;
@@ -40,6 +45,8 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
     if (inputSocket.socketType === outputSocket.socketType) {
       inputSocket._connectSocketWith(outputSocket);
       outputSocket._connectSocketWith(inputSocket);
+
+      inputSocket._setVariableName(outputSocket.variableName);
     } else {
       console.error(
         'AbstractVaryingSocket.connectSockets: socketType is different'
@@ -73,6 +80,14 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
    */
   get interpolationType() {
     return this.__interpolationType;
+  }
+
+  /**
+   * @private
+   * change variable name of this socket
+   */
+  _setVariableName(newVariableName: string) {
+    this.__variableName = newVariableName;
   }
 
   /**
