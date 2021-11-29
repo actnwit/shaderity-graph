@@ -6,17 +6,20 @@ import Node from './Node';
 // Shader codes corresponding to the node are not defined.
 
 const vertexNodeData: NodeData = {
-  shaderFunctionName: 'funcA',
+  shaderFunctionName: 'functionA',
+  shaderFunctionDataKey: 'funcA',
   shaderStage: 'vertex',
 };
 
 const fragmentNodeData: NodeData = {
-  shaderFunctionName: 'funcB',
+  shaderFunctionName: 'functionB',
+  shaderFunctionDataKey: 'funcB',
   shaderStage: 'fragment',
 };
 
 const noUseNodeData: NodeData = {
-  shaderFunctionName: 'funcC',
+  shaderFunctionName: 'functionC',
+  shaderFunctionDataKey: 'funcC',
   shaderStage: 'noUse',
 };
 
@@ -54,14 +57,28 @@ test('Node.getNodeById', () => {
 
 //
 test('node.functionName', () => {
-  expect(nodeForVertexShader.functionName).toBe('funcA');
-  expect(nodeForFragmentShader.functionName).toBe('funcB');
-  expect(nodeNotUseInShader.functionName).toBe('funcC');
+  expect(nodeForVertexShader.functionName).toBe('functionA');
+  expect(nodeForFragmentShader.functionName).toBe('functionB');
+  expect(nodeNotUseInShader.functionName).toBe('functionC');
+
+  nodeForVertexShader.functionName = 'functionD';
+  nodeForFragmentShader.functionName = 'functionE';
+  nodeNotUseInShader.functionName = 'functionF';
+
+  expect(nodeForVertexShader.functionName).toBe('functionD');
+  expect(nodeForFragmentShader.functionName).toBe('functionE');
+  expect(nodeNotUseInShader.functionName).toBe('functionF');
+});
+
+test('node.functionName', () => {
+  expect(nodeForVertexShader._shaderFunctionDataKey).toBe('funcA');
+  expect(nodeForFragmentShader._shaderFunctionDataKey).toBe('funcB');
+  expect(nodeNotUseInShader._shaderFunctionDataKey).toBe('funcC');
 });
 
 test('node.shaderCode', () => {
   expect(nodeForVertexShader.shaderCode).toBe(
-    `// function name ${nodeForVertexShader.functionName} is not found`
+    `// key ${vertexNodeData.shaderFunctionDataKey} is not found in ShaderFunctionDataRepository`
   );
   console.log('Please ignore the console.error above if the test passes.');
 });

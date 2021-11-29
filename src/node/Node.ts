@@ -45,6 +45,7 @@ export default class Node implements INode {
   protected static __nodes: Node[] = [];
 
   protected __shaderFunctionName: string;
+  protected __shaderFunctionDataKey: string;
   protected __shaderStage: ShaderStageEnum;
 
   protected __id: number;
@@ -61,6 +62,7 @@ export default class Node implements INode {
    */
   constructor(nodeData: NodeData, socketDataArray: SocketData[]) {
     this.__shaderFunctionName = nodeData.shaderFunctionName;
+    this.__shaderFunctionDataKey = nodeData.shaderFunctionDataKey;
     this.__shaderStage = nodeData.shaderStage;
     this.__id = Node.__nodes.length;
     Node.__nodes[this.__id] = this;
@@ -76,11 +78,11 @@ export default class Node implements INode {
 
     const existShaderFunctionData =
       ShaderFunctionDataRepository.existShaderFunctionData(
-        this.__shaderFunctionName
+        this.__shaderFunctionDataKey
       );
     if (!existShaderFunctionData) {
       console.warn(
-        `Node: function ${this.__shaderFunctionName} is not found in ShaderFunctionDataRepository`
+        `Node: key ${this.__shaderFunctionDataKey} is not found in ShaderFunctionDataRepository`
       );
     }
   }
@@ -179,7 +181,14 @@ export default class Node implements INode {
   }
 
   /**
-   * Get the name of the function that corresponds to this node in the shader
+   * Set the name of the function that corresponds to the entry point of this node in the shader
+   */
+  set functionName(name: string) {
+    this.__shaderFunctionName = name;
+  }
+
+  /**
+   * Get the name of the function that corresponds to entry point of this node in the shader
    */
   get functionName() {
     return this.__shaderFunctionName;
@@ -191,8 +200,9 @@ export default class Node implements INode {
   get shaderCode() {
     const shaderCode =
       ShaderFunctionDataRepository.getShaderFunctionData(
-        this.__shaderFunctionName
-      )?.code ?? `// function name ${this.__shaderFunctionName} is not found`;
+        this.__shaderFunctionDataKey
+      )?.code ??
+      `// key ${this.__shaderFunctionDataKey} is not found in ShaderFunctionDataRepository`;
 
     return shaderCode;
   }
@@ -213,12 +223,20 @@ export default class Node implements INode {
 
   /**
    * @private
+   * Get shaderFunctionDataKey
+   */
+  get _shaderFunctionDataKey() {
+    return this.__shaderFunctionDataKey;
+  }
+
+  /**
+   * @private
    * Get the webgl extension used by the functions of this node
    */
   get _extensions() {
     const extensions =
       ShaderFunctionDataRepository.getShaderFunctionData(
-        this.__shaderFunctionName
+        this.__shaderFunctionDataKey
       )?.extensions ?? [];
 
     return extensions;
