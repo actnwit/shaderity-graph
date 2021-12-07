@@ -9,7 +9,7 @@ import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import {ISocket} from '../sockets/interface/ISocket';
 import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
 import AbstractVaryingSocket from '../sockets/abstract/AbstractVaryingSocket';
-import {INode} from './INode';
+import {INode, NodeClassName} from './INode';
 
 /**
  * A node is an object that contains functions to be used in the shader.
@@ -250,5 +250,6 @@ export default abstract class AbstractNode implements INode {
     this.__sockets.push(socket);
   }
 
+  abstract get className(): NodeClassName;
   protected abstract __addSockets(socketDataArray: SocketData[]): void;
 }

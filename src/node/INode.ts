@@ -1,7 +1,10 @@
 import {ISocket} from '../sockets/interface/ISocket';
 import {ShaderStageEnum} from '../types/CommonEnum';
 
+export type NodeClassName = 'ShaderityNode';
+
 export interface INode {
+  get className(): NodeClassName;
   get shaderStage(): ShaderStageEnum;
   get id(): number;
   get _sockets(): ISocket[];

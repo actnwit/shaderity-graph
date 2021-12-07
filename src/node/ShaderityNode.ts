@@ -84,6 +84,12 @@ export default class ShaderityNode extends AbstractNode {
     // TODO: extract shaderity nodes
     return AbstractNode.fragmentNodes as ShaderityNode[];
   }
+  /**
+   * Get the name of the function that corresponds to entry point of this node in the shader
+   */
+  get className(): 'ShaderityNode' {
+    return 'ShaderityNode';
+  }
 
   /**
    * Set the name of the function that corresponds to the entry point of this node in the shader
