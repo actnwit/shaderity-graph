@@ -9,6 +9,7 @@ import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import {ISocket} from '../sockets/interface/ISocket';
 import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
 import AbstractVaryingSocket from '../sockets/abstract/AbstractVaryingSocket';
+import {INode} from './INode';
 
 /**
  * A node is an object that contains functions to be used in the shader.
@@ -24,7 +25,7 @@ import AbstractVaryingSocket from '../sockets/abstract/AbstractVaryingSocket';
  *       Do not write these variables directly into the function of each node.
  *       They must be specified in the function arguments.
  */
-export default abstract class AbstractNode {
+export default abstract class AbstractNode implements INode {
   private static __nodes: AbstractNode[] = [];
 
   private __shaderStage: ShaderStageEnum;
