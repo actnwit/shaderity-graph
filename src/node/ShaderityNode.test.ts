@@ -1,23 +1,23 @@
-import {NodeData} from '../types/CommonType';
+import {ShaderityNodeData} from '../types/CommonType';
 import ShaderityNode from './ShaderityNode';
 
 // This is the unit test for node.
 // All the node has no socket.
 // Shader codes corresponding to the node are not defined.
 
-const vertexNodeData: NodeData = {
+const vertexNodeData: ShaderityNodeData = {
   shaderFunctionName: 'functionA',
   shaderFunctionDataKey: 'funcA',
   shaderStage: 'vertex',
 };
 
-const fragmentNodeData: NodeData = {
+const fragmentNodeData: ShaderityNodeData = {
   shaderFunctionName: 'functionB',
   shaderFunctionDataKey: 'funcB',
   shaderStage: 'fragment',
 };
 
-const noUseNodeData: NodeData = {
+const noUseNodeData: ShaderityNodeData = {
   shaderFunctionName: 'functionC',
   shaderFunctionDataKey: 'funcC',
   shaderStage: 'noUse',

@@ -1,6 +1,6 @@
 import ShaderityNode from '../node/ShaderityNode';
 import ShaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
-import {SocketDirection} from '../types/CommonEnum';
+import {NodeType, SocketDirection} from '../types/CommonEnum';
 import {
   ShaderityGraphNode,
   ShaderityGraphJson,
@@ -50,7 +50,12 @@ export default class JsonImporter {
       const nodeJson = nodesJson[i];
 
       // TODO: create the other type nodes
-      new ShaderityNode(nodeJson.nodeData, nodeJson.socketDataArray);
+      if (
+        nodeJson.nodeData.nodeType == null ||
+        nodeJson.nodeData.nodeType === NodeType.ShaderityNode
+      ) {
+        new ShaderityNode(nodeJson.nodeData, nodeJson.socketDataArray);
+      }
     }
   }
 

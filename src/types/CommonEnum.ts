@@ -127,3 +127,17 @@ export const SocketDirection = {
 
 export type SocketDirectionEnum =
   typeof SocketDirection[keyof typeof SocketDirection];
+
+export const NodeType = {
+  ShaderityNode: 'shaderityNode',
+  SamplerInputNode: 'samplerInputNode',
+} as const;
+
+export type NodeTypeEnum = typeof NodeType[keyof typeof NodeType];
+
+export const SamplerType = {
+  Texture2D: 'sampler2D',
+  TextureCube: 'samplerCube',
+} as const;
+
+export type SamplerTypeEnum = typeof SamplerType[keyof typeof SamplerType];

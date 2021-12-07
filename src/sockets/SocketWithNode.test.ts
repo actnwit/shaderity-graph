@@ -4,7 +4,7 @@ import {
   AttributeInputSocketData,
   StandardInputSocketData,
   StandardOutputSocketData,
-  NodeData,
+  ShaderityNodeData,
   UniformInputSocketData,
   VaryingInputSocketData,
   VaryingOutputSocketData,
@@ -90,7 +90,7 @@ const shaderOutputSocketData: ShaderOutputSocketData = {
   direction: SocketDirection.Output,
 };
 
-const driverNodeData0: NodeData = {
+const driverNodeData0: ShaderityNodeData = {
   shaderFunctionName: 'functionA',
   shaderFunctionDataKey: 'funcA',
   shaderStage: 'vertex',
@@ -280,13 +280,13 @@ const varyingInputSocketData1: VaryingInputSocketData = {
   // },
 };
 
-const driverNodeData1: NodeData = {
+const driverNodeData1: ShaderityNodeData = {
   shaderFunctionName: 'functionB',
   shaderFunctionDataKey: 'funcB',
   shaderStage: 'vertex',
 };
 
-const driverNodeData2: NodeData = {
+const driverNodeData2: ShaderityNodeData = {
   shaderFunctionName: 'functionC',
   shaderFunctionDataKey: 'funcC',
   shaderStage: 'vertex',

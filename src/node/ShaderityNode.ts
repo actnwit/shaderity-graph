@@ -1,6 +1,6 @@
 import {ShaderStage, SocketDirection} from '../types/CommonEnum';
 import {
-  NodeData,
+  ShaderityNodeData,
   StandardInputSocketData,
   StandardOutputSocketData,
   UniformInputSocketData,
@@ -44,7 +44,7 @@ export default class ShaderityNode extends AbstractNode {
    * @param socketDataArray define sockets. The order of the socketData must match the order of
    *                        the arguments of the node's shader function.
    */
-  constructor(nodeData: NodeData, socketDataArray: SocketData[]) {
+  constructor(nodeData: ShaderityNodeData, socketDataArray: SocketData[]) {
     super(nodeData, socketDataArray);
     this.__shaderFunctionName = nodeData.shaderFunctionName;
     this.__shaderFunctionDataKey = nodeData.shaderFunctionDataKey;
