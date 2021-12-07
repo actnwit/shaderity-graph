@@ -1,4 +1,5 @@
 import ShaderityGraphConverter from './main/ShaderityGraphConverter';
+import AbstractNode from './node/AbstractNode';
 import ShaderityNode from './node/ShaderityNode';
 import {
   ShaderStage,
@@ -34,6 +35,7 @@ import {
 } from './types/CommonType';
 
 export default {
+  AbstractNode,
   ShaderityNode,
   ShaderStage,
   SocketDirection,
