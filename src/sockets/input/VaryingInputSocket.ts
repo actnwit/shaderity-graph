@@ -12,7 +12,6 @@ import AbstractSocket from '../abstract/AbstractSocket';
  * If the function corresponding to a node uses an varying variable,
  * the function must use this socket to receive the variable as an argument.
  * This socket can connects with VaryingOutputSockets.
- * This socket can be used only with fragment shader nodes.
  */
 export default class VaryingInputSocket
   extends AbstractSocket
