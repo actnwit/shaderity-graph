@@ -33,8 +33,8 @@ export default abstract class AbstractNode implements INode {
 
   private __sockets: ISocket[] = [];
 
-  private static __existVertexShaderOutputSocket = false;
-  private static __existFragmentShaderOutputSocket = false;
+  protected static __existVertexShaderOutputSocket = false;
+  protected static __existFragmentShaderOutputSocket = false;
 
   /**
    * Create a new node

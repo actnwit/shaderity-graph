@@ -1,9 +1,4 @@
-import {
-  ShaderStage,
-  ShaderStageEnum,
-  SocketDirection,
-  SocketType,
-} from '../types/CommonEnum';
+import {ShaderStage, SocketDirection} from '../types/CommonEnum';
 import {
   NodeData,
   StandardInputSocketData,
@@ -12,21 +7,19 @@ import {
   VaryingInputSocketData,
   AttributeInputSocketData,
   VaryingOutputSocketData,
+  InputSocketData,
+  OutputSocketData,
   SocketData,
-  ShaderOutputSocketData,
 } from '../types/CommonType';
-import StandardInputSocket from '../sockets/input/StandardInputSocket';
-import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
-import {INode} from './INode';
 import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
-import AbstractStandardSocket from '../sockets/abstract/AbstractStandardSocket';
-import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
-import UniformInputSocket from '../sockets/input/UniformInputSocket';
-import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
-import {ISocket} from '../sockets/interface/ISocket';
+import AbstractNode from './AbstractNode';
 import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
-import AbstractVaryingSocket from '../sockets/abstract/AbstractVaryingSocket';
+import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
 import ShaderOutputSocket from '../sockets/output/ShaderOutputSocket';
+import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
+import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
+import UniformInputSocket from '../sockets/input/UniformInputSocket';
+import StandardInputSocket from '../sockets/input/StandardInputSocket';
 
 /**
  * A node is an object that contains functions to be used in the shader.
@@ -42,18 +35,9 @@ import ShaderOutputSocket from '../sockets/output/ShaderOutputSocket';
  *       Do not write these variables directly into the function of each node.
  *       They must be specified in the function arguments.
  */
-export default class ShaderityNode implements INode {
-  protected static __nodes: ShaderityNode[] = [];
-
-  protected __shaderFunctionName: string;
-  protected __shaderFunctionDataKey: string;
-  protected __shaderStage: ShaderStageEnum;
-
-  protected __id: number;
-  protected __sockets: ISocket[] = [];
-
-  private static __existVertexShaderOutputSocket = false;
-  private static __existFragmentShaderOutputSocket = false;
+export default class ShaderityNode extends AbstractNode {
+  private __shaderFunctionName: string;
+  private __shaderFunctionDataKey: string;
 
   /**
    * Create a new node
@@ -62,20 +46,9 @@ export default class ShaderityNode implements INode {
    *                        the arguments of the node's shader function.
    */
   constructor(nodeData: NodeData, socketDataArray: SocketData[]) {
+    super(nodeData, socketDataArray);
     this.__shaderFunctionName = nodeData.shaderFunctionName;
     this.__shaderFunctionDataKey = nodeData.shaderFunctionDataKey;
-    this.__shaderStage = nodeData.shaderStage;
-    this.__id = ShaderityNode.__nodes.length;
-    ShaderityNode.__nodes[this.__id] = this;
-
-    for (let i = 0; i < socketDataArray.length; i++) {
-      const socketData = socketDataArray[i];
-      if (socketData.direction === SocketDirection.Input) {
-        this.__addInputSocket(socketData);
-      } else {
-        this.__addOutputSocket(socketData);
-      }
-    }
 
     const existShaderFunctionData =
       ShaderFunctionDataRepository.existShaderFunctionData(
@@ -88,97 +61,28 @@ export default class ShaderityNode implements INode {
     }
   }
 
-  /**
-   * Get all created nodes
-   */
+  // /**
+  //  * Get all created nodes
+  //  */
   static get allNodes(): ShaderityNode[] {
-    return this.__nodes;
+    // TODO: extract shaderity nodes
+    return AbstractNode.allNodes as ShaderityNode[];
   }
 
-  /**
-   * Get all created vertex nodes
-   */
+  // /**
+  //  * Get all created vertex nodes
+  //  */
   static get vertexNodes(): ShaderityNode[] {
-    const vertexNodes: ShaderityNode[] = [];
-    for (const node of this.__nodes) {
-      if (node.shaderStage === ShaderStage.Vertex) {
-        vertexNodes.push(node);
-      }
-    }
-    return vertexNodes;
+    // TODO: extract shaderity nodes
+    return AbstractNode.vertexNodes as ShaderityNode[];
   }
 
-  /**
-   * Get all created fragment nodes
-   */
+  // /**
+  //  * Get all created fragment nodes
+  //  */
   static get fragmentNodes(): ShaderityNode[] {
-    const fragmentNodes: ShaderityNode[] = [];
-    for (const node of this.__nodes) {
-      if (node.shaderStage === ShaderStage.Fragment) {
-        fragmentNodes.push(node);
-      }
-    }
-    return fragmentNodes;
-  }
-
-  /**
-   * Remove all created nodes
-   */
-  static resetNodes() {
-    this.__existVertexShaderOutputSocket = false;
-    this.__existFragmentShaderOutputSocket = false;
-    this.__nodes.length = 0;
-  }
-
-  /**
-   * Get the node with the specified id
-   */
-  static getNodeById(id: number) {
-    return this.__nodes[id];
-  }
-
-  /**
-   * Connects two nodes via a specified socket.
-   * @param inputNode previous node
-   * @param outputSocketNameOfInputNode the socket name to be connected on the previous node
-   * @param outputNode post node
-   * @param inputSocketNameOfOutputNode the socket name to be connected on the post node
-   */
-  static connectNodes(
-    inputNode: ShaderityNode,
-    outputSocketNameOfInputNode: string,
-    outputNode: ShaderityNode,
-    inputSocketNameOfOutputNode: string
-  ) {
-    const outputSocket = inputNode.__getOutputSocket(
-      outputSocketNameOfInputNode
-    );
-    const inputSocket = outputNode.__getInputSocket(
-      inputSocketNameOfOutputNode
-    );
-
-    if (inputSocket == null || outputSocket == null) {
-      console.error('Node.connectNodes: socket is not found');
-      return;
-    }
-
-    if (
-      inputSocket.className === 'StandardInputSocket' &&
-      outputSocket.className === 'StandardOutputSocket'
-    ) {
-      AbstractStandardSocket.connectSockets(inputSocket, outputSocket);
-      return;
-    }
-
-    if (
-      inputSocket.className === 'VaryingInputSocket' &&
-      outputSocket.className === 'VaryingOutputSocket'
-    ) {
-      AbstractVaryingSocket.connectSockets(inputSocket, outputSocket);
-      return;
-    }
-
-    console.error('Node.connectNodes: the input socket is non-standard socket');
+    // TODO: extract shaderity nodes
+    return AbstractNode.fragmentNodes as ShaderityNode[];
   }
 
   /**
@@ -209,20 +113,6 @@ export default class ShaderityNode implements INode {
   }
 
   /**
-   * Get the shaderStage where this node will be used
-   */
-  get shaderStage() {
-    return this.__shaderStage;
-  }
-
-  /**
-   * Get the id of this node
-   */
-  get id() {
-    return this.__id;
-  }
-
-  /**
    * @private
    * Get shaderFunctionDataKey
    */
@@ -243,114 +133,22 @@ export default class ShaderityNode implements INode {
     return extensions;
   }
 
-  /**
-   * @private
-   * Get all the sockets of this node
-   */
-  get _sockets() {
-    return this.__sockets;
-  }
-
-  /**
-   * Get connected previous node by input socket name
-   * */
-  getInputNode(socketName: string) {
-    const targetSocket = this.__getInputSocket(socketName);
-    if (targetSocket == null) {
-      return undefined;
+  protected __addSockets(socketDataArray: SocketData[]): void {
+    for (let i = 0; i < socketDataArray.length; i++) {
+      const socketData = socketDataArray[i];
+      if (socketData.direction === SocketDirection.Input) {
+        this.__addInputSocket(socketData);
+      } else {
+        this.__addOutputSocket(socketData);
+      }
     }
-
-    if (
-      targetSocket.className === 'AttributeInputSocket' ||
-      targetSocket.className === 'UniformInputSocket'
-    ) {
-      // non-connectable socket cannot connect another node
-      return undefined;
-    }
-
-    const connectedNode = targetSocket.connectedNode;
-    return connectedNode;
-  }
-
-  /**
-   * Get connected following node by output socket name
-   * */
-  getOutputNodes(socketName: string) {
-    const targetSocket = this.__getOutputSocket(socketName);
-    if (targetSocket == null) {
-      return [];
-    }
-
-    const connectedNodes = targetSocket.connectedNodes;
-    return connectedNodes;
-  }
-
-  /**
-   * Get variable name corresponding specified socket
-   * Return '' if the socket is not found or is StandardInputSocket
-   * */
-  getVariableNameOfInputSocket(socketName: string) {
-    const socket = this.__getInputSocket(socketName);
-    if (socket == null || socket.className === 'StandardInputSocket') {
-      return '';
-    } else {
-      return socket.variableName;
-    }
-  }
-
-  /**
-   * @private
-   * Get input socket by socket name
-   * */
-  private __getInputSocket(socketName: string) {
-    const resultSocket = this.__sockets.find(
-      socket => socket.isInputSocket() && socket.socketName === socketName
-    ) as
-      | StandardInputSocket
-      | AttributeInputSocket
-      | VaryingInputSocket
-      | UniformInputSocket;
-
-    if (resultSocket == null) {
-      console.error(
-        `Node.__getInputSocket: socket name ${socketName} is not exist`
-      );
-      return undefined;
-    }
-
-    return resultSocket;
-  }
-
-  /**
-   * @private
-   * Get output socket by socket name
-   * */
-  private __getOutputSocket(socketName: string) {
-    const resultSocket = this.__sockets.find(
-      socket => !socket.isInputSocket() && socket.socketName === socketName
-    ) as StandardOutputSocket | VaryingOutputSocket;
-
-    if (resultSocket == null) {
-      console.error(
-        `Node.__getOutputSocket: socket name ${socketName} is not exist`
-      );
-      return undefined;
-    }
-
-    return resultSocket;
   }
 
   /**
    * @private
    * Add input socket of this node to connect another node
    */
-  private __addInputSocket(
-    socketData:
-      | StandardInputSocketData
-      | AttributeInputSocketData
-      | VaryingInputSocketData
-      | UniformInputSocketData
-  ) {
+  private __addInputSocket(socketData: InputSocketData) {
     const socketName = socketData.socketName;
 
     const duplicateInputSocket =
@@ -385,16 +183,21 @@ export default class ShaderityNode implements INode {
         socketName,
         uSocketData.uniformData
       );
-    } else {
+    } else if ((socketData as StandardInputSocketData).shaderData != null) {
       const sSocketData = socketData as StandardInputSocketData;
       inputSocket = new StandardInputSocket(
         this,
         socketName,
         sSocketData.shaderData
       );
+    } else {
+      console.error(
+        `ShaderityNode.__addInputSocket: ${socketName} is invalid socket for the ShaderityNode`
+      );
+      return;
     }
 
-    this.__sockets.push(inputSocket);
+    this.__addSocket(inputSocket);
   }
 
   /**
@@ -402,15 +205,9 @@ export default class ShaderityNode implements INode {
    * Check for duplicate socket names in the input sockets.
    */
   private __checkDuplicationOfInputSocket(socketName: string) {
-    const existSocketName = this.__sockets.some(
+    return this._sockets.some(
       socket => socket.isInputSocket() && socket.socketName === socketName
     );
-
-    if (existSocketName) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   /**
@@ -418,12 +215,7 @@ export default class ShaderityNode implements INode {
    * Add output socket of this node to connect another node
    */
 
-  private __addOutputSocket(
-    socketData:
-      | StandardOutputSocketData
-      | VaryingOutputSocketData
-      | ShaderOutputSocketData
-  ) {
+  private __addOutputSocket(socketData: OutputSocketData) {
     const socketName = socketData.socketName;
 
     const duplicateOutputSocket =
@@ -456,7 +248,7 @@ export default class ShaderityNode implements INode {
       outputSocket = new ShaderOutputSocket(this, socketName);
     }
 
-    this.__sockets.push(outputSocket);
+    this.__addSocket(outputSocket);
   }
 
   /**
@@ -464,15 +256,9 @@ export default class ShaderityNode implements INode {
    * Check for duplicate socket names in the output sockets.
    */
   private __checkDuplicationOfOutputSocket(socketName: string) {
-    const existSocketName = this.__sockets.some(
+    return this._sockets.some(
       socket => !socket.isInputSocket() && socket.socketName === socketName
     );
-
-    if (existSocketName) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   /**
@@ -481,19 +267,19 @@ export default class ShaderityNode implements INode {
    */
   private __checkUniquenessOfShaderOutputSocket() {
     if (this.shaderStage === ShaderStage.Vertex) {
-      if (ShaderityNode.__existVertexShaderOutputSocket) {
+      if (AbstractNode.__existVertexShaderOutputSocket) {
         console.error(
           'Node.__addOutputSocket: ShaderOutputSocket must be one in the vertex shader'
         );
       }
-      ShaderityNode.__existVertexShaderOutputSocket = true;
+      AbstractNode.__existVertexShaderOutputSocket = true;
     } else {
-      if (ShaderityNode.__existFragmentShaderOutputSocket) {
+      if (AbstractNode.__existFragmentShaderOutputSocket) {
         console.error(
           'Node.__addOutputSocket: ShaderOutputSocket must be one in the fragment shader'
         );
       }
-      ShaderityNode.__existFragmentShaderOutputSocket = true;
+      AbstractNode.__existFragmentShaderOutputSocket = true;
     }
   }
 }
