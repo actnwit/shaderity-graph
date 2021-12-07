@@ -1,4 +1,4 @@
-import Node from '../node/Node';
+import ShaderityNode from '../node/ShaderityNode';
 import {ShaderityObjects, ShaderityGraphJson} from '../types/CommonType';
 import JsonImporter from '../import/JsonImporter';
 import ShaderGraphResolver from '../shaderGraph/ShaderGraphResolver';
@@ -42,18 +42,18 @@ export default class ShaderityGraphConverter {
       );
     }
 
-    Node.resetNodes();
+    ShaderityNode.resetNodes();
     ShaderFunctionDataRepository.resetRepository();
 
     JsonImporter.importShaderityGraphJson(json);
 
-    if (Node.vertexNodes.length === 0) {
+    if (ShaderityNode.vertexNodes.length === 0) {
       console.warn(
         'System.createShaderCodesFromJsonObject: no vertex node is found'
       );
     }
 
-    if (Node.fragmentNodes.length === 0) {
+    if (ShaderityNode.fragmentNodes.length === 0) {
       console.warn(
         'System.createShaderCodesFromJsonObject: no fragment node is found'
       );

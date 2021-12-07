@@ -1,4 +1,4 @@
-import Node from '../node/Node';
+import ShaderityNode from '../node/ShaderityNode';
 import StandardInputSocket from '../sockets/input/StandardInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import {ISocket} from '../sockets/interface/ISocket';
@@ -11,7 +11,7 @@ export default class NodeSorter {
   /**
    * Sort the nodes topologically based on Kahn's algorithm
    */
-  static sortTopologically(unsortedNodes: Node[]): Node[] {
+  static sortTopologically(unsortedNodes: ShaderityNode[]): ShaderityNode[] {
     // this sort is based on https://www.geeksforgeeks.org/topological-sorting-indegree-based-solution/
 
     // Storage of edges (e.g. edge[0] = [1] means unsortedNodes[0] has the edge to unsortedNodes[1])
@@ -52,7 +52,7 @@ export default class NodeSorter {
    * In addition, store the specific edge information in the "edges" array.
    */
   private static __countInputNodesAndSetEdges(
-    unsortedNodes: Node[],
+    unsortedNodes: ShaderityNode[],
     edges: number[][]
   ) {
     const inputNodeCounts: number[] = Array(unsortedNodes.length);
@@ -84,7 +84,7 @@ export default class NodeSorter {
 
   private static __isInputSocketWhoseConnectedOutputIsInSameShader(
     inputSocket: ISocket,
-    node: Node
+    node: ShaderityNode
   ) {
     if (inputSocket.className === 'StandardInputSocket') {
       return true;
@@ -105,10 +105,10 @@ export default class NodeSorter {
    * Find nodes that have no input nodes.
    */
   private static __getNoInputNodes(
-    unsortedNodes: Node[],
+    unsortedNodes: ShaderityNode[],
     inputNodeCounts: number[]
   ) {
-    const noUnsortedInputNodes: Node[] = [];
+    const noUnsortedInputNodes: ShaderityNode[] = [];
     for (let i = 0; i < inputNodeCounts.length; i++) {
       const inputNodeCount = inputNodeCounts[i];
       if (inputNodeCount === 0) {
@@ -124,14 +124,14 @@ export default class NodeSorter {
    * Sorting nodes
    */
   private static __sortTopologically(
-    unsortedNodes: Node[],
+    unsortedNodes: ShaderityNode[],
     inputNodeCounts: number[],
-    noUnsortedInputNodes: Node[],
+    noUnsortedInputNodes: ShaderityNode[],
     edges: number[][]
   ) {
-    const sortedNodes: Node[] = [];
+    const sortedNodes: ShaderityNode[] = [];
     while (noUnsortedInputNodes.length !== 0) {
-      const sortingNode = noUnsortedInputNodes.shift() as Node;
+      const sortingNode = noUnsortedInputNodes.shift() as ShaderityNode;
       sortedNodes.push(sortingNode);
 
       const sortingNodeIndex = unsortedNodes.findIndex(

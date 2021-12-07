@@ -42,8 +42,8 @@ import ShaderOutputSocket from '../sockets/output/ShaderOutputSocket';
  *       Do not write these variables directly into the function of each node.
  *       They must be specified in the function arguments.
  */
-export default class Node implements INode {
-  protected static __nodes: Node[] = [];
+export default class ShaderityNode implements INode {
+  protected static __nodes: ShaderityNode[] = [];
 
   protected __shaderFunctionName: string;
   protected __shaderFunctionDataKey: string;
@@ -65,8 +65,8 @@ export default class Node implements INode {
     this.__shaderFunctionName = nodeData.shaderFunctionName;
     this.__shaderFunctionDataKey = nodeData.shaderFunctionDataKey;
     this.__shaderStage = nodeData.shaderStage;
-    this.__id = Node.__nodes.length;
-    Node.__nodes[this.__id] = this;
+    this.__id = ShaderityNode.__nodes.length;
+    ShaderityNode.__nodes[this.__id] = this;
 
     for (let i = 0; i < socketDataArray.length; i++) {
       const socketData = socketDataArray[i];
@@ -91,15 +91,15 @@ export default class Node implements INode {
   /**
    * Get all created nodes
    */
-  static get allNodes(): Node[] {
+  static get allNodes(): ShaderityNode[] {
     return this.__nodes;
   }
 
   /**
    * Get all created vertex nodes
    */
-  static get vertexNodes(): Node[] {
-    const vertexNodes: Node[] = [];
+  static get vertexNodes(): ShaderityNode[] {
+    const vertexNodes: ShaderityNode[] = [];
     for (const node of this.__nodes) {
       if (node.shaderStage === ShaderStage.Vertex) {
         vertexNodes.push(node);
@@ -111,8 +111,8 @@ export default class Node implements INode {
   /**
    * Get all created fragment nodes
    */
-  static get fragmentNodes(): Node[] {
-    const fragmentNodes: Node[] = [];
+  static get fragmentNodes(): ShaderityNode[] {
+    const fragmentNodes: ShaderityNode[] = [];
     for (const node of this.__nodes) {
       if (node.shaderStage === ShaderStage.Fragment) {
         fragmentNodes.push(node);
@@ -145,9 +145,9 @@ export default class Node implements INode {
    * @param inputSocketNameOfOutputNode the socket name to be connected on the post node
    */
   static connectNodes(
-    inputNode: Node,
+    inputNode: ShaderityNode,
     outputSocketNameOfInputNode: string,
-    outputNode: Node,
+    outputNode: ShaderityNode,
     inputSocketNameOfOutputNode: string
   ) {
     const outputSocket = inputNode.__getOutputSocket(
@@ -481,19 +481,19 @@ export default class Node implements INode {
    */
   private __checkUniquenessOfShaderOutputSocket() {
     if (this.shaderStage === ShaderStage.Vertex) {
-      if (Node.__existVertexShaderOutputSocket) {
+      if (ShaderityNode.__existVertexShaderOutputSocket) {
         console.error(
           'Node.__addOutputSocket: ShaderOutputSocket must be one in the vertex shader'
         );
       }
-      Node.__existVertexShaderOutputSocket = true;
+      ShaderityNode.__existVertexShaderOutputSocket = true;
     } else {
-      if (Node.__existFragmentShaderOutputSocket) {
+      if (ShaderityNode.__existFragmentShaderOutputSocket) {
         console.error(
           'Node.__addOutputSocket: ShaderOutputSocket must be one in the fragment shader'
         );
       }
-      Node.__existFragmentShaderOutputSocket = true;
+      ShaderityNode.__existFragmentShaderOutputSocket = true;
     }
   }
 }

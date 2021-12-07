@@ -1,5 +1,5 @@
 import ShaderityGraphConverter from './main/ShaderityGraphConverter';
-import Node from './node/Node';
+import ShaderityNode from './node/ShaderityNode';
 import {
   ShaderStage,
   ShaderStageEnum,
@@ -32,7 +32,7 @@ import {
 } from './types/CommonType';
 
 export default {
-  Node,
+  ShaderityNode,
   ShaderStage,
   SocketDirection,
   ShaderityGraphConverter,
