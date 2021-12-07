@@ -5,9 +5,9 @@ import {ISocket} from '../ISocket';
 export interface IStandardInputSocket extends ISocket {
   _connectedSocket?: IStandardOutputSocket;
 
-  _connectSocketWith(socket: IStandardOutputSocket): void;
-
   get defaultValue(): number[];
   get connectedNode(): INode | undefined;
   get connectedSocket(): IStandardOutputSocket | undefined;
+
+  connectSocketWith(socket: IStandardOutputSocket): void;
 }

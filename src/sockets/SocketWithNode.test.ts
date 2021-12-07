@@ -15,9 +15,7 @@ import StandardInputSocket from './input/StandardInputSocket';
 import UniformInputSocket from './input/UniformInputSocket';
 import VaryingInputSocket from './input/VaryingInputSocket';
 import StandardOutputSocket from './output/StandardOutputSocket';
-import AbstractStandardSocket from './abstract/AbstractStandardSocket';
 import VaryingOutputSocket from './output/VaryingOutputSocket';
-import AbstractVaryingSocket from './abstract/AbstractVaryingSocket';
 
 // This is the integration test of socket with node.
 
@@ -315,10 +313,7 @@ test('StandardInputSocket.defaultValue (not specified case)', () => {
 });
 
 test('AbstractStandardSocket.connectSockets', () => {
-  AbstractStandardSocket.connectSockets(
-    standardInputSocket1,
-    standardOutputSocket
-  );
+  standardInputSocket1.connectSocketWith(standardOutputSocket);
 
   expect(standardInputSocket1.connectedSocket).toStrictEqual(
     standardOutputSocket
@@ -331,10 +326,7 @@ test('AbstractStandardSocket.connectSockets', () => {
 });
 
 test('AbstractVaryingSocket.connectSockets', () => {
-  AbstractVaryingSocket.connectSockets(
-    varyingInputSocket1,
-    varyingOutputSocket
-  );
+  varyingInputSocket1.connectSocketWith(varyingOutputSocket);
 
   expect(varyingInputSocket1.variableName).toStrictEqual(
     'v_0_varyingOutputSocket'

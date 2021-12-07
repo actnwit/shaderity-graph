@@ -64,10 +64,13 @@ export default class StandardOutputSocket
   }
 
   /**
-   * Connect this socket and a standard input socket
-   * @param socket The socket to connect to
+   * @private
+   * Connect socket from this socket to a standard input socket
+   * Do not call this method except from the connectSocketWith method of the StandardInputSocket class
+   *
+   * @param inputSocket The input socket to connect to
    */
-  _connectSocketWith(socket: IStandardInputSocket) {
-    this._connectedSockets.push(socket);
+  _connectSocketWith(inputSocket: IStandardInputSocket) {
+    this._connectedSockets.push(inputSocket);
   }
 }

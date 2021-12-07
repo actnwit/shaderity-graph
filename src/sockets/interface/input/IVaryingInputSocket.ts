@@ -18,6 +18,6 @@ export interface IVaryingInputSocket extends ISocket {
   get connectedNode(): INode | undefined;
   get connectedSocket(): IVaryingOutputSocket | undefined;
 
-  _connectSocketWith(socket: ISocket): void;
   _setVariableName(newVariableName: string): void;
+  connectSocketWith(socket: IVaryingOutputSocket): void;
 }

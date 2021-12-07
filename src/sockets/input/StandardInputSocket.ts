@@ -61,8 +61,19 @@ export default class StandardInputSocket
     return this._connectedSocket;
   }
 
-  _connectSocketWith(socket: IStandardOutputSocket) {
-    this._connectedSocket = socket;
+  /**
+   * Connect this socket and a standard output socket
+   * @param outputSocket The output socket to connect to
+   */
+  connectSocketWith(outputSocket: IStandardOutputSocket) {
+    if (this.socketType === outputSocket.socketType) {
+      this._connectedSocket = outputSocket;
+      outputSocket._connectSocketWith(this);
+    } else {
+      console.error(
+        'StandardInputSocket.connectSocketWith: socketType is different'
+      );
+    }
   }
 
   private __getDefaultValue(shaderData: ShaderStandardInputData) {

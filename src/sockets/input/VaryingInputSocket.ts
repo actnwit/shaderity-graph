@@ -67,7 +67,28 @@ export default class VaryingInputSocket
     return this._connectedSocket;
   }
 
-  _connectSocketWith(socket: IVaryingOutputSocket) {
-    this._connectedSocket = socket;
+  /**
+   * Connect this socket and a varying output socket
+   * @param outputSocket The output socket to connect to
+   */
+  connectSocketWith(outputSocket: IVaryingOutputSocket) {
+    if (this.socketType === outputSocket.socketType) {
+      this._connectedSocket = outputSocket;
+      outputSocket._connectSocketWith(this);
+
+      this._setVariableName(outputSocket.variableName);
+    } else {
+      console.error(
+        'VaryingInputSocket.connectSocketWith: socketType is different'
+      );
+    }
+  }
+
+  /**
+   * @private
+   * change variable name of this socket
+   */
+  _setVariableName(newVariableName: string) {
+    this.__variableName = newVariableName;
   }
 }

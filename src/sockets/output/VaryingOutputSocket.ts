@@ -76,10 +76,13 @@ export default class VaryingOutputSocket
   }
 
   /**
-   * Connect this socket and a varying input socket
-   * @param socket The socket to connect to
+   * @private
+   * Connect socket from this socket to a varying input socket
+   * Do not call this method except from the connectSocketWith method of the VaryingInputSocket class
+   *
+   * @param inputSocket The input socket to connect to
    */
-  _connectSocketWith(socket: IVaryingInputSocket) {
-    this._connectedSockets.push(socket);
+  _connectSocketWith(inputSocket: IVaryingInputSocket) {
+    this._connectedSockets.push(inputSocket);
   }
 }

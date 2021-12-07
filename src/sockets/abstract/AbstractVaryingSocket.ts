@@ -6,15 +6,13 @@ import {
   ShaderPrecisionType,
 } from '../../types/CommonType';
 import AbstractSocket from './AbstractSocket';
-import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
-import {IVaryingOutputSocket} from '../interface/output/IVaryingOutputSocket';
 
 /**
  * The roll of varying sockets are passing data from the vertex shader to the fragment shader.
  * The user can connect sockets by Node.connectNodes method.
  */
 export default abstract class AbstractVaryingSocket extends AbstractSocket {
-  private __variableName: string;
+  protected __variableName: string;
   private __type: ShaderVaryingVarType;
 
   constructor(
@@ -27,27 +25,6 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
 
     this.__variableName = variableName;
     this.__type = varying.type;
-  }
-
-  /**
-   * Connecting input and output varying sockets
-   * @param inputSocket varying input socket contained in the output node
-   * @param outputSocket varying output socket contained in the input node
-   */
-  static connectSockets(
-    inputSocket: IVaryingInputSocket,
-    outputSocket: IVaryingOutputSocket
-  ) {
-    if (inputSocket.socketType === outputSocket.socketType) {
-      inputSocket._connectSocketWith(outputSocket);
-      outputSocket._connectSocketWith(inputSocket);
-
-      inputSocket._setVariableName(outputSocket.variableName);
-    } else {
-      console.error(
-        'AbstractVaryingSocket.connectSockets: socketType is different'
-      );
-    }
   }
 
   /**
@@ -65,14 +42,6 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
   }
 
   /**
-   * @private
-   * change variable name of this socket
-   */
-  _setVariableName(newVariableName: string) {
-    this.__variableName = newVariableName;
-  }
-
-  /**
    * Get the class name of this socket
    */
   abstract get className(): 'VaryingInputSocket' | 'VaryingOutputSocket';
@@ -86,12 +55,4 @@ export default abstract class AbstractVaryingSocket extends AbstractSocket {
    * Get the precision of varying variable
    */
   abstract get precision(): ShaderPrecisionType | undefined;
-
-  /**
-   * Connect this socket and the argument socket
-   * @param socket The socket to connect to
-   */
-  abstract _connectSocketWith(
-    socket: IVaryingInputSocket | IVaryingOutputSocket
-  ): void;
 }
