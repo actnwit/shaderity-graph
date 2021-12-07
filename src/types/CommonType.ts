@@ -59,6 +59,17 @@ export type SocketData =
   | VaryingOutputSocketData
   | ShaderOutputSocketData;
 
+export type InputSocketData =
+  | StandardInputSocketData
+  | AttributeInputSocketData
+  | VaryingInputSocketData
+  | UniformInputSocketData;
+
+export type OutputSocketData =
+  | StandardOutputSocketData
+  | VaryingOutputSocketData
+  | ShaderOutputSocketData;
+
 export interface ShaderityGraphNode {
   nodeData: NodeData;
   socketDataArray: SocketData[]; // the order must be the order of the function arguments for this node
