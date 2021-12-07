@@ -31,10 +31,10 @@ export default class ShaderGraphResolver {
     fragmentShaderGlobalData?: ShaderGlobalData
   ) {
     const sortedVertexNode = NodeSorter.sortTopologically(
-      ShaderityNode.vertexNodes
+      ShaderityNode.vertexShaderityNodes
     );
     const sortedFragmentNode = NodeSorter.sortTopologically(
-      ShaderityNode.fragmentNodes
+      ShaderityNode.fragmentShaderityNodes
     );
 
     const vertexShaderityObject = ShaderGraphResolver.__createShaderityObject(
@@ -313,7 +313,7 @@ ${functionCalls}
     nodes: ShaderityNode[]
   ) {
     const argumentNameList: Array<Array<string>> = new Array(
-      ShaderityNode.allNodes.length
+      ShaderityNode.allShaderityNodes.length
     );
     argumentNameList.fill(new Array(0));
 

@@ -64,25 +64,28 @@ export default class ShaderityNode extends AbstractNode {
   // /**
   //  * Get all created nodes
   //  */
-  static get allNodes(): ShaderityNode[] {
-    // TODO: extract shaderity nodes
-    return AbstractNode.allNodes as ShaderityNode[];
+  static get allShaderityNodes(): ShaderityNode[] {
+    return AbstractNode.allNodes.filter(
+      node => node.className === 'ShaderityNode'
+    ) as ShaderityNode[];
   }
 
   // /**
   //  * Get all created vertex nodes
   //  */
-  static get vertexNodes(): ShaderityNode[] {
-    // TODO: extract shaderity nodes
-    return AbstractNode.vertexNodes as ShaderityNode[];
+  static get vertexShaderityNodes(): ShaderityNode[] {
+    return AbstractNode.vertexNodes.filter(
+      node => node.className === 'ShaderityNode'
+    ) as ShaderityNode[];
   }
 
   // /**
   //  * Get all created fragment nodes
   //  */
-  static get fragmentNodes(): ShaderityNode[] {
-    // TODO: extract shaderity nodes
-    return AbstractNode.fragmentNodes as ShaderityNode[];
+  static get fragmentShaderityNodes(): ShaderityNode[] {
+    return AbstractNode.fragmentNodes.filter(
+      node => node.className === 'ShaderityNode'
+    ) as ShaderityNode[];
   }
   /**
    * Get the name of the function that corresponds to entry point of this node in the shader

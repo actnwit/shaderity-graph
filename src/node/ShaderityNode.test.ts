@@ -35,7 +35,7 @@ const nodeNotUseInShader = new ShaderityNode(noUseNodeData, []);
 console.log('Please ignore the console.warn above if the test passes.');
 
 test('Node.allNodes', () => {
-  expect(ShaderityNode.allNodes).toStrictEqual([
+  expect(ShaderityNode.allShaderityNodes).toStrictEqual([
     nodeForVertexShader,
     nodeForFragmentShader,
     nodeNotUseInShader,
@@ -43,11 +43,15 @@ test('Node.allNodes', () => {
 });
 
 test('Node.vertexNodes', () => {
-  expect(ShaderityNode.vertexNodes).toStrictEqual([nodeForVertexShader]);
+  expect(ShaderityNode.vertexShaderityNodes).toStrictEqual([
+    nodeForVertexShader,
+  ]);
 });
 
 test('Node.fragmentNodes', () => {
-  expect(ShaderityNode.fragmentNodes).toStrictEqual([nodeForFragmentShader]);
+  expect(ShaderityNode.fragmentShaderityNodes).toStrictEqual([
+    nodeForFragmentShader,
+  ]);
 });
 
 test('Node.getNodeById', () => {
