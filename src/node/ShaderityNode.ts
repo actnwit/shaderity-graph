@@ -22,16 +22,15 @@ import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import StandardInputSocket from '../sockets/input/StandardInputSocket';
 
 /**
- * A node is an object that contains functions to be used in the shader.
- * Each node has its sockets for input and output.
- * The sockets corresponds to a function argument of a node.
+ * A shaderity node is an object that contains functions to be used in the shader.
+ * Each sockets corresponds to a shader function argument of a node.
  *
  * The node graph which is the collection of connected nodes is transformed into a shader by
- * calling the node functions sequentially. Nodes are connected to each other via standard
- * sockets, and data can be passed between them.
+ * calling the shader functions of nodes sequentially. Nodes are connected to each other via sockets,
+ * and data can be passed between them.
  *
- * Note: Data of attribute/varying/uniform variable must be passed to a node through a
- *       non-standard socket such as AttributeInputSocket/VaryingInputSocket/UniformInputSocket.
+ * Note: Data of attribute/varying/uniform variable must be passed to a node through
+ *       AttributeInputSocket/VaryingInputSocket/UniformInputSocket.
  *       Do not write these variables directly into the function of each node.
  *       They must be specified in the function arguments.
  */

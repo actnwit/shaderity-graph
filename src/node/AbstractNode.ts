@@ -12,18 +12,7 @@ import AbstractVaryingSocket from '../sockets/abstract/AbstractVaryingSocket';
 import {INode, NodeClassName} from './INode';
 
 /**
- * A node is an object that contains functions to be used in the shader.
- * Each node has its sockets for input and output.
- * The sockets corresponds to a function argument of a node.
- *
- * The node graph which is the collection of connected nodes is transformed into a shader by
- * calling the node functions sequentially. Nodes are connected to each other via standard
- * sockets, and data can be passed between them.
- *
- * Note: Data of attribute/varying/uniform variable must be passed to a node through a
- *       non-standard socket such as AttributeInputSocket/VaryingInputSocket/UniformInputSocket.
- *       Do not write these variables directly into the function of each node.
- *       They must be specified in the function arguments.
+ * A node is an object that has sockets for input and output.
  */
 export default abstract class AbstractNode implements INode {
   private static __nodes: AbstractNode[] = [];
@@ -38,7 +27,7 @@ export default abstract class AbstractNode implements INode {
 
   /**
    * Create a new node
-   * @param nodeData define shader function name and shader stage
+   * @param nodeData contains data of shader stage
    */
   constructor(nodeData: NodeData, socketDataArray: SocketData[]) {
     this.__shaderStage = nodeData.shaderStage;
@@ -132,7 +121,7 @@ export default abstract class AbstractNode implements INode {
   }
 
   /**
-   * Get the shaderStage where this node will be used
+   * Get the shaderStage
    */
   get shaderStage() {
     return this.__shaderStage;
@@ -250,6 +239,15 @@ export default abstract class AbstractNode implements INode {
     this.__sockets.push(socket);
   }
 
+  /**
+   * @private
+   * Get the class name of this instance
+   */
   abstract get className(): NodeClassName;
+
+  /**
+   * @private
+   * attach sockets to this node
+   */
   protected abstract __addSockets(socketDataArray: SocketData[]): void;
 }
