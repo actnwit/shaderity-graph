@@ -8,6 +8,7 @@ import {
   ShaderFunctions,
   VaryingInputSocketData,
 } from '../types/CommonType';
+import AbstractNode from '../node/AbstractNode';
 
 /**
  * This class parses the ShaderityGraphJson and imports it
@@ -47,6 +48,8 @@ export default class JsonImporter {
   private static __createNodes(nodesJson: ShaderityGraphNode[]) {
     for (let i = 0; i < nodesJson.length; i++) {
       const nodeJson = nodesJson[i];
+
+      // TODO: create the other type nodes
       new ShaderityNode(nodeJson.nodeData, nodeJson.socketDataArray);
     }
   }
@@ -74,16 +77,16 @@ export default class JsonImporter {
           continue;
         }
 
-        const inputNode = ShaderityNode.getNodeById(
+        const inputNode = AbstractNode.getNodeById(
           socketConnectionData.connectedNodeId
         );
         const outputSocketNameOfInputNode =
           socketConnectionData.connectedSocketName;
-        const outputNode = ShaderityNode.getNodeById(outputNodeId);
+        const outputNode = AbstractNode.getNodeById(outputNodeId);
         const inputSocketNameOfOutputNode =
           connectableInputSocketData.socketName;
 
-        ShaderityNode.connectNodes(
+        AbstractNode.connectNodes(
           inputNode,
           outputSocketNameOfInputNode,
           outputNode,

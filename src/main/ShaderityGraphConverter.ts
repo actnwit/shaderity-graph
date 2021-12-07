@@ -1,8 +1,8 @@
-import ShaderityNode from '../node/ShaderityNode';
 import {ShaderityObjects, ShaderityGraphJson} from '../types/CommonType';
 import JsonImporter from '../import/JsonImporter';
 import ShaderGraphResolver from '../shaderGraph/ShaderGraphResolver';
 import ShaderFunctionDataRepository from '../node/ShaderFunctionDataRepository';
+import AbstractNode from '../node/AbstractNode';
 
 /**
  * This class converts ShaderityGraphJson into shader code for GLSL ES3.0.
@@ -42,18 +42,18 @@ export default class ShaderityGraphConverter {
       );
     }
 
-    ShaderityNode.resetNodes();
+    AbstractNode.resetNodes();
     ShaderFunctionDataRepository.resetRepository();
 
     JsonImporter.importShaderityGraphJson(json);
 
-    if (ShaderityNode.vertexNodes.length === 0) {
+    if (AbstractNode.vertexNodes.length === 0) {
       console.warn(
         'System.createShaderCodesFromJsonObject: no vertex node is found'
       );
     }
 
-    if (ShaderityNode.fragmentNodes.length === 0) {
+    if (AbstractNode.fragmentNodes.length === 0) {
       console.warn(
         'System.createShaderCodesFromJsonObject: no fragment node is found'
       );
