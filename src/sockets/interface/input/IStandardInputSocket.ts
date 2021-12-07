@@ -1,8 +1,8 @@
 import {INode} from '../../../node/INode';
 import {IStandardOutputSocket} from '../output/IStandardOutputSocket';
-import {IStandardSocket} from '../IStandardSocket';
+import {ISocket} from '../ISocket';
 
-export interface IStandardInputSocket extends IStandardSocket {
+export interface IStandardInputSocket extends ISocket {
   _connectedSocket?: IStandardOutputSocket;
 
   _connectSocketWith(socket: IStandardOutputSocket): void;

@@ -1,9 +1,9 @@
 import {INode} from '../../../node/INode';
-import {IStandardSocket} from '../IStandardSocket';
 import {IStandardInputSocket} from '../input/IStandardInputSocket';
 import {ShaderPrecisionType} from '../../../types/CommonType';
+import {ISocket} from '../ISocket';
 
-export interface IStandardOutputSocket extends IStandardSocket {
+export interface IStandardOutputSocket extends ISocket {
   _connectedSockets: IStandardInputSocket[];
 
   _connectSocketWith(socket: IStandardInputSocket): void;
