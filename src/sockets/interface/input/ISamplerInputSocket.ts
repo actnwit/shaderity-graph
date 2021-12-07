@@ -8,7 +8,7 @@ export interface ISamplerInputSocket extends ISocket {
   get connectedSocket(): ISamplerOutputSocket | undefined;
 
   get variableName(): string;
-  get precision(): ShaderPrecisionType;
+  get precision(): ShaderPrecisionType | undefined;
 
   connectSocketWith(socket: ISamplerOutputSocket): void;
 }

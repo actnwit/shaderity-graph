@@ -1,5 +1,5 @@
 import {INode} from '../../node/INode';
-import {SocketTypeEnum} from '../../types/CommonEnum';
+import {SamplerTypeEnum, SocketTypeEnum} from '../../types/CommonEnum';
 import {
   ShaderAttributeVarType,
   ShaderUniformVarTypeES3,
@@ -61,7 +61,8 @@ export default abstract class AbstractSocket implements ISocket {
       this.className === 'StandardInputSocket' ||
       this.className === 'AttributeInputSocket' ||
       this.className === 'VaryingInputSocket' ||
-      this.className === 'UniformInputSocket'
+      this.className === 'UniformInputSocket' ||
+      this.className === 'SamplerInputSocket'
     ) {
       return true;
     }
@@ -81,5 +82,6 @@ export default abstract class AbstractSocket implements ISocket {
     | SocketTypeEnum
     | ShaderAttributeVarType
     | ShaderVaryingVarType
-    | ShaderUniformVarTypeES3;
+    | ShaderUniformVarTypeES3
+    | SamplerTypeEnum;
 }

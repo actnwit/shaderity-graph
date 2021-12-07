@@ -9,6 +9,7 @@ import {
   VaryingOutputSocketData,
   InputSocketData,
   OutputSocketData,
+  SamplerInputSocketData,
   SocketData,
 } from '../types/CommonType';
 import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
@@ -20,6 +21,7 @@ import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import StandardInputSocket from '../sockets/input/StandardInputSocket';
+import SamplerInputSocket from '../sockets/input/SamplerInputSocket';
 
 /**
  * A shaderity node is an object that contains functions to be used in the shader.
@@ -197,6 +199,13 @@ export default class ShaderityNode extends AbstractNode {
         this,
         socketName,
         sSocketData.shaderData
+      );
+    } else if ((socketData as SamplerInputSocketData).samplerType != null) {
+      const sSocketData = socketData as SamplerInputSocketData;
+      inputSocket = new SamplerInputSocket(
+        this,
+        socketName,
+        sSocketData.samplerType
       );
     } else {
       console.error(

@@ -8,6 +8,7 @@ import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import {ISocket} from '../sockets/interface/ISocket';
 import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
 import {INode, NodeClassName} from './INode';
+import SamplerInputSocket from '../sockets/input/SamplerInputSocket';
 
 /**
  * A node is an object that has sockets for input and output.
@@ -198,7 +199,8 @@ export default abstract class AbstractNode implements INode {
       | StandardInputSocket
       | AttributeInputSocket
       | VaryingInputSocket
-      | UniformInputSocket;
+      | UniformInputSocket
+      | SamplerInputSocket;
 
     if (resultSocket == null) {
       console.error(
