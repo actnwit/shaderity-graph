@@ -1,22 +1,24 @@
 import {IStandardOutputSocket} from '../interface/output/IStandardOutputSocket';
 import {IStandardInputSocket} from '../interface/input/IStandardInputSocket';
 import {INode} from '../../node/INode';
-import AbstractStandardSocket from '../abstract/AbstractStandardSocket';
 import {
   ShaderStandardOutputData,
   ShaderPrecisionType,
 } from '../../types/CommonType';
+import {SocketTypeEnum} from '../../types/CommonEnum';
+import AbstractSocket from '../abstract/AbstractSocket';
 
 /**
  * The StandardOutputSocket is an output socket that can connect to StandardInputSockets.
  * This socket can connect to multiple StandardInputSockets.
  */
 export default class StandardOutputSocket
-  extends AbstractStandardSocket
+  extends AbstractSocket
   implements IStandardOutputSocket
 {
   _connectedSockets: IStandardInputSocket[] = [];
 
+  private __socketType: SocketTypeEnum;
   private __precision?: ShaderPrecisionType;
 
   constructor(
@@ -24,7 +26,8 @@ export default class StandardOutputSocket
     socketName: string,
     shaderData: ShaderStandardOutputData
   ) {
-    super(shaderData.type, node, socketName);
+    super(node, socketName);
+    this.__socketType = shaderData.type;
     this.__precision = shaderData.precision;
   }
 
@@ -33,6 +36,13 @@ export default class StandardOutputSocket
    */
   get className(): 'StandardOutputSocket' {
     return 'StandardOutputSocket';
+  }
+
+  /**
+   * Get the glsl type of data to be passed between sockets
+   */
+  get socketType() {
+    return this.__socketType;
   }
 
   /**
