@@ -144,6 +144,10 @@ export default class ShaderityNode extends AbstractNode {
     return extensions;
   }
 
+  /**
+   * @protected
+   * attach sockets to this node
+   */
   protected __addSockets(socketDataArray: SocketData[]): void {
     for (let i = 0; i < socketDataArray.length; i++) {
       const socketData = socketDataArray[i];
