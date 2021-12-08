@@ -13,6 +13,7 @@ import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
 import NodeSorter from './NodeSorter';
 import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
 import {ShaderityObject} from 'shaderity';
+import SamplerInputSocket from '../sockets/input/SamplerInputSocket';
 
 /**
  * This class resolves the created node graph and creates vertex and fragment shaders.
@@ -178,8 +179,11 @@ export default class ShaderGraphResolver {
           }
         );
         attributeNames.push(variableName);
-      } else if (socket.className === 'UniformInputSocket') {
-        const uInputSocket = socket as UniformInputSocket;
+      } else if (
+        socket.className === 'UniformInputSocket' ||
+        socket.className === 'SamplerInputSocket'
+      ) {
+        const uInputSocket = socket as UniformInputSocket | SamplerInputSocket;
 
         shaderityObjectCreator.addUniformDeclaration(
           `${uInputSocket.variableName}`,
@@ -492,12 +496,14 @@ ${functionCalls}
       if (
         inputSocket.className === 'AttributeInputSocket' ||
         inputSocket.className === 'VaryingInputSocket' ||
-        inputSocket.className === 'UniformInputSocket'
+        inputSocket.className === 'UniformInputSocket' ||
+        inputSocket.className === 'SamplerInputSocket'
       ) {
         const storageQualifierInputSocket = inputSocket as
           | AttributeInputSocket
           | VaryingInputSocket
-          | UniformInputSocket;
+          | UniformInputSocket
+          | SamplerInputSocket;
         argumentNameList[nodeId][i] = storageQualifierInputSocket.variableName;
       }
     }
