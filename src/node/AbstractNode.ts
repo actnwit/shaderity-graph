@@ -9,6 +9,7 @@ import {ISocket} from '../sockets/interface/ISocket';
 import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
 import {INode, NodeClassName} from './INode';
 import SamplerInputSocket from '../sockets/input/SamplerInputSocket';
+import SamplerOutputSocket from '../sockets/output/SamplerOutputSocket';
 
 /**
  * A node is an object that has sockets for input and output.
@@ -111,6 +112,14 @@ export default abstract class AbstractNode implements INode {
     if (
       inputSocket.className === 'VaryingInputSocket' &&
       outputSocket.className === 'VaryingOutputSocket'
+    ) {
+      inputSocket.connectSocketWith(outputSocket);
+      return;
+    }
+
+    if (
+      inputSocket.className === 'SamplerInputSocket' &&
+      outputSocket.className === 'SamplerOutputSocket'
     ) {
       inputSocket.connectSocketWith(outputSocket);
       return;
@@ -219,7 +228,7 @@ export default abstract class AbstractNode implements INode {
   private __getOutputSocket(socketName: string) {
     const resultSocket = this.__sockets.find(
       socket => !socket.isInputSocket() && socket.socketName === socketName
-    ) as StandardOutputSocket | VaryingOutputSocket;
+    ) as StandardOutputSocket | VaryingOutputSocket | SamplerOutputSocket;
 
     if (resultSocket == null) {
       console.error(

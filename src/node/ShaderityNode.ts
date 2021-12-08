@@ -10,6 +10,7 @@ import {
   InputSocketData,
   OutputSocketData,
   SamplerInputSocketData,
+  SamplerOutputSocketData,
   SocketData,
 } from '../types/CommonType';
 import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
@@ -260,6 +261,11 @@ export default class ShaderityNode extends AbstractNode {
         socketName,
         sSocketData.shaderData
       );
+    } else if ((socketData as SamplerOutputSocketData).samplerType != null) {
+      console.error(
+        'ShaderityNode.__addInputSocket: ShaderityNode does not support SamplerOutputSocketData.'
+      );
+      return;
     } else {
       this.__checkUniquenessOfShaderOutputSocket();
       outputSocket = new ShaderOutputSocket(this, socketName);
