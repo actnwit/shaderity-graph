@@ -3,10 +3,11 @@ import {
   ShaderPrecisionType,
   ShaderVaryingOutputData,
   ShaderVaryingInterpolationType,
+  ShaderVaryingVarType,
 } from '../../types/CommonType';
-import AbstractVaryingSocket from '../abstract/AbstractVaryingSocket';
 import {IVaryingOutputSocket} from '../interface/output/IVaryingOutputSocket';
 import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
+import AbstractSocket from '../abstract/AbstractSocket';
 
 /**
  * The VaryingOutputSocket is an output socket that sets a value to a varying variable.
@@ -14,21 +15,25 @@ import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
  * This socket can be used only with vertex shader nodes.
  */
 export default class VaryingOutputSocket
-  extends AbstractVaryingSocket
+  extends AbstractSocket
   implements IVaryingOutputSocket
 {
-  _connectedSockets: IVaryingInputSocket[] = [];
-
+  private __variableName: string;
+  private __type: ShaderVaryingVarType;
   private __precision?: ShaderPrecisionType;
   private __interpolationType: ShaderVaryingInterpolationType | undefined;
+
+  _connectedSockets: IVaryingInputSocket[] = [];
 
   constructor(
     node: INode,
     socketName: string,
     varying: ShaderVaryingOutputData
   ) {
-    super(node, socketName, varying, `v_${node.id}_${socketName}`);
+    super(node, socketName);
 
+    this.__variableName = `v_${node.id}_${socketName}`;
+    this.__type = varying.type;
     this.__precision = varying.precision;
     this.__interpolationType = varying.interpolationType;
   }
@@ -38,6 +43,20 @@ export default class VaryingOutputSocket
    */
   get className(): 'VaryingOutputSocket' {
     return 'VaryingOutputSocket';
+  }
+
+  /**
+   * Get the varying variable name
+   */
+  get variableName() {
+    return this.__variableName;
+  }
+
+  /**
+   * Get the glsl type of varying variable
+   */
+  get socketType() {
+    return this.__type;
   }
 
   /**

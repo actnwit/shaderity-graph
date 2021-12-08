@@ -1,8 +1,11 @@
 import {INode} from '../../node/INode';
-import {ShaderVaryingInputData} from '../../types/CommonType';
-import AbstractVaryingSocket from '../abstract/AbstractVaryingSocket';
+import {
+  ShaderVaryingInputData,
+  ShaderVaryingVarType,
+} from '../../types/CommonType';
 import {IVaryingOutputSocket} from '../interface/output/IVaryingOutputSocket';
 import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
+import AbstractSocket from '../abstract/AbstractSocket';
 
 /**
  * The VaryingInputSocket is an input socket that receives an varying variable.
@@ -12,9 +15,12 @@ import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
  * This socket can be used only with fragment shader nodes.
  */
 export default class VaryingInputSocket
-  extends AbstractVaryingSocket
+  extends AbstractSocket
   implements IVaryingInputSocket
 {
+  private __variableName: string;
+  private __type: ShaderVaryingVarType;
+
   _connectedSocket: IVaryingOutputSocket | undefined = undefined;
 
   constructor(
@@ -22,12 +28,9 @@ export default class VaryingInputSocket
     socketName: string,
     varying: ShaderVaryingInputData
   ) {
-    super(
-      node,
-      socketName,
-      varying,
-      `v_non_connected_${node.id}_${socketName}`
-    );
+    super(node, socketName);
+    this.__variableName = `v_non_connected_${node.id}_${socketName}`;
+    this.__type = varying.type;
   }
 
   /**
@@ -35,6 +38,20 @@ export default class VaryingInputSocket
    */
   get className(): 'VaryingInputSocket' {
     return 'VaryingInputSocket';
+  }
+
+  /**
+   * Get the varying variable name
+   */
+  get variableName() {
+    return this.__variableName;
+  }
+
+  /**
+   * Get the glsl type of varying variable
+   */
+  get socketType() {
+    return this.__type;
   }
 
   /**
