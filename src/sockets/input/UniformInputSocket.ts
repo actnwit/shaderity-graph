@@ -5,13 +5,17 @@ import {
   ShaderUniformData,
   ShaderUniformVarTypeES3,
 } from '../../types/CommonType';
+import {IUniformInputSocket} from '../interface/input/IUniformInputSocket';
 
 /**
  * The UniformInputSocket is an input socket that receives an uniform variable.
  * If the function corresponding to a node uses an uniform variable,
  * the function must use this socket to receive the variable as an argument.
  */
-export default class UniformInputSocket extends AbstractSocket {
+export default class UniformInputSocket
+  extends AbstractSocket
+  implements IUniformInputSocket
+{
   private __variableName: string;
   private __type: ShaderUniformVarTypeES3;
   private __precision?: ShaderPrecisionType;
