@@ -8,8 +8,12 @@ import {
   UniformInputSocketData,
 } from '../types/CommonType';
 import AbstractNode from './AbstractNode';
+
 /**
+ * A sampler node is an node to output sampler type value by output socket.
  *
+ * This node must have two sockets.
+ * The one is the uniform input socket and the other one is sampler output socket.
  */
 export default class SamplerNode extends AbstractNode {
   /**

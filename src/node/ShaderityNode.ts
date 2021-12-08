@@ -25,17 +25,20 @@ import StandardInputSocket from '../sockets/input/StandardInputSocket';
 import SamplerInputSocket from '../sockets/input/SamplerInputSocket';
 
 /**
- * A shaderity node is an object that contains functions to be used in the shader.
+ * A shaderity node is an node that contains functions to be used in the shader.
  * Each sockets corresponds to a shader function argument of a node.
  *
  * The node graph which is the collection of connected nodes is transformed into a shader by
  * calling the shader functions of nodes sequentially. Nodes are connected to each other via sockets,
  * and data can be passed between them.
  *
- * Note: Data of attribute/varying/uniform variable must be passed to a node through
- *       AttributeInputSocket/VaryingInputSocket/UniformInputSocket.
- *       Do not write these variables directly into the function of each node.
- *       They must be specified in the function arguments.
+ * Note1: Data of attribute/varying/uniform variable must be passed to a node through
+ *        AttributeInputSocket/VaryingInputSocket/UniformInputSocket.
+ *        Do not write these variables directly into the function of each node.
+ *        They must be specified in the function arguments.
+ *
+ * Note2: This node cannot attach sampler type output socket.
+ *        To use the socket, you need to use sampler node instead of this node
  */
 export default class ShaderityNode extends AbstractNode {
   private __shaderFunctionName: string;
