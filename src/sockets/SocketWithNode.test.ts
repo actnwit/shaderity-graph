@@ -1,19 +1,25 @@
+import SamplerNode from '../node/SamplerNode';
 import ShaderityNode from '../node/ShaderityNode';
-import {SocketDirection, SocketType} from '../types/CommonEnum';
+import {SamplerType, SocketDirection, SocketType} from '../types/CommonEnum';
 import {
   AttributeInputSocketData,
   StandardInputSocketData,
   StandardOutputSocketData,
   ShaderityNodeData,
+  SamplerInputNodeData,
   UniformInputSocketData,
   VaryingInputSocketData,
   VaryingOutputSocketData,
   ShaderOutputSocketData,
+  SamplerInputSocketData,
+  SamplerOutputSocketData,
 } from '../types/CommonType';
 import AttributeInputSocket from './input/AttributeInputSocket';
+import SamplerInputSocket from './input/SamplerInputSocket';
 import StandardInputSocket from './input/StandardInputSocket';
 import UniformInputSocket from './input/UniformInputSocket';
 import VaryingInputSocket from './input/VaryingInputSocket';
+import SamplerOutputSocket from './output/SamplerOutputSocket';
 import StandardOutputSocket from './output/StandardOutputSocket';
 import VaryingOutputSocket from './output/VaryingOutputSocket';
 
@@ -90,6 +96,12 @@ const shaderOutputSocketData: ShaderOutputSocketData = {
   direction: SocketDirection.Output,
 };
 
+const samplerInputSocketData: SamplerInputSocketData = {
+  socketName: 'tex',
+  direction: SocketDirection.Input,
+  samplerType: SamplerType.Texture2D,
+};
+
 const driverNodeData0: ShaderityNodeData = {
   shaderFunctionName: 'functionA',
   shaderFunctionDataKey: 'funcA',
@@ -105,6 +117,7 @@ const sockets0 = [
   uniformInputSocketData1,
   varyingOutputSocketData,
   shaderOutputSocketData,
+  samplerInputSocketData,
 ];
 
 const node0 = new ShaderityNode(driverNodeData0, sockets0);
@@ -125,6 +138,7 @@ test('socket.className', () => {
   expect(socketsOfNode0[5].className).toBe('UniformInputSocket');
   expect(socketsOfNode0[6].className).toBe('VaryingOutputSocket');
   expect(socketsOfNode0[7].className).toBe('ShaderOutputSocket');
+  expect(socketsOfNode0[8].className).toBe('SamplerInputSocket');
 });
 
 test('socket.socketName', () => {
@@ -136,6 +150,7 @@ test('socket.socketName', () => {
   expect(socketsOfNode0[5].socketName).toBe('uniformSocketB');
   expect(socketsOfNode0[6].socketName).toBe('varyingOutputSocket');
   expect(socketsOfNode0[7].socketName).toBe('mvpPosition');
+  expect(socketsOfNode0[8].socketName).toBe('tex');
 });
 
 test('socket.socketType', () => {
@@ -147,6 +162,7 @@ test('socket.socketType', () => {
   expect(socketsOfNode0[5].socketType).toBe('sampler2D');
   expect(socketsOfNode0[6].socketType).toBe('vec4');
   expect(socketsOfNode0[7].socketType).toBe('vec4');
+  expect(socketsOfNode0[8].socketType).toBe('sampler2D');
 });
 
 test('socket.node', () => {
@@ -158,9 +174,10 @@ test('socket.node', () => {
   expect(socketsOfNode0[5].node).toStrictEqual(node0);
   expect(socketsOfNode0[6].node).toStrictEqual(node0);
   expect(socketsOfNode0[7].node).toStrictEqual(node0);
+  expect(socketsOfNode0[8].node).toStrictEqual(node0);
 });
 
-test('socket.node', () => {
+test('socket.isInputSocket', () => {
   expect(socketsOfNode0[0].isInputSocket()).toBe(true);
   expect(socketsOfNode0[1].isInputSocket()).toBe(false);
   expect(socketsOfNode0[2].isInputSocket()).toBe(true);
@@ -169,6 +186,7 @@ test('socket.node', () => {
   expect(socketsOfNode0[5].isInputSocket()).toBe(true);
   expect(socketsOfNode0[6].isInputSocket()).toBe(false);
   expect(socketsOfNode0[7].isInputSocket()).toBe(false);
+  expect(socketsOfNode0[8].isInputSocket()).toBe(true);
 });
 
 const standardInputSocket0 = socketsOfNode0[0] as StandardInputSocket;
@@ -252,6 +270,15 @@ test('varyingOutputSocket.interpolationType', () => {
   expect(varyingOutputSocket.interpolationType).toBe('flat');
 });
 
+const samplerInputSocket = socketsOfNode0[8] as SamplerInputSocket;
+test('samplerInputSocket.variableName', () => {
+  expect(samplerInputSocket.variableName).toBe('u_defaultsampler2D');
+});
+
+test('samplerInputSocket.precision', () => {
+  expect(samplerInputSocket.precision).toBe(undefined);
+});
+
 // --- test for connecting sockets  -------------------------------------------------
 
 const standardInputSocketData1: StandardInputSocketData = {
@@ -289,12 +316,26 @@ const driverNodeData1: ShaderityNodeData = {
 const driverNodeData2: ShaderityNodeData = {
   shaderFunctionName: 'functionC',
   shaderFunctionDataKey: 'funcC',
+  nodeType: 'shaderityNode',
   shaderStage: 'vertex',
+};
+
+const driverNodeData3: SamplerInputNodeData = {
+  shaderStage: 'vertex',
+  nodeType: 'samplerInputNode',
+};
+
+const samplerOutputSocketData: SamplerOutputSocketData = {
+  socketName: 'texOut',
+  direction: SocketDirection.Output,
+  samplerType: SamplerType.Texture2D,
 };
 
 const sockets1 = [standardInputSocketData1];
 
 const sockets2 = [varyingInputSocketData1];
+
+const sockets3 = [uniformInputSocketData1, samplerOutputSocketData];
 
 const node1 = new ShaderityNode(driverNodeData1, sockets1);
 console.log('Please ignore the console.error above if the test passes.');
@@ -302,17 +343,22 @@ console.log('Please ignore the console.error above if the test passes.');
 const node2 = new ShaderityNode(driverNodeData2, sockets2);
 console.log('Please ignore the console.error above if the test passes.');
 
+const node3 = new SamplerNode(driverNodeData3, sockets3);
+
 const socketsOfNode1 = node1._sockets;
 const socketsOfNode2 = node2._sockets;
+const socketsOfNode3 = node3._sockets;
 
 const standardInputSocket1 = socketsOfNode1[0] as StandardInputSocket;
 const varyingInputSocket1 = socketsOfNode2[0] as VaryingInputSocket;
+const uniformInputSocket2 = socketsOfNode3[0] as UniformInputSocket;
+const samplerOutputSocket = socketsOfNode3[1] as SamplerOutputSocket;
 
 test('StandardInputSocket.defaultValue (not specified case)', () => {
   expect(standardInputSocket1.defaultValue).toStrictEqual([0, 0]);
 });
 
-test('AbstractStandardSocket.connectSockets', () => {
+test('standardInputSocket.connectSockets', () => {
   standardInputSocket1.connectSocketWith(standardOutputSocket);
 
   expect(standardInputSocket1.connectedSocket).toStrictEqual(
@@ -325,7 +371,7 @@ test('AbstractStandardSocket.connectSockets', () => {
   expect(standardOutputSocket.connectedNodes).toStrictEqual([node1]);
 });
 
-test('AbstractVaryingSocket.connectSockets', () => {
+test('varyingInputSocket.connectSockets', () => {
   varyingInputSocket1.connectSocketWith(varyingOutputSocket);
 
   expect(varyingInputSocket1.variableName).toStrictEqual(
@@ -339,4 +385,28 @@ test('AbstractVaryingSocket.connectSockets', () => {
   ]);
   expect(varyingInputSocket1.connectedNode).toStrictEqual(node0);
   expect(varyingOutputSocket.connectedNodes).toStrictEqual([node2]);
+});
+
+test('samplerInputSocket.connectSockets', () => {
+  samplerInputSocket.connectSocketWith(samplerOutputSocket);
+
+  expect(samplerInputSocket.variableName).toStrictEqual('u_3_uniformSocketB');
+  expect(samplerInputSocket.connectedSocket).toStrictEqual(samplerOutputSocket);
+  expect(samplerOutputSocket.connectedSockets).toStrictEqual([
+    samplerInputSocket,
+  ]);
+
+  expect(samplerInputSocket.connectedNode).toStrictEqual(node3);
+  expect(samplerOutputSocket.connectedNodes).toStrictEqual([node0]);
+});
+
+test('samplerOutputSocket', () => {
+  expect(samplerOutputSocket.className).toStrictEqual('SamplerOutputSocket');
+  expect(samplerOutputSocket.isInputSocket()).toStrictEqual(false);
+  expect(samplerOutputSocket.node).toStrictEqual(node3);
+  expect(samplerOutputSocket.socketName).toStrictEqual('texOut');
+  expect(samplerOutputSocket.socketType).toStrictEqual('sampler2D');
+  expect(samplerOutputSocket.correspondingUniformInputSocket).toStrictEqual(
+    uniformInputSocket2
+  );
 });
