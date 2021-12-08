@@ -22,8 +22,7 @@ export default class VaryingOutputSocket
   private __type: ShaderVaryingVarType;
   private __precision?: ShaderPrecisionType;
   private __interpolationType: ShaderVaryingInterpolationType | undefined;
-
-  _connectedSockets: IVaryingInputSocket[] = [];
+  private __connectedSockets: IVaryingInputSocket[] = [];
 
   constructor(
     node: INode,
@@ -78,10 +77,10 @@ export default class VaryingOutputSocket
    * @returns array of connected Nodes
    */
   get connectedNodes() {
-    const nodes: INode[] = new Array(this._connectedSockets.length);
+    const nodes: INode[] = new Array(this.__connectedSockets.length);
     // the order of nodes is same to this._connectedSockets
-    for (let i = 0; i < this._connectedSockets.length; i++) {
-      nodes[i] = this._connectedSockets[i].node;
+    for (let i = 0; i < this.__connectedSockets.length; i++) {
+      nodes[i] = this.__connectedSockets[i].node;
     }
     return nodes;
   }
@@ -91,7 +90,7 @@ export default class VaryingOutputSocket
    * @returns array of connected sockets
    */
   get connectedSockets() {
-    return this._connectedSockets;
+    return this.__connectedSockets;
   }
 
   /**
@@ -102,6 +101,6 @@ export default class VaryingOutputSocket
    * @param inputSocket The input socket to connect to
    */
   _connectSocketWith(inputSocket: IVaryingInputSocket) {
-    this._connectedSockets.push(inputSocket);
+    this.__connectedSockets.push(inputSocket);
   }
 }

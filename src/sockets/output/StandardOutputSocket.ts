@@ -16,10 +16,9 @@ export default class StandardOutputSocket
   extends AbstractSocket
   implements IStandardOutputSocket
 {
-  _connectedSockets: IStandardInputSocket[] = [];
-
   private __socketType: SocketTypeEnum;
   private __precision?: ShaderPrecisionType;
+  private __connectedSockets: IStandardInputSocket[] = [];
 
   constructor(
     node: INode,
@@ -57,10 +56,10 @@ export default class StandardOutputSocket
    * @returns array of connected Nodes
    */
   get connectedNodes() {
-    const nodes: INode[] = new Array(this._connectedSockets.length);
+    const nodes: INode[] = new Array(this.__connectedSockets.length);
     // the order of nodes is same to this._connectedSockets
-    for (let i = 0; i < this._connectedSockets.length; i++) {
-      nodes[i] = this._connectedSockets[i].node;
+    for (let i = 0; i < this.__connectedSockets.length; i++) {
+      nodes[i] = this.__connectedSockets[i].node;
     }
     return nodes;
   }
@@ -70,7 +69,7 @@ export default class StandardOutputSocket
    * @returns array of connected sockets
    */
   get connectedSockets() {
-    return this._connectedSockets;
+    return this.__connectedSockets;
   }
 
   /**
@@ -81,6 +80,6 @@ export default class StandardOutputSocket
    * @param inputSocket The input socket to connect to
    */
   _connectSocketWith(inputSocket: IStandardInputSocket) {
-    this._connectedSockets.push(inputSocket);
+    this.__connectedSockets.push(inputSocket);
   }
 }

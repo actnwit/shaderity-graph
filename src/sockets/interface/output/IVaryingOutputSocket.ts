@@ -7,8 +7,6 @@ import {
 import {IVaryingInputSocket} from '../input/IVaryingInputSocket';
 import {ISocket} from '../ISocket';
 export interface IVaryingOutputSocket extends ISocket {
-  _connectedSockets: IVaryingInputSocket[];
-
   get className(): 'VaryingOutputSocket';
   get variableName(): string;
   get socketType(): ShaderVaryingVarType;

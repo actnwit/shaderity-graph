@@ -14,8 +14,6 @@ export default class StandardInputSocket
   extends AbstractSocket
   implements IStandardInputSocket
 {
-  _connectedSocket: IStandardOutputSocket | undefined = undefined;
-
   private __socketType: SocketTypeEnum;
   /**
    * @private
@@ -23,6 +21,7 @@ export default class StandardInputSocket
    * the __defaultValue is used as input value.
    */
   private __defaultValue: number[];
+  private __connectedSocket: IStandardOutputSocket | undefined = undefined;
 
   constructor(
     node: INode,
@@ -60,7 +59,7 @@ export default class StandardInputSocket
    * @returns connected node or undefined
    */
   get connectedNode() {
-    return this._connectedSocket?.node;
+    return this.__connectedSocket?.node;
   }
 
   /**
@@ -68,7 +67,7 @@ export default class StandardInputSocket
    * @returns connected socket or undefined
    */
   get connectedSocket() {
-    return this._connectedSocket;
+    return this.__connectedSocket;
   }
 
   /**
@@ -77,7 +76,7 @@ export default class StandardInputSocket
    */
   connectSocketWith(outputSocket: IStandardOutputSocket) {
     if (this.socketType === outputSocket.socketType) {
-      this._connectedSocket = outputSocket;
+      this.__connectedSocket = outputSocket;
       outputSocket._connectSocketWith(this);
     } else {
       console.error(

@@ -20,8 +20,7 @@ export default class VaryingInputSocket
 {
   private __variableName: string;
   private __type: ShaderVaryingVarType;
-
-  _connectedSocket: IVaryingOutputSocket | undefined = undefined;
+  private __connectedSocket: IVaryingOutputSocket | undefined = undefined;
 
   constructor(
     node: INode,
@@ -65,7 +64,7 @@ export default class VaryingInputSocket
    * Get the precision of varying variable
    */
   get precision() {
-    return this._connectedSocket?.precision || 'highp';
+    return this.__connectedSocket?.precision || 'highp';
   }
 
   /**
@@ -73,7 +72,7 @@ export default class VaryingInputSocket
    * @returns connected node or undefined
    */
   get connectedNode() {
-    return this._connectedSocket?.node;
+    return this.__connectedSocket?.node;
   }
 
   /**
@@ -81,7 +80,7 @@ export default class VaryingInputSocket
    * @returns connected socket or undefined
    */
   get connectedSocket() {
-    return this._connectedSocket;
+    return this.__connectedSocket;
   }
 
   /**
@@ -90,7 +89,7 @@ export default class VaryingInputSocket
    */
   connectSocketWith(outputSocket: IVaryingOutputSocket) {
     if (this.socketType === outputSocket.socketType) {
-      this._connectedSocket = outputSocket;
+      this.__connectedSocket = outputSocket;
       outputSocket._connectSocketWith(this);
 
       this._setVariableName(outputSocket.variableName);
