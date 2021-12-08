@@ -4,7 +4,9 @@
 
 - [ShaderityGraphJson](#shaderitygraphjson)(root object)
   - [ShaderityGraphNode](#shaderitygraphnode)
-    - [NodeData](#nodedata)
+    - [AbstractNodeData](#abstractnodedata)
+      - [ShaderityNodeData](#shaderitynodedata)
+      - [SamplerNodeData](#samplernodedata)
     - [AbstractSocketData](#abstractsocketdata)
       - [StandardInputSocketData](#standardinputsocketdata)
         - [ShaderStandardInputData](#shaderstandardinputdata)
@@ -132,7 +134,7 @@ All nodes exchange data through sockets except for the followings
 
 Data of the node itself. It does not include information about connections to other nodes.
 
-- Type: `Object` ([NodeData](#nodedata))
+- Type: `Object` ([NodeData](#abstractnodedata))
 
 - Required: Yes
 
@@ -142,7 +144,7 @@ Data of the node itself. It does not include information about connections to ot
 
 Data of the sockets attached to the node. A node is connected to other nodes via the socket. The order of the AbstractSocketData must match the order of the arguments of the node's shader function.
 
-- Type: `Object`[1-*] (Array of [AbstractSocketData](#abstractsocketdata))
+- Type: `Object`[1-*] (Array of [SocketData](#abstractsocketdata))
 
 - Required: Yes
 
@@ -160,44 +162,44 @@ Application-specific data.
 
 ***
 
-## NodeData
+## AbstractNodeData
 
-Data of one node that is not associated with any other node
+Data of each node.
+
+There are two concrete node data.
+- [shaderityNodeData](#shaderitynodedata)
+- [samplerInputNodeData](#samplerinputnodedata)
 
 |Name|Type|Description|Required|
 |:--|:--|:--|:--|
-|shaderFunctionName|`string`|Name of the function which is used by this node|✅ Yes|
-|shaderFunctionDataKey|`string`|Key of the shader function data|✅ Yes|
+|nodeType|`string`|Specify the node type.|No|
 |shaderStage|`string`|Specifies whether this node is used by the vertex shader or the fragment shader.|✅ Yes|
 |extras|`Object`|Application-specific data|No|
 
 <br>
 
-### NodeData.shaderFunctionName ✅
+### AbstractNodeData.nodeType
 
-Function name in the shader corresponding to this node.
-The function is called within the main function.
-The function definition is written in the shaderFunctionData corresponding to the [shaderFunctionDataKey](#shaderfunctiondatakey).
+Specify the type of this node.
 
-- Type: `string`
+There are two types of nodes in this library.
 
-- Required: Yes
+One is the 'samplerInputNode' type. This node is a special node with a fixed socket for input and output.
+Only this node can output the value of sampler type. The only input is the uniform value of sampler type.
 
-<br>
-
-### NodeData.shaderFunctionDataKey ✅
-
-Key of the shader function data.
-When this node is used, the shader function data corresponding to this key will be used in the shader.
-You need to set the shader function data with this key in the [ShaderFunctions](#shaderfunctions).
+The other one is the 'shaderityNode'. All nodes except samplerInputNode are this node.
 
 - Type: `string`
 
-- Required: Yes
+- Required: No (default value is 'shaderityNode')
+
+- Allowed values
+  - `shaderityNode`: General node
+  - `samplerInputNode`: Node to input a uniform value of type Sampler and output it
 
 <br>
 
-### NodeData.shaderStage ✅
+### AbstractNodeData.shaderStage ✅
 
 Specifies whether this node is used by the vertex shader or the fragment shader.
 
@@ -212,7 +214,7 @@ Specifies whether this node is used by the vertex shader or the fragment shader.
 
 <br>
 
-### NodeData.extras
+### AbstractNodeData.extras
 
 Application-specific data.
 
@@ -221,6 +223,137 @@ Application-specific data.
 - Required: No
 
 <br>
+
+## ShaderityNodeData
+
+General node data.
+
+Note: If you choose ShaderityNodeData as ShaderityGraphNode.nodeData, you cannot attach the SamplerOutputSocket to ShaderityGraphNode.socketDataArray. If you want to the SamplerOutputSocket, use SamplerInputNodeData.
+
+|Name|Type|Description|Required|
+|:--|:--|:--|:--|
+|nodeType|`string`|Specify the node type.|No|
+|shaderStage|`string`|Specifies whether this node is used by the vertex shader or the fragment shader.|✅ Yes|
+|shaderFunctionName|`string`|Name of the function which is used by this node|✅ Yes|
+|shaderFunctionDataKey|`string`|Key of the shader function data|✅ Yes|
+|extras|`Object`|Application-specific data|No|
+
+<br>
+
+### ShaderityNodeData.nodeType
+
+Specify the type of this node.
+
+- Type: `string`
+
+- Required: No
+
+- Allowed values
+  - `shaderityNode`: General node
+
+<br>
+
+### ShaderityNodeData.shaderStage ✅
+
+Specifies whether this node is used by the vertex shader or the fragment shader.
+
+- Type: `string`
+
+- Required: Yes
+
+- Allowed values
+  - `vertex`: This node is used by the vertex shader.
+  - `fragment`: This node is used by the fragment shader.
+  - `noUse`: This node is not used by any shaders.
+
+<br>
+
+### ShaderityNodeData.shaderFunctionName ✅
+
+Function name in the shader corresponding to this node.
+The function is called within the main function.
+The function definition is written in the shaderFunctionData corresponding to the [shaderFunctionDataKey](#shaderfunctiondatakey).
+
+- Type: `string`
+
+- Required: Yes
+
+<br>
+
+### ShaderityNodeData.shaderFunctionDataKey ✅
+
+Key of the shader function data.
+When this node is used, the shader function data corresponding to this key will be used in the shader.
+You need to set the shader function data with this key in the [ShaderFunctions](#shaderfunctions).
+
+- Type: `string`
+
+- Required: Yes
+
+<br>
+
+### ShaderityNodeData.extras
+
+Application-specific data.
+
+- Type: `Object`
+
+- Required: No
+
+<br>
+
+## SamplerInputNodeData
+
+Node data for output of the sampler type value obtained as uniform value.
+
+Note: If you choose SamplerInputNodeData as ShaderityGraphNode.nodeData, ShaderityGraphNode.socketDataArray needs to contain only two: UniformInputSocketData and SamplerOutputSocketData.
+
+|Name|Type|Description|Required|
+|:--|:--|:--|:--|
+|nodeType|`string`|Specify the node type.|✅Yes|
+|shaderStage|`string`|Specifies whether this node is used by the vertex shader or the fragment shader.|✅ Yes|
+|extras|`Object`|Application-specific data|No|
+
+<br>
+
+### SamplerInputNodeData.nodeType ✅
+
+Specify the type of this node.
+
+- Type: `string`
+
+- Required: Yes
+
+- Allowed values
+  - `samplerInputNode`
+
+<br>
+
+### SamplerInputNodeData.shaderStage ✅
+
+Specifies whether this node is used by the vertex shader or the fragment shader.
+
+- Type: `string`
+
+- Required: Yes
+
+- Allowed values
+  - `vertex`: This node is used by the vertex shader.
+  - `fragment`: This node is used by the fragment shader.
+  - `noUse`: This node is not used by any shaders.
+
+<br>
+
+### SamplerInputNodeData.extras
+
+Application-specific data.
+
+- Type: `Object`
+
+- Required: No
+
+<br>
+
 
 ***
 
@@ -240,6 +373,8 @@ In shaderity graph, all nodes input and output data through sockets. The followi
 - [AttributeInputSocketData](#attributeinputsocketdata) (2)
 - [UniformInputSocketData](#uniforminputsocketdata) (2)
 - [ShaderOutputSocketData](#shaderoutputsocketdata) (3)
+- [SamplerInputSocketData](#samplerinputsocketdata) (1)
+- [SamplerOutputSocketData](#sampleroutputsocketdata) (1)
 
 Note:
 1. Normally, type 2 and 3 are not shown in the GUI (See the following figure 'hidden socket' )
@@ -383,7 +518,7 @@ GLSL type of data to be input on this socket.
 
 - Required: Yes
 
-- Allowed values
+- Allowed values  (Do not use sampler type value)
   - `bool`
   - `int`
   - `float`
@@ -396,8 +531,6 @@ GLSL type of data to be input on this socket.
   - `mat2`
   - `mat3`
   - `mat4`
-  - `sampler2D`
-  - `samplerCube`
 
 <br>
 
@@ -881,7 +1014,7 @@ This property must be set `output`. See [AbstractSocketData.direction](#abstract
 
 Data of the output variable.
 
-- Type:  `Object` ([StandardOutputSocketData](#standardoutputsocketdata))
+- Type:  `Object` ([ShaderStandardOutputData](#shaderstandardoutputdata))
 
 - Required: No
 
@@ -898,7 +1031,7 @@ Application-specific data.
 <br>
 
 
-## StandardOutputSocketData
+## ShaderStandardOutputData
 
 Data of the shader variable taken as output
 
@@ -908,7 +1041,7 @@ Data of the shader variable taken as output
 
 <br>
 
-### StandardOutputSocketData.type ✅
+### ShaderStandardOutputData.type ✅
 
 GLSL type of data to be output on this socket.
 
@@ -916,7 +1049,7 @@ GLSL type of data to be output on this socket.
 
 - Required: Yes
 
-- Allowed values
+- Allowed values (Do not use sampler type value)
   - `bool`
   - `int`
   - `float`
@@ -929,9 +1062,6 @@ GLSL type of data to be output on this socket.
   - `mat2`
   - `mat3`
   - `mat4`
-  - `sampler2D`
-  - `samplerCube`
-
 <br>
 
 ## VaryingOutputSocketData
@@ -1102,6 +1232,92 @@ Application-specific data.
 
 <br>
 
+## SamplerInputSocketData
+
+Input sampler type value.
+
+|Name|Type|Description|Required|
+|:--|:--|:--|:--|
+|direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
+|samplerType|`string`|GLSL type of the input sampler value|✅ Yes|
+|socketConnectionData|`string`|Data of the connected output socket|✅ Yes|
+
+<br>
+
+### SamplerInputSocketData.direction ✅
+
+This property must be set `input`. See [AbstractSocketData.direction](#abstractsocketdatadirection) for detail.
+
+- Type: `string`
+
+- Required: Yes
+
+- Allowed values
+  - `input`: This socket receives data.
+
+<br>
+
+### SamplerInputSocketData.samplerType ✅
+
+GLSL type of the input sampler value.
+
+- Type: `string`
+
+- Required: Yes
+
+- Allowed values
+  - `sampler2D`
+  - `samplerCube`
+
+<br>
+
+### SamplerInputSocketData.socketConnectionData ✅
+
+Data of the connected output socket.
+
+- Type:  `Object` ([SocketConnectionData](#socketconnectiondata))
+
+- Required: No
+
+<br>
+
+## SamplerOutputSocketData
+
+Output sampler type value. This socket can be contained by the 'SamplerInputNode' type node only.
+
+|Name|Type|Description|Required|
+|:--|:--|:--|:--|
+|direction|`string`|Whether the node receives or passes data through that socket|✅ Yes|
+|samplerType|`string`|GLSL type of the input sampler value|✅ Yes|
+
+<br>
+
+### SamplerOutputSocketData.direction ✅
+
+This property must be set `output`. See [AbstractSocketData.direction](#abstractsocketdatadirection) for detail.
+
+- Type: `string`
+
+- Required: Yes
+
+- Allowed values
+  - `output`: This socket passes data.
+
+<br>
+
+### SamplerOutputSocketData.samplerType ✅
+
+GLSL type of the input sampler value.
+
+- Type: `string`
+
+- Required: Yes
+
+- Allowed values
+  - `sampler2D`
+  - `samplerCube`
+
+<br>
 
 ***
 
@@ -1254,21 +1470,6 @@ GLSL type of the constant value
   - `mat4x2`
   - `mat4x3`
   - `mat4x4`
-  - `sampler2D`
-  - `samplerCube`
-  - `sampler3D`
-  - `sampler2DArray`
-  - `isampler2D`
-  - `isamplerCube`
-  - `isampler3D`
-  - `isampler2DArray`
-  - `usampler2D`
-  - `usamplerCube`
-  - `usampler3D`
-  - `usampler2DArray`
-  - `sampler2DShadow`
-  - `samplerCubeShadow`
-  - `sampler2DArrayShadow`
 
 <br>
 
@@ -1286,7 +1487,7 @@ Constant value to assign to a constant variable
 
 ## ShaderFunctions
 
-The ShaderFunctions is an object that contains the data of the shader function of all the nodes. For the ShaderFunctions property, [shaderFunctionDataKey](#nodedatashaderfunctiondatakey-✅) is the key and the corresponding value is [shaderFunctionData](#shaderfunctiondata).
+The ShaderFunctions is an object that contains the data of the shader function of all the nodes. For the ShaderFunctions property, [shaderFunctionDataKey](#shaderitynodedatashaderfunctiondatakey-✅) is the key and the corresponding value is [shaderFunctionData](#shaderfunctiondata).
 
 |Name|Type|Description|
 |:--|:--|:--|
@@ -1318,8 +1519,8 @@ Data of the function corresponding to shaderFunctionDataKey
 ### ShaderFunctionData.code ✅
 
 Function codes used in the shader.
-You need to write a function with the name of [shaderFunctionName](#nodedatashaderfunctionname-✅) of the node corresponding to this ShaderFunctionData to this property.
-The function with the name of [shaderFunctionName](#nodedatashaderfunctionname-✅) is the entry point of ShaderFunctionData.code. 
+You need to write a function with the name of [shaderFunctionName](#shaderitynodedatashaderfunctionname-✅) of the node corresponding to this ShaderFunctionData to this property.
+The function with the name of [shaderFunctionName](#shaderitynodedatashaderfunctionname-✅) is the entry point of ShaderFunctionData.code. 
 
 Note
 1. In the function whose name is shaderFunctionName, all inputs and outputs should be written as arguments. The return value of the function itself should be of type void. The return value is not used in shaders.
