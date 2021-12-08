@@ -7,8 +7,10 @@ import {
   StandardInputSocketData,
   ShaderFunctions,
   VaryingInputSocketData,
+  SamplerInputSocketData,
 } from '../types/CommonType';
 import AbstractNode from '../node/AbstractNode';
+import SamplerNode from '../node/SamplerNode';
 
 /**
  * This class parses the ShaderityGraphJson and imports it
@@ -50,10 +52,9 @@ export default class JsonImporter {
       const nodeJson = nodesJson[i];
 
       // TODO: create the other type nodes
-      if (
-        nodeJson.nodeData.nodeType == null ||
-        nodeJson.nodeData.nodeType === NodeType.ShaderityNode
-      ) {
+      if (nodeJson.nodeData.nodeType === NodeType.SamplerInputNode) {
+        new SamplerNode(nodeJson.nodeData, nodeJson.socketDataArray);
+      } else {
         new ShaderityNode(nodeJson.nodeData, nodeJson.socketDataArray);
       }
     }
@@ -75,7 +76,8 @@ export default class JsonImporter {
 
         const connectableInputSocketData = socketData as
           | StandardInputSocketData
-          | VaryingInputSocketData;
+          | VaryingInputSocketData
+          | SamplerInputSocketData;
         const socketConnectionData =
           connectableInputSocketData.socketConnectionData;
         if (socketConnectionData == null) {
