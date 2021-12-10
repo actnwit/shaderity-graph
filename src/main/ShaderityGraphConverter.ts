@@ -14,7 +14,7 @@ import ShaderityNode from '../node/ShaderityNode';
  */
 export default class ShaderityGraphConverter {
   //TODO: need to set version
-  static readonly shaderityGraphVersion = '';
+  static readonly shaderityGraphJsonVersion = '0.1.0';
 
   /**
    * Converts a file of ShaderityGraphJson to shaderity objects
@@ -37,7 +37,7 @@ export default class ShaderityGraphConverter {
   public static createShaderityObjectsFromJsonObject(
     json: ShaderityGraphJson
   ): ShaderityObjects {
-    if (json.version !== this.shaderityGraphVersion) {
+    if (json.version !== this.shaderityGraphJsonVersion) {
       console.warn(
         'System.createShaderCodesFromJsonObject: mismatch version between json and system'
       );
