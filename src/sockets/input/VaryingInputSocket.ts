@@ -1,33 +1,34 @@
 import {INode} from '../../node/INode';
-import {ShaderVaryingInputData} from '../../types/CommonType';
-import AbstractVaryingSocket from '../abstract/AbstractVaryingSocket';
+import {
+  ShaderVaryingInputData,
+  ShaderVaryingVarType,
+} from '../../types/CommonType';
 import {IVaryingOutputSocket} from '../interface/output/IVaryingOutputSocket';
 import {IVaryingInputSocket} from '../interface/input/IVaryingInputSocket';
+import AbstractSocket from '../abstract/AbstractSocket';
 
 /**
  * The VaryingInputSocket is an input socket that receives an varying variable.
  * If the function corresponding to a node uses an varying variable,
  * the function must use this socket to receive the variable as an argument.
  * This socket can connects with VaryingOutputSockets.
- * This socket can be used only with fragment shader nodes.
  */
 export default class VaryingInputSocket
-  extends AbstractVaryingSocket
+  extends AbstractSocket
   implements IVaryingInputSocket
 {
-  _connectedSocket: IVaryingOutputSocket | undefined = undefined;
+  private __variableName: string;
+  private __type: ShaderVaryingVarType;
+  private __connectedSocket: IVaryingOutputSocket | undefined = undefined;
 
   constructor(
     node: INode,
     socketName: string,
     varying: ShaderVaryingInputData
   ) {
-    super(
-      node,
-      socketName,
-      varying,
-      `v_non_connected_${node.id}_${socketName}`
-    );
+    super(node, socketName);
+    this.__variableName = `v_non_connected_${node.id}_${socketName}`;
+    this.__type = varying.type;
   }
 
   /**
@@ -35,6 +36,20 @@ export default class VaryingInputSocket
    */
   get className(): 'VaryingInputSocket' {
     return 'VaryingInputSocket';
+  }
+
+  /**
+   * Get the varying variable name
+   */
+  get variableName() {
+    return this.__variableName;
+  }
+
+  /**
+   * Get the glsl type of varying variable
+   */
+  get socketType() {
+    return this.__type;
   }
 
   /**
@@ -48,7 +63,7 @@ export default class VaryingInputSocket
    * Get the precision of varying variable
    */
   get precision() {
-    return this._connectedSocket?.precision || 'highp';
+    return this.__connectedSocket?.precision || 'highp';
   }
 
   /**
@@ -56,7 +71,7 @@ export default class VaryingInputSocket
    * @returns connected node or undefined
    */
   get connectedNode() {
-    return this._connectedSocket?.node;
+    return this.__connectedSocket?.node;
   }
 
   /**
@@ -64,10 +79,31 @@ export default class VaryingInputSocket
    * @returns connected socket or undefined
    */
   get connectedSocket() {
-    return this._connectedSocket;
+    return this.__connectedSocket;
   }
 
-  _connectSocketWith(socket: IVaryingOutputSocket) {
-    this._connectedSocket = socket;
+  /**
+   * Connect this socket and a varying output socket
+   * @param outputSocket The output socket to connect to
+   */
+  connectSocketWith(outputSocket: IVaryingOutputSocket) {
+    if (this.socketType === outputSocket.socketType) {
+      this.__connectedSocket = outputSocket;
+      outputSocket._connectSocketWith(this);
+
+      this._setVariableName(outputSocket.variableName);
+    } else {
+      console.error(
+        'VaryingInputSocket.connectSocketWith: socketType is different'
+      );
+    }
+  }
+
+  /**
+   * @private
+   * change variable name of this socket
+   */
+  _setVariableName(newVariableName: string) {
+    this.__variableName = newVariableName;
   }
 }

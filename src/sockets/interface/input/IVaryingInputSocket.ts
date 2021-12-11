@@ -8,8 +8,6 @@ import {ISocket} from '../ISocket';
 import {IVaryingOutputSocket} from '../output/IVaryingOutputSocket';
 
 export interface IVaryingInputSocket extends ISocket {
-  _connectedSocket: IVaryingOutputSocket | undefined;
-
   get className(): 'VaryingInputSocket';
   get variableName(): string;
   get socketType(): ShaderVaryingVarType;
@@ -18,6 +16,6 @@ export interface IVaryingInputSocket extends ISocket {
   get connectedNode(): INode | undefined;
   get connectedSocket(): IVaryingOutputSocket | undefined;
 
-  _connectSocketWith(socket: ISocket): void;
   _setVariableName(newVariableName: string): void;
+  connectSocketWith(socket: IVaryingOutputSocket): void;
 }

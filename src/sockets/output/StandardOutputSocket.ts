@@ -1,30 +1,32 @@
 import {IStandardOutputSocket} from '../interface/output/IStandardOutputSocket';
 import {IStandardInputSocket} from '../interface/input/IStandardInputSocket';
 import {INode} from '../../node/INode';
-import AbstractStandardSocket from '../abstract/AbstractStandardSocket';
 import {
   ShaderStandardOutputData,
   ShaderPrecisionType,
 } from '../../types/CommonType';
+import {SocketTypeEnum} from '../../types/CommonEnum';
+import AbstractSocket from '../abstract/AbstractSocket';
 
 /**
  * The StandardOutputSocket is an output socket that can connect to StandardInputSockets.
  * This socket can connect to multiple StandardInputSockets.
  */
 export default class StandardOutputSocket
-  extends AbstractStandardSocket
+  extends AbstractSocket
   implements IStandardOutputSocket
 {
-  _connectedSockets: IStandardInputSocket[] = [];
-
+  private __socketType: SocketTypeEnum;
   private __precision?: ShaderPrecisionType;
+  private __connectedSockets: IStandardInputSocket[] = [];
 
   constructor(
     node: INode,
     socketName: string,
     shaderData: ShaderStandardOutputData
   ) {
-    super(shaderData.type, node, socketName);
+    super(node, socketName);
+    this.__socketType = shaderData.type;
     this.__precision = shaderData.precision;
   }
 
@@ -33,6 +35,13 @@ export default class StandardOutputSocket
    */
   get className(): 'StandardOutputSocket' {
     return 'StandardOutputSocket';
+  }
+
+  /**
+   * Get the glsl type of data to be passed between sockets
+   */
+  get socketType() {
+    return this.__socketType;
   }
 
   /**
@@ -47,10 +56,10 @@ export default class StandardOutputSocket
    * @returns array of connected Nodes
    */
   get connectedNodes() {
-    const nodes: INode[] = new Array(this._connectedSockets.length);
+    const nodes: INode[] = new Array(this.__connectedSockets.length);
     // the order of nodes is same to this._connectedSockets
-    for (let i = 0; i < this._connectedSockets.length; i++) {
-      nodes[i] = this._connectedSockets[i].node;
+    for (let i = 0; i < this.__connectedSockets.length; i++) {
+      nodes[i] = this.__connectedSockets[i].node;
     }
     return nodes;
   }
@@ -60,14 +69,17 @@ export default class StandardOutputSocket
    * @returns array of connected sockets
    */
   get connectedSockets() {
-    return this._connectedSockets;
+    return this.__connectedSockets;
   }
 
   /**
-   * Connect this socket and a standard input socket
-   * @param socket The socket to connect to
+   * @private
+   * Connect socket from this socket to a standard input socket
+   * Do not call this method except from the connectSocketWith method of the StandardInputSocket class
+   *
+   * @param inputSocket The input socket to connect to
    */
-  _connectSocketWith(socket: IStandardInputSocket) {
-    this._connectedSockets.push(socket);
+  _connectSocketWith(inputSocket: IStandardInputSocket) {
+    this.__connectedSockets.push(inputSocket);
   }
 }

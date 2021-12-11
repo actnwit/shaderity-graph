@@ -2,13 +2,11 @@ import {ShaderStage, ShaderStageEnum} from '../types/CommonEnum';
 import {NodeData, SocketData} from '../types/CommonType';
 import StandardInputSocket from '../sockets/input/StandardInputSocket';
 import StandardOutputSocket from '../sockets/output/StandardOutputSocket';
-import AbstractStandardSocket from '../sockets/abstract/AbstractStandardSocket';
 import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import {ISocket} from '../sockets/interface/ISocket';
 import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
-import AbstractVaryingSocket from '../sockets/abstract/AbstractVaryingSocket';
 import {INode, NodeClassName} from './INode';
 
 /**
@@ -105,7 +103,7 @@ export default abstract class AbstractNode implements INode {
       inputSocket.className === 'StandardInputSocket' &&
       outputSocket.className === 'StandardOutputSocket'
     ) {
-      AbstractStandardSocket.connectSockets(inputSocket, outputSocket);
+      inputSocket.connectSocketWith(outputSocket);
       return;
     }
 
@@ -113,7 +111,7 @@ export default abstract class AbstractNode implements INode {
       inputSocket.className === 'VaryingInputSocket' &&
       outputSocket.className === 'VaryingOutputSocket'
     ) {
-      AbstractVaryingSocket.connectSockets(inputSocket, outputSocket);
+      inputSocket.connectSocketWith(outputSocket);
       return;
     }
 
