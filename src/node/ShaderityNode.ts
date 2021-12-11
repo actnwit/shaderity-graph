@@ -1,6 +1,6 @@
 import {ShaderStage, SocketDirection} from '../types/CommonEnum';
 import {
-  NodeData,
+  ShaderityNodeData,
   StandardInputSocketData,
   StandardOutputSocketData,
   UniformInputSocketData,
@@ -9,6 +9,8 @@ import {
   VaryingOutputSocketData,
   InputSocketData,
   OutputSocketData,
+  SamplerInputSocketData,
+  SamplerOutputSocketData,
   SocketData,
 } from '../types/CommonType';
 import ShaderFunctionDataRepository from './ShaderFunctionDataRepository';
@@ -20,19 +22,23 @@ import AttributeInputSocket from '../sockets/input/AttributeInputSocket';
 import VaryingInputSocket from '../sockets/input/VaryingInputSocket';
 import UniformInputSocket from '../sockets/input/UniformInputSocket';
 import StandardInputSocket from '../sockets/input/StandardInputSocket';
+import SamplerInputSocket from '../sockets/input/SamplerInputSocket';
 
 /**
- * A shaderity node is an object that contains functions to be used in the shader.
+ * A shaderity node is an node that contains functions to be used in the shader.
  * Each sockets corresponds to a shader function argument of a node.
  *
  * The node graph which is the collection of connected nodes is transformed into a shader by
  * calling the shader functions of nodes sequentially. Nodes are connected to each other via sockets,
  * and data can be passed between them.
  *
- * Note: Data of attribute/varying/uniform variable must be passed to a node through
- *       AttributeInputSocket/VaryingInputSocket/UniformInputSocket.
- *       Do not write these variables directly into the function of each node.
- *       They must be specified in the function arguments.
+ * Note1: Data of attribute/varying/uniform variable must be passed to a node through
+ *        AttributeInputSocket/VaryingInputSocket/UniformInputSocket.
+ *        Do not write these variables directly into the function of each node.
+ *        They must be specified in the function arguments.
+ *
+ * Note2: This node cannot attach sampler type output socket.
+ *        To use the socket, you need to use sampler node instead of this node
  */
 export default class ShaderityNode extends AbstractNode {
   private __shaderFunctionName: string;
@@ -44,7 +50,7 @@ export default class ShaderityNode extends AbstractNode {
    * @param socketDataArray define sockets. The order of the socketData must match the order of
    *                        the arguments of the node's shader function.
    */
-  constructor(nodeData: NodeData, socketDataArray: SocketData[]) {
+  constructor(nodeData: ShaderityNodeData, socketDataArray: SocketData[]) {
     super(nodeData, socketDataArray);
     this.__shaderFunctionName = nodeData.shaderFunctionName;
     this.__shaderFunctionDataKey = nodeData.shaderFunctionDataKey;
@@ -141,6 +147,10 @@ export default class ShaderityNode extends AbstractNode {
     return extensions;
   }
 
+  /**
+   * @protected
+   * attach sockets to this node
+   */
   protected __addSockets(socketDataArray: SocketData[]): void {
     for (let i = 0; i < socketDataArray.length; i++) {
       const socketData = socketDataArray[i];
@@ -198,6 +208,13 @@ export default class ShaderityNode extends AbstractNode {
         socketName,
         sSocketData.shaderData
       );
+    } else if ((socketData as SamplerInputSocketData).samplerType != null) {
+      const sSocketData = socketData as SamplerInputSocketData;
+      inputSocket = new SamplerInputSocket(
+        this,
+        socketName,
+        sSocketData.samplerType
+      );
     } else {
       console.error(
         `ShaderityNode.__addInputSocket: ${socketName} is invalid socket for the ShaderityNode`
@@ -251,6 +268,11 @@ export default class ShaderityNode extends AbstractNode {
         socketName,
         sSocketData.shaderData
       );
+    } else if ((socketData as SamplerOutputSocketData).samplerType != null) {
+      console.error(
+        'ShaderityNode.__addInputSocket: ShaderityNode does not support SamplerOutputSocketData.'
+      );
+      return;
     } else {
       this.__checkUniquenessOfShaderOutputSocket();
       outputSocket = new ShaderOutputSocket(this, socketName);

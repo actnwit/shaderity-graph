@@ -11,6 +11,8 @@ import {
   ShaderConstantValueObject as _ShaderConstantValueObject,
 } from 'shaderity/dist/esm';
 import {
+  NodeTypeEnum,
+  SamplerTypeEnum,
   ShaderStageEnum,
   SocketDirectionEnum,
   SocketTypeEnum,
@@ -57,18 +59,22 @@ export type SocketData =
   | UniformInputSocketData
   | StandardOutputSocketData
   | VaryingOutputSocketData
-  | ShaderOutputSocketData;
+  | ShaderOutputSocketData
+  | SamplerInputSocketData
+  | SamplerOutputSocketData;
 
 export type InputSocketData =
   | StandardInputSocketData
   | AttributeInputSocketData
   | VaryingInputSocketData
-  | UniformInputSocketData;
+  | UniformInputSocketData
+  | SamplerInputSocketData;
 
 export type OutputSocketData =
   | StandardOutputSocketData
   | VaryingOutputSocketData
-  | ShaderOutputSocketData;
+  | ShaderOutputSocketData
+  | SamplerOutputSocketData;
 
 export interface ShaderityGraphNode {
   nodeData: NodeData;
@@ -76,11 +82,22 @@ export interface ShaderityGraphNode {
   extras?: {[key: string]: unknown};
 }
 
-export interface NodeData {
-  shaderFunctionName: string;
-  shaderFunctionDataKey: string;
+export type NodeData = ShaderityNodeData | SamplerInputNodeData;
+
+export interface AbstractNodeData {
+  nodeType?: NodeTypeEnum;
   shaderStage: ShaderStageEnum;
   extras?: {[key: string]: unknown};
+}
+
+export interface ShaderityNodeData extends AbstractNodeData {
+  shaderFunctionName: string;
+  shaderFunctionDataKey: string;
+  nodeType?: 'shaderityNode';
+}
+
+export interface SamplerInputNodeData extends AbstractNodeData {
+  nodeType: 'samplerInputNode';
 }
 
 export interface ShaderGlobalData {
@@ -166,4 +183,15 @@ export interface UniformInputSocketData extends AbstractSocketData {
 
 export interface ShaderOutputSocketData extends AbstractSocketData {
   direction: 'out';
+}
+
+export interface SamplerInputSocketData extends AbstractSocketData {
+  direction: 'in';
+  samplerType: SamplerTypeEnum;
+  socketConnectionData?: SocketConnectionData;
+}
+
+export interface SamplerOutputSocketData extends AbstractSocketData {
+  direction: 'out';
+  samplerType: SamplerTypeEnum;
 }

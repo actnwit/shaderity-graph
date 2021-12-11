@@ -1,23 +1,23 @@
-import {NodeData} from '../types/CommonType';
+import {ShaderityNodeData} from '../types/CommonType';
 import ShaderityNode from './ShaderityNode';
 
 // This is the unit test for node.
 // All the node has no socket.
 // Shader codes corresponding to the node are not defined.
 
-const vertexNodeData: NodeData = {
+const vertexShaderityNodeData: ShaderityNodeData = {
   shaderFunctionName: 'functionA',
   shaderFunctionDataKey: 'funcA',
   shaderStage: 'vertex',
 };
 
-const fragmentNodeData: NodeData = {
+const fragmentShaderityNodeData: ShaderityNodeData = {
   shaderFunctionName: 'functionB',
   shaderFunctionDataKey: 'funcB',
   shaderStage: 'fragment',
 };
 
-const noUseNodeData: NodeData = {
+const noUseShaderityNodeData: ShaderityNodeData = {
   shaderFunctionName: 'functionC',
   shaderFunctionDataKey: 'funcC',
   shaderStage: 'noUse',
@@ -25,16 +25,16 @@ const noUseNodeData: NodeData = {
 
 // The following nodes cannot connect each other.
 // This is because all the nodes has no sockets.
-const nodeForVertexShader = new ShaderityNode(vertexNodeData, []);
+const nodeForVertexShader = new ShaderityNode(vertexShaderityNodeData, []);
 console.log('Please ignore the console.warn above if the test passes.');
 
-const nodeForFragmentShader = new ShaderityNode(fragmentNodeData, []);
+const nodeForFragmentShader = new ShaderityNode(fragmentShaderityNodeData, []);
 console.log('Please ignore the console.warn above if the test passes.');
 
-const nodeNotUseInShader = new ShaderityNode(noUseNodeData, []);
+const nodeNotUseInShader = new ShaderityNode(noUseShaderityNodeData, []);
 console.log('Please ignore the console.warn above if the test passes.');
 
-test('Node.allNodes', () => {
+test('ShaderityNode.allShaderityNodes', () => {
   expect(ShaderityNode.allShaderityNodes).toStrictEqual([
     nodeForVertexShader,
     nodeForFragmentShader,
@@ -42,25 +42,30 @@ test('Node.allNodes', () => {
   ]);
 });
 
-test('Node.vertexNodes', () => {
+test('ShaderityNode.vertexShaderityNodes', () => {
   expect(ShaderityNode.vertexShaderityNodes).toStrictEqual([
     nodeForVertexShader,
   ]);
 });
 
-test('Node.fragmentNodes', () => {
+test('ShaderityNode.fragmentShaderityNodes', () => {
   expect(ShaderityNode.fragmentShaderityNodes).toStrictEqual([
     nodeForFragmentShader,
   ]);
 });
 
-test('Node.getNodeById', () => {
+test('ShaderityNode.getNodeById', () => {
   // first registered node
   expect(ShaderityNode.getNodeById(0)).toBe(nodeForVertexShader);
 });
 
-//
-test('node.functionName', () => {
+test('shaderityNode.className', () => {
+  expect(nodeForVertexShader.className).toBe('ShaderityNode');
+  expect(nodeForFragmentShader.className).toBe('ShaderityNode');
+  expect(nodeNotUseInShader.className).toBe('ShaderityNode');
+});
+
+test('shaderityNode.functionName', () => {
   expect(nodeForVertexShader.functionName).toBe('functionA');
   expect(nodeForFragmentShader.functionName).toBe('functionB');
   expect(nodeNotUseInShader.functionName).toBe('functionC');
@@ -74,35 +79,35 @@ test('node.functionName', () => {
   expect(nodeNotUseInShader.functionName).toBe('functionF');
 });
 
-test('node.functionName', () => {
+test('shaderityNode.functionName', () => {
   expect(nodeForVertexShader._shaderFunctionDataKey).toBe('funcA');
   expect(nodeForFragmentShader._shaderFunctionDataKey).toBe('funcB');
   expect(nodeNotUseInShader._shaderFunctionDataKey).toBe('funcC');
 });
 
-test('node.shaderCode', () => {
+test('shaderityNode.shaderCode', () => {
   expect(nodeForVertexShader.shaderCode).toBe(
-    `// key ${vertexNodeData.shaderFunctionDataKey} is not found in ShaderFunctionDataRepository`
+    `// key ${vertexShaderityNodeData.shaderFunctionDataKey} is not found in ShaderFunctionDataRepository`
   );
   console.log('Please ignore the console.error above if the test passes.');
 });
 
-test('node.shaderStage', () => {
+test('shaderityNode.shaderStage', () => {
   expect(nodeForVertexShader.shaderStage).toBe('vertex');
   expect(nodeForFragmentShader.shaderStage).toBe('fragment');
   expect(nodeNotUseInShader.shaderStage).toBe('noUse');
 });
 
-test('node.id', () => {
+test('shaderityNode.id', () => {
   expect(nodeForVertexShader.id).toBe(0);
 });
 
-test('node.getInputNode', () => {
+test('shaderityNode.getInputNode', () => {
   expect(nodeForVertexShader.getInputNode('test')).toBe(undefined);
   console.log('Please ignore the console.error above if the test passes.');
 });
 
-test('node.getOutputNodes', () => {
+test('shaderityNode.getOutputNodes', () => {
   expect(nodeForVertexShader.getOutputNodes('test')).toStrictEqual([]);
   console.log('Please ignore the console.error above if the test passes.');
 });

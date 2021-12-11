@@ -8,6 +8,10 @@ import {
   SocketTypeEnum,
   SocketDirection,
   SocketDirectionEnum,
+  NodeType,
+  NodeTypeEnum,
+  SamplerType,
+  SamplerTypeEnum,
 } from './types/CommonEnum';
 import {
   ShaderityObjects,
@@ -17,6 +21,8 @@ import {
   ShaderFunctionData,
   ShaderFunctions,
   NodeData,
+  ShaderityNodeData,
+  SamplerInputNodeData,
   SocketData,
   InputSocketData,
   OutputSocketData,
@@ -32,6 +38,8 @@ import {
   SocketConnectionData,
   ShaderOutputSocketData,
   ShaderPrecisionType,
+  SamplerInputSocketData,
+  SamplerOutputSocketData,
 } from './types/CommonType';
 
 export default {
@@ -41,6 +49,8 @@ export default {
   SocketDirection,
   ShaderityGraphConverter,
   SocketType,
+  NodeType,
+  SamplerType,
   Version: ShaderityGraphConverter.shaderityGraphVersion,
 };
 
@@ -50,11 +60,15 @@ export type {
   ShaderityGraphJson,
   ShaderityGraphNode,
   SocketTypeEnum,
+  NodeTypeEnum,
+  SamplerTypeEnum,
   SocketDirectionEnum,
   ShaderGlobalData,
   ShaderFunctionData,
   ShaderFunctions,
   NodeData,
+  ShaderityNodeData,
+  SamplerInputNodeData,
   SocketData,
   InputSocketData,
   OutputSocketData,
@@ -70,4 +84,6 @@ export type {
   SocketConnectionData,
   ShaderOutputSocketData,
   ShaderPrecisionType,
+  SamplerInputSocketData,
+  SamplerOutputSocketData,
 };
