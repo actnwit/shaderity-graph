@@ -1,5 +1,6 @@
 import ShaderityGraphConverter from './main/ShaderityGraphConverter';
-import Node from './node/Node';
+import AbstractNode from './node/AbstractNode';
+import ShaderityNode from './node/ShaderityNode';
 import {
   ShaderStage,
   ShaderStageEnum,
@@ -17,6 +18,8 @@ import {
   ShaderFunctions,
   NodeData,
   SocketData,
+  InputSocketData,
+  OutputSocketData,
   StandardInputSocketData,
   AttributeInputSocketData,
   ShaderAttributeVarType,
@@ -32,7 +35,8 @@ import {
 } from './types/CommonType';
 
 export default {
-  Node,
+  AbstractNode,
+  ShaderityNode,
   ShaderStage,
   SocketDirection,
   ShaderityGraphConverter,
@@ -52,6 +56,8 @@ export type {
   ShaderFunctions,
   NodeData,
   SocketData,
+  InputSocketData,
+  OutputSocketData,
   StandardInputSocketData,
   AttributeInputSocketData,
   ShaderAttributeVarType,

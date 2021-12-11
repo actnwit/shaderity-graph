@@ -1,4 +1,4 @@
-import Node from '../node/Node';
+import ShaderityNode from '../node/ShaderityNode';
 import {SocketDirection, SocketType} from '../types/CommonEnum';
 import {
   AttributeInputSocketData,
@@ -109,7 +109,7 @@ const sockets0 = [
   shaderOutputSocketData,
 ];
 
-const node0 = new Node(driverNodeData0, sockets0);
+const node0 = new ShaderityNode(driverNodeData0, sockets0);
 console.log('Please ignore the console.error above if the test passes.');
 
 const socketsOfNode0 = node0._sockets;
@@ -298,10 +298,10 @@ const sockets1 = [standardInputSocketData1];
 
 const sockets2 = [varyingInputSocketData1];
 
-const node1 = new Node(driverNodeData1, sockets1);
+const node1 = new ShaderityNode(driverNodeData1, sockets1);
 console.log('Please ignore the console.error above if the test passes.');
 
-const node2 = new Node(driverNodeData2, sockets2);
+const node2 = new ShaderityNode(driverNodeData2, sockets2);
 console.log('Please ignore the console.error above if the test passes.');
 
 const socketsOfNode1 = node1._sockets;

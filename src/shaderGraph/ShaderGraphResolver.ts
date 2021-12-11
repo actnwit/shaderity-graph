@@ -1,4 +1,4 @@
-import Node from '../node/Node';
+import ShaderityNode from '../node/ShaderityNode';
 import {ShaderGlobalData} from '../types/CommonType';
 import {ShaderStage, SocketType} from '../types/CommonEnum';
 import Shaderity, {
@@ -30,8 +30,12 @@ export default class ShaderGraphResolver {
     vertexShaderGlobalData?: ShaderGlobalData,
     fragmentShaderGlobalData?: ShaderGlobalData
   ) {
-    const sortedVertexNode = NodeSorter.sortTopologically(Node.vertexNodes);
-    const sortedFragmentNode = NodeSorter.sortTopologically(Node.fragmentNodes);
+    const sortedVertexNode = NodeSorter.sortTopologically(
+      ShaderityNode.vertexShaderityNodes
+    );
+    const sortedFragmentNode = NodeSorter.sortTopologically(
+      ShaderityNode.fragmentShaderityNodes
+    );
 
     const vertexShaderityObject = ShaderGraphResolver.__createShaderityObject(
       sortedVertexNode,
@@ -61,7 +65,7 @@ export default class ShaderGraphResolver {
    * @returns shaderity object
    */
   private static __createShaderityObject(
-    sortedNodes: Node[],
+    sortedNodes: ShaderityNode[],
     shaderStage: ShaderStageStr,
     globalData?: ShaderGlobalData
   ): ShaderityObject {
@@ -140,7 +144,7 @@ export default class ShaderGraphResolver {
    */
   private static __addNodeDataToShaderityObjectCreator(
     shaderityObjectCreator: ShaderityObjectCreator,
-    node: Node,
+    node: ShaderityNode,
     shaderFunctionDataKeys: string[],
     shaderStage: ShaderStageStr
   ) {
@@ -249,7 +253,7 @@ export default class ShaderGraphResolver {
    * @param sortedNodes topologically sorted array of nodes
    * @returns shader code of main function
    */
-  private static __createMainFunctionCode(sortedNodes: Node[]) {
+  private static __createMainFunctionCode(sortedNodes: ShaderityNode[]) {
     // stock variable names to be used as arguments in each node's function call
     // usage: argumentNameList[node.id][index of socket] = variableName;
     const argumentNameList: Array<Array<string>> =
@@ -306,10 +310,10 @@ ${functionCalls}
    * @returns array to store the variable names
    */
   private static __initializeArgumentNameListOfFunctionsCalledInMainFunction(
-    nodes: Node[]
+    nodes: ShaderityNode[]
   ) {
     const argumentNameList: Array<Array<string>> = new Array(
-      Node.allNodes.length
+      ShaderityNode.allShaderityNodes.length
     );
     argumentNameList.fill(new Array(0));
 
@@ -335,7 +339,7 @@ ${functionCalls}
    * @returns string of variable definitions
    */
   private static __createInputVariableDefinitionsAndStoreVariableName(
-    node: Node,
+    node: ShaderityNode,
     argumentNameList: string[][]
   ): string {
     let returnStr = '';
@@ -394,7 +398,7 @@ ${functionCalls}
    * @returns string of variable declarations
    */
   private static __createOutVariableDeclarationsAndStoreVariableName(
-    node: Node,
+    node: ShaderityNode,
     argumentNameList: string[][]
   ): string {
     let returnStr = '';
@@ -476,7 +480,7 @@ ${functionCalls}
    * @param argumentNameList array to store the variable names used in each function call of the main function
    */
   private static __addStorageQualifierVariableName(
-    node: Node,
+    node: ShaderityNode,
     argumentNameList: string[][]
   ): void {
     const nodeId = node.id;
@@ -500,7 +504,7 @@ ${functionCalls}
   }
 
   private static __addShaderOutputVariableName(
-    node: Node,
+    node: ShaderityNode,
     argumentNameList: string[][]
   ): void {
     const nodeId = node.id;
@@ -526,7 +530,7 @@ ${functionCalls}
    * @returns function call string
    */
   private static __createShaderGraphFunctionCalls(
-    node: Node,
+    node: ShaderityNode,
     argumentNames: string[]
   ): string {
     let returnStr = `  ${node.functionName}(`;

@@ -1,5 +1,5 @@
 import {NodeData} from '../types/CommonType';
-import Node from './Node';
+import ShaderityNode from './ShaderityNode';
 
 // This is the unit test for node.
 // All the node has no socket.
@@ -25,17 +25,17 @@ const noUseNodeData: NodeData = {
 
 // The following nodes cannot connect each other.
 // This is because all the nodes has no sockets.
-const nodeForVertexShader = new Node(vertexNodeData, []);
+const nodeForVertexShader = new ShaderityNode(vertexNodeData, []);
 console.log('Please ignore the console.warn above if the test passes.');
 
-const nodeForFragmentShader = new Node(fragmentNodeData, []);
+const nodeForFragmentShader = new ShaderityNode(fragmentNodeData, []);
 console.log('Please ignore the console.warn above if the test passes.');
 
-const nodeNotUseInShader = new Node(noUseNodeData, []);
+const nodeNotUseInShader = new ShaderityNode(noUseNodeData, []);
 console.log('Please ignore the console.warn above if the test passes.');
 
 test('Node.allNodes', () => {
-  expect(Node.allNodes).toStrictEqual([
+  expect(ShaderityNode.allShaderityNodes).toStrictEqual([
     nodeForVertexShader,
     nodeForFragmentShader,
     nodeNotUseInShader,
@@ -43,16 +43,20 @@ test('Node.allNodes', () => {
 });
 
 test('Node.vertexNodes', () => {
-  expect(Node.vertexNodes).toStrictEqual([nodeForVertexShader]);
+  expect(ShaderityNode.vertexShaderityNodes).toStrictEqual([
+    nodeForVertexShader,
+  ]);
 });
 
 test('Node.fragmentNodes', () => {
-  expect(Node.fragmentNodes).toStrictEqual([nodeForFragmentShader]);
+  expect(ShaderityNode.fragmentShaderityNodes).toStrictEqual([
+    nodeForFragmentShader,
+  ]);
 });
 
 test('Node.getNodeById', () => {
   // first registered node
-  expect(Node.getNodeById(0)).toBe(nodeForVertexShader);
+  expect(ShaderityNode.getNodeById(0)).toBe(nodeForVertexShader);
 });
 
 //
