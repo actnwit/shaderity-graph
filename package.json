@@ -1,6 +1,6 @@
 {
   "name": "shaderity-graph",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "dist/esm/index.js",
   "repository": "https://github.com/actnwit/shaderity-graph.git",
   "author": "Yuki Shimada <emadurandal@gmail.com>",
