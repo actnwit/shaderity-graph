@@ -51,7 +51,7 @@ export default {
   SocketType,
   NodeType,
   SamplerType,
-  Version: ShaderityGraphConverter.shaderityGraphVersion,
+  Version: ShaderityGraphConverter.shaderityGraphJsonVersion,
 };
 
 export type {
