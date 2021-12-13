@@ -5,7 +5,6 @@
   "repository": "https://github.com/actnwit/shaderity-graph.git",
   "author": "Yuki Shimada <emadurandal@gmail.com>",
   "license": "MIT",
-  "private": true,
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
