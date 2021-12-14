@@ -4,7 +4,7 @@
   "main": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
   "files": [
-    "./dist"
+    "dist"
   ],
   "repository": "https://github.com/actnwit/shaderity-graph.git",
   "author": "Yuki Shimada <emadurandal@gmail.com>",
