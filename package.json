@@ -1,7 +1,11 @@
 {
   "name": "shaderity-graph",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "files": [
+    "./dist"
+  ],
   "repository": "https://github.com/actnwit/shaderity-graph.git",
   "author": "Yuki Shimada <emadurandal@gmail.com>",
   "license": "MIT",
@@ -41,8 +45,5 @@
     "gts-fix": "gts fix ./src ./samples/**/*.ts",
     "doc": "npx typedoc --entryPointStrategy expand --exclude '**/*index.ts' --exclude '**/*I[A-Z]*.ts' ./src/",
     "test": "jest --config ./config/jest/jest.config.js"
-  },
-  "files": [
-    "./dist"
-  ]
+  }
 }
