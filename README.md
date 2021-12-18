@@ -2,6 +2,13 @@
 
 The Shaderity-Graph is a tool to resolves a node graph.
 
+## package hierarchy
+
+- shaderity-graph: This. a runtime for node graph processing.
+    - shaderity: for runtime features
+        - [shaderity-loader](https://github.com/actnwit/shaderity-loader): for static features
+            - [shaderity-node](https://github.com/actnwit/shaderity-node): The internal component for shaderity-loader.
+
 ## Features
 
 Currently, we only support node graph resolving for GLSL shaders.
