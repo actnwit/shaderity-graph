@@ -14,6 +14,7 @@ import NodeSorter from './NodeSorter';
 import VaryingOutputSocket from '../sockets/output/VaryingOutputSocket';
 import {ShaderityObject} from 'shaderity';
 import SamplerInputSocket from '../sockets/input/SamplerInputSocket';
+import AbstractNode from '../node/AbstractNode';
 
 /**
  * This class resolves the created node graph and creates vertex and fragment shaders.
@@ -261,9 +262,7 @@ export default class ShaderGraphResolver {
     // stock variable names to be used as arguments in each node's function call
     // usage: argumentNameList[node.id][index of socket] = variableName;
     const argumentNameList: Array<Array<string>> =
-      this.__initializeArgumentNameListOfFunctionsCalledInMainFunction(
-        sortedNodes
-      );
+      this.__initializeArgumentNameListOfFunctionsCalledInMainFunction();
 
     let variableDeclarations = '';
     let inputValueDefinitions = '';
@@ -313,12 +312,10 @@ ${functionCalls}
    * @param nodes array of nodes
    * @returns array to store the variable names
    */
-  private static __initializeArgumentNameListOfFunctionsCalledInMainFunction(
-    nodes: ShaderityNode[]
-  ) {
-    const argumentNameList: Array<Array<string>> = new Array(
-      ShaderityNode.allShaderityNodes.length
-    );
+  private static __initializeArgumentNameListOfFunctionsCalledInMainFunction() {
+    const nodes = AbstractNode.allNodes;
+
+    const argumentNameList: Array<Array<string>> = new Array(nodes.length);
     argumentNameList.fill(new Array(0));
 
     for (let i = 0; i < nodes.length; i++) {
