@@ -1,5 +1,8 @@
 {
   "markdownlint.customRules": [
     "\"MD033\": false"
+  ],
+  "cSpell.words": [
+    "Shaderity"
   ]
 }
