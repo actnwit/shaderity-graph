@@ -539,7 +539,7 @@ ${functionCalls}
     let returnStr = `  ${node.functionName}(`;
 
     for (let i = 0; i < argumentNames.length; i++) {
-      const argumentName = argumentNames[i];
+      const argumentName = argumentNames[i].split('[')[0];
       returnStr += argumentName + ', ';
     }
 
