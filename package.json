@@ -31,7 +31,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "shaderity": "^0.2.2"
+    "shaderity": "^0.2.5"
   },
   "scripts": {
     "prepare": "husky install",

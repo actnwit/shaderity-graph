@@ -4521,10 +4521,10 @@ shaderity-node@0.0.6:
   resolved "https://registry.yarnpkg.com/shaderity-node/-/shaderity-node-0.0.6.tgz#4da236be537978442c77898116c2a06c5ffc1dda"
   integrity sha512-SBN7sLsDPzq/IGna/d8PFuOU8PxfSIgmue9q6B5OxZUQCmOKkEFReMFadD7QtCWaaoizLGlsFeoVIHWvtOm6kw==
 
-shaderity@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/shaderity/-/shaderity-0.2.2.tgz#0963594287a66565f1a72c0828bb4f91c5dcde18"
-  integrity sha512-bP/6jRaEjnOjTkI9q/zzRrnubvJ0NBXAUadwwBeIL5UxL2tvqT64CEnIlG+sJi8xNMg6lhkSXniCC+BdFWxkPg==
+shaderity@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/shaderity/-/shaderity-0.2.5.tgz#65a42bc9a418edbf7634fc8e1ea785dd539e8b19"
+  integrity sha512-lwWP0QAxCJrmReFMjrFUV0eSqBJpvQYfzuwpMyLj7/UGR76nDe8nraqemlUrzBXzdFNgs0r/Wh5jOioiGp+bJw==
 
 shallow-clone@^3.0.0:
   version "3.0.1"
